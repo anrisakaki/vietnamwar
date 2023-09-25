@@ -15,3 +15,12 @@ varhs1_16 <- read_dta(file = "2016_new/Q1_New_16.dta")
 
 LFS_2015 <- read_dta(file = "LFS_2015_final_full.dta")
 
+# VHLSS 
+
+vhlss06 <- list.files(pattern = "muc(.*)dta$")
+vhlss06 <- lapply(vhlss06, read_dta)
+
+m1_06 <- vhlss06[[1]]
+m2a_06 <- vhlss06[[2]]
+m4a_06 <- vhlss06[[3]]
+weights_vhlss <- read_dta("hhinc06.dta")
