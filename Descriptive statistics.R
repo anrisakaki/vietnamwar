@@ -1,7 +1,6 @@
 birthcohort_sum_vhlss <- vhlss06 %>%
   group_by(birth_year) %>%
-  filter(!is.na(educ),
-         !is.na(income)) %>% 
+  filter(!is.na(educ)) %>% 
   summarise(educ_mean = sum(educ * hhwt) / sum(hhwt)) %>% 
   mutate(educ_mean = round(educ_mean, 2)) %>% 
   filter(birth_year < 1988 & birth_year > 1945)
@@ -18,8 +17,16 @@ bombs_sum <- hhinc06_bombs %>%
   group_by(tinh, tot_bmr_prov) %>% 
   summarise(income_mean = sum(tot_hhinc * wt45)/ sum(wt45))
 
-child_sum <- varhs_10 %>% 
-  filter(child == 1 & )
+vet_inceduc <- varhs_16 %>% 
+  group_by(vn_army) %>% 
+  summarise(educ_mean = mean(educ, na.rm = T),
+            income_mean = mean(income, na.rm = T))
+
+vet_inceduc_hh <- varhs_16 %>% 
+  group_by(hh_army) %>% 
+  filter(child == 1) %>% 
+  summarise(educ_mean = mean(educ, na.rm = T),
+            income_mean = mean(income, na.rm = T))
 
 # Birth cohort and education levels 
 
@@ -56,7 +63,7 @@ ggplot(birthcohort_sum_vhlss, aes(x = birth_year, y = educ_mean)) +
   ) +  
   scale_x_continuous(breaks=seq(1946,1987,1)) +
   labs(x = "Birth cohort",
-       y = "Avg. years in education") +
+       y = "") +
   theme_minimal() +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
@@ -64,4 +71,77 @@ ggplot(birthcohort_sum_vhlss, aes(x = birth_year, y = educ_mean)) +
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         legend.title=element_blank())
+ggsave("vn_educ_birthcohort.jpeg", width = 17, height = 7)
 
+# Veteran and income 
+
+ggplot(vet_inceduc, aes(x = as.factor(vn_army), y = income_mean, fill = as.factor(vn_army))) +
+  geom_bar(stat = "identity", width = 0.75) +
+  labs(
+    x = "Served in Vietnamese Army",
+    y = ""
+  ) +
+  theme_minimal() +
+  guides(fill = F) +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10))
+ggsave("vet_avg_inc.jpeg", width = 7, height = 7)
+
+ggplot(vet_inceduc_hh, aes(x = as.factor(hh_army), y = income_mean, fill = as.factor(hh_army))) +
+  geom_bar(stat = "identity", width = 0.75) +
+  labs(
+    x = "Veteran parent",
+    y = ""
+  ) +
+  theme_minimal() +
+  guides(fill = F) +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10))
+ggsave("vet_avg_inc_hh.jpeg", width = 7, height = 7)
+
+# Veteran and education 
+
+ggplot(vet_inceduc, aes(x = as.factor(vn_army), y = educ_mean, fill = as.factor(vn_army))) +
+  geom_bar(stat = "identity", width = 0.75) +
+  labs(
+    x = "Served in Vietnamese Army",
+    y = ""
+  ) +
+  scale_y_continuous(breaks=seq(0,10,2)) +  
+  theme_minimal() +
+  guides(fill = F) +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10))
+ggsave("vet_avg_educ.jpeg", width = 7, height = 7)
+
+ggplot(vet_inceduc_hh, aes(x = as.factor(hh_army), y = educ_mean, fill = as.factor(hh_army))) +
+  geom_bar(stat = "identity", width = 0.75) +
+  labs(
+    x = "Veteran parent",
+    y = ""
+  ) +
+  theme_minimal() +
+  guides(fill = F) +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10))
+ggsave("vet_avg_educ_hh.jpeg", width = 7, height = 7)
