@@ -32,3 +32,31 @@ vhlss06 <- list(m1_06, m2a_06, m4a_06) %>%
 # Adding weights 
 
 vhlss06 <- left_join(vhlss06, weights_06, by = c("tinh", "huyen", "xa"))
+
+# Creating district variable
+
+vhlss06 <- vhlss06 %>%
+  mutate(xa = sprintf("%02d", xa),
+          district = paste0(as.character(tinh), xa))
+
+hhinc06 <- weights_vhlss %>% 
+  mutate(xa = sprintf("%02d", xa),
+         district = paste0(as.character(tinh), xa),
+         tot_hhinc = rlincomepc * hhsize)  
+
+# Matching with Miguel's bombing data 
+
+bombs_dist <- bombs_district %>% select(district, north_lat, east_long, south, tot_bmr, tot_bmr_per, districtname, provincename, urban) %>% 
+  mutate(district = as.character(district))
+bombs_prov <- bombs_province %>% select(province, tot_bmr) %>% 
+  rename(tot_bmr_prov = tot_bmr,
+         tinh = province)
+
+vhlss06_bombs <- left_join(vhlss06, bombs_dist, by = "district")
+vhlss06_bombs <- left_join(vhlss06_bombs, bombs_prov, by = "tinh")
+
+hhinc06_bombs <- left_join(hhinc06, bombs_dist, by = "district") %>% 
+  select(-"urban.y") %>% 
+  rename(urban = urban.x)
+
+hhinc06_bombs <- left_join(hhinc06_bombs, bombs_prov, by = "tinh")
