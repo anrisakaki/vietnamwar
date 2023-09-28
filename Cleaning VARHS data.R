@@ -76,3 +76,56 @@ varhs_10 <- varhs_10 %>%
   group_by(hhid) %>% 
   mutate(hh_army = ifelse(any(vn_army == 1), 1, 0)) %>% 
   ungroup()
+
+# 2016 
+
+varhs1_16 <- varhs1_16 %>% 
+  mutate(female = ifelse(p1q3_ == 2, 1, 0),
+         illness = ifelse(p1q5_ == 1, 1, 0),
+         mental_health = ifelse(illness == 1 & p1q6a_ == 1, 1, 0),
+         vn_army = ifelse(p2q13_ == 1, 1, 0),
+         child = ifelse(p1q2_ == 3, 1, 0)) %>% 
+  rename(birth_year = p1q4b_,
+         illness_length = p1q7_,
+         educ = p2q10_) %>% 
+  select(tinh_2016, quan_2016, xa_2016, ma_h0_2016, p1stt_, birth_year, female, child, illness, mental_health, illness_length, educ, vn_army)
+
+varhs5_16 <- varhs5_16 %>% 
+  mutate(work = ifelse(is.na(p25q2_), 1, 0)) %>% 
+  rename(nowork_reason = p25q2_,
+         p1stt_ = p25ma_) %>% 
+  select(tinh_2016, quan_2016, xa_2016, ma_h0_2016, p1stt_, work, nowork_reason)
+
+varhs5a_16 <- varhs5a_16 %>% 
+  rename(income = p26q10b_,
+         p1stt_ = p26ma_) %>% 
+  # Calculating monthly income 
+  mutate(
+    # Those who get paid hourly 
+    income = ifelse(p26q10a_ == 1, income * p26q8_ * p26q7_, income),
+    # Those who get paid on a daily basis 
+    income = ifelse(p26q10a_ == 2, income * p26q7_, income),
+    # Those who get paid on a weekly basis
+    income = ifelse(p26q10a_ == 3, income/7 * p26q7_, income),
+    # Those who get paid on a yearly basis 
+    income = ifelse(p26q10a_ == 5, income/p26q6_, income)
+    ) %>% 
+  select(tinh_2016, quan_2016, xa_2016, ma_h0_2016, p1stt_, income)
+
+varhs10_16 <- varhs10_16 %>% 
+  rename(p1stt_ = p44q1_) %>% 
+  mutate(vet_union = ifelse(p44q2_ == 5, 1, 0)) %>% 
+  select(tinh_2016, quan_2016, xa_2016, ma_h0_2016, p1stt_, vet_union)
+
+varhs_16 <- list(varhs1_16, varhs5_16, varhs5a_16, varhs10_16) %>% 
+  reduce(full_join, by = c("tinh_2016", "quan_2016", "xa_2016", "ma_h0_2016", "p1stt_")) %>% 
+  mutate(vn_army = ifelse(is.na(vn_army), 1, 0)) %>% 
+  group_by(tinh_2016, quan_2016, xa_2016, ma_h0_2016) %>% 
+  mutate(hhid = cur_group_id()) %>% 
+  group_by(tinh_2016, quan_2016, xa_2016, ma_h0_2016, p1stt_) %>% 
+  mutate(ivid = cur_group_id()) %>% 
+  group_by(hhid) %>% 
+  mutate(hh_army = ifelse(any(vn_army == 1), 1, 0)) %>% 
+  ungroup() %>% 
+  mutate(age = 2016 - birth_year)
+
