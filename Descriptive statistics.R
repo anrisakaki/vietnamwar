@@ -1,9 +1,27 @@
 birthcohort_sum_vhlss <- vhlss06 %>%
   group_by(birth_year) %>%
-  filter(!is.na(educ)) %>% 
+  filter(!is.na(educ),
+         !is.na(income)) %>% 
   summarise(educ_mean = sum(educ * hhwt) / sum(hhwt)) %>% 
   mutate(educ_mean = round(educ_mean, 2)) %>% 
   filter(birth_year < 1988 & birth_year > 1945)
+
+bombs_sum_educ <- vhlss06_bombs %>% 
+  group_by(tinh, tot_bmr_prov) %>% 
+  filter(!is.na(income),
+         !is.na(educ)) %>% 
+  filter(birth_year < 1989 & birth_year > 1940) %>% 
+  summarise(income_mean = sum(income * hhwt)/ sum(hhwt),
+            educ_mean = sum(educ * hhwt)/ sum(hhwt))
+
+bombs_sum <- hhinc06_bombs %>% 
+  group_by(tinh, tot_bmr_prov) %>% 
+  summarise(income_mean = sum(tot_hhinc * wt45)/ sum(wt45))
+
+child_sum <- varhs_10 %>% 
+  filter(child == 1 & )
+
+# Birth cohort and education levels 
 
 ggplot(birthcohort_sum_vhlss, aes(x = birth_year, y = educ_mean)) +
   geom_line(size = 1.1) +
@@ -46,3 +64,4 @@ ggplot(birthcohort_sum_vhlss, aes(x = birth_year, y = educ_mean)) +
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         legend.title=element_blank())
+
