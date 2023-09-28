@@ -3,6 +3,7 @@ library(tidyverse)
 library(haven)
 library(sf)
 library(fixest)
+library(extrafont)
 
 # VARHS 
 
