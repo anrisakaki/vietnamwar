@@ -138,5 +138,3 @@ veterans_prov <- varhs_16 %>%
   select(tinh_2016, quan_2016, vet_share)
   
 varhs_16 <- left_join(varhs_16, veterans_prov, by = c("tinh_2016", "quan_2016"))
-
-varhs_16 <- left_join()
