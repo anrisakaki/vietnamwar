@@ -14,7 +14,7 @@ bombs_sum_educ <- vhlss06_bombs %>%
             educ_mean = sum(educ * hhwt)/ sum(hhwt))
 
 bombs_sum <- hhinc06_bombs %>% 
-  group_by(tinh, tot_bmr_prov, t) %>% 
+  group_by(tinh, tot_bmr_prov) %>% 
   summarise(income_mean = sum(tot_hhinc * wt45)/ sum(wt45))
 
 vet_inceduc <- varhs_16 %>% 
@@ -141,7 +141,7 @@ ggplot(vet_inceduc_hh, aes(x = as.factor(hh_army), y = educ_mean, fill = as.fact
     y = ""
   ) +
   theme_minimal() +
-  guides(fill = F) +  
+  guides(fill = "none") +  
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
