@@ -129,3 +129,14 @@ varhs_16 <- list(varhs1_16, varhs5_16, varhs5a_16, varhs10_16) %>%
   ungroup() %>% 
   mutate(age = 2016 - birth_year)
 
+veterans_prov <- varhs_16 %>% 
+  group_by(tinh_2016, quan_2016, vn_army) %>% 
+  summarise(count = n()) %>% 
+  group_by(tinh_2016, quan_2016) %>% 
+  mutate(vet_share = count/sum(count)) %>% 
+  filter(vn_army == 1) %>% 
+  select(tinh_2016, quan_2016, vet_share)
+  
+varhs_16 <- left_join(varhs_16, veterans_prov, by = c("tinh_2016", "quan_2016"))
+
+varhs_16 <- left_join()
