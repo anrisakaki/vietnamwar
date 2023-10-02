@@ -14,7 +14,7 @@ bombs_sum_educ <- vhlss06_bombs %>%
             educ_mean = sum(educ * hhwt)/ sum(hhwt))
 
 bombs_sum <- hhinc06_bombs %>% 
-  group_by(tinh, tot_bmr_prov) %>% 
+  group_by(tinh, tot_bmr_prov, t) %>% 
   summarise(income_mean = sum(tot_hhinc * wt45)/ sum(wt45))
 
 vet_inceduc <- varhs_16 %>% 
@@ -22,9 +22,14 @@ vet_inceduc <- varhs_16 %>%
   summarise(educ_mean = mean(educ, na.rm = T),
             income_mean = mean(income, na.rm = T))
 
+vet_inceduc_pd <- varhs_16 %>% 
+  group_by(tinh_2016, quan_2016, vet_share) %>% 
+  summarise(educ_mean = mean(educ, na.rm = T),
+            income_mean = mean(income, na.rm = T))
+
 vet_inceduc_hh <- varhs_16 %>% 
   group_by(hh_army) %>% 
-  filter(child == 1) %>% 
+  filter(child == 1 & birth_year < 1999) %>% 
   summarise(educ_mean = mean(educ, na.rm = T),
             income_mean = mean(income, na.rm = T))
 
@@ -112,7 +117,7 @@ ggsave("vet_avg_inc_hh.jpeg", width = 7, height = 7)
 # Veteran and education 
 
 ggplot(vet_inceduc, aes(x = as.factor(vn_army), y = educ_mean, fill = as.factor(vn_army))) +
-  geom_bar(stat = "identity", width = 0.75) +
+  geom_bar(stat = "identity", width = 0.75) +   
   labs(
     x = "Served in Vietnamese Army",
     y = ""
@@ -145,3 +150,6 @@ ggplot(vet_inceduc_hh, aes(x = as.factor(hh_army), y = educ_mean, fill = as.fact
         legend.title=element_blank(),
         text = element_text(size=10))
 ggsave("vet_avg_educ_hh.jpeg", width = 7, height = 7)
+
+# Veteran share and education 
+
