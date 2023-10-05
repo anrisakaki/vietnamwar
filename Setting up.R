@@ -65,6 +65,10 @@ thor <- read.csv("datamil-vietnam-war-thor-data/datamil-vietnam-war-thor-data/th
 
 weapons_dict <- read.csv("datamil-vietnam-war-thor-data/datamil-vietnam-war-thor-data/THOR_VIET_WEAPON_GLOSS.csv")
 
+# Young Lives 
+
+yl_anthro <- read_dta("YL/stata/stata13/vietnam_r5/vnyc_anthro_anon/vn_r5_ychh_youngerchildanthroandppvt.dta")
+
 # Map 
 
 vnmap0 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_0.shp")
