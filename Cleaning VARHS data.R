@@ -119,13 +119,14 @@ varhs10_16 <- varhs10_16 %>%
 
 varhs_16 <- list(varhs1_16, varhs5_16, varhs5a_16, varhs10_16) %>% 
   reduce(full_join, by = c("tinh_2016", "quan_2016", "xa_2016", "ma_h0_2016", "p1stt_")) %>% 
-  mutate(vn_army = ifelse(is.na(vn_army), 1, 0)) %>% 
+  # mutate(vn_army = ifelse(is.na(vn_army), 1, 0)) %>% 
   group_by(tinh_2016, quan_2016, xa_2016, ma_h0_2016) %>% 
   mutate(hhid = cur_group_id()) %>% 
   group_by(tinh_2016, quan_2016, xa_2016, ma_h0_2016, p1stt_) %>% 
   mutate(ivid = cur_group_id()) %>% 
   group_by(hhid) %>% 
-  mutate(hh_army = ifelse(any(vn_army == 1), 1, 0)) %>% 
+  mutate(hh_army = ifelse(any(vn_army == 1), 1, 0)) %>%
+  mutate(hh_army = ifelse(is.na(hh_army), 0, hh_army)) %>% 
   ungroup() %>% 
   mutate(age = 2016 - birth_year)
 
