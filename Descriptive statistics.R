@@ -1,7 +1,8 @@
 birthcohort_sum_vhlss <- vhlss06 %>%
   group_by(birth_year) %>%
   filter(!is.na(educ)) %>% 
-  summarise(educ_mean = sum(educ * hhwt) / sum(hhwt)) %>% 
+  summarise(educ_mean = sum(educ * hhwt) / sum(hhwt),
+            std_error = sd(educ) / sqrt(n())) %>% 
   mutate(educ_mean = round(educ_mean, 2)) %>% 
   filter(birth_year < 1988 & birth_year > 1945)
 
@@ -18,9 +19,11 @@ bombs_sum <- hhinc06_bombs %>%
   summarise(income_mean = sum(tot_hhinc * wt45)/ sum(wt45))
 
 vet_inceduc <- varhs_16 %>% 
-  group_by(vn_army) %>% 
+  group_by(vn_army) %>%
+  filter(birth_year < 1959) %>% 
   summarise(educ_mean = mean(educ, na.rm = T),
-            income_mean = mean(income, na.rm = T))
+            income_mean = mean(income, na.rm = T)) %>% 
+  filter(!is.na(vn_army))
 
 vet_inceduc_pd <- varhs_16 %>% 
   group_by(tinh_2016, quan_2016, vet_share) %>% 
@@ -153,3 +156,36 @@ ggsave("vet_avg_educ_hh.jpeg", width = 7, height = 7)
 
 # Veteran share and education 
 
+ggplot(vet_inceduc_pd, aes(x = (vet_share*100), y = educ_mean)) +
+  geom_point() +  # Add scatterplot points
+  geom_smooth(method = "lm",
+              se = T) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "Share of veteran",
+       y = "Avg. education attainment")
+ggsave("vet_avg_educ_district.jpeg", width = 7, height = 7)
+
+ggplot(vet_inceduc_pd, aes(x = (vet_share*100), y = log(income_mean))) +
+  geom_point() +  # Add scatterplot points
+  geom_smooth(method = "lm",
+              se = T) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "Share of veteran",
+       y = "log(Avg. income)")
+ggsave("vet_avg_inc_district.jpeg", width = 7, height = 7)
