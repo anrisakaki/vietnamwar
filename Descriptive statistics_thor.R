@@ -31,4 +31,11 @@ ggplot(dplyr::filter(thor_sum, WEAPON_CLASS == "BOMB" | WEAPON_CLASS == "ROCKET"
   labs(x = "Year",
        y = "Total Weapon Load (Tonnes)") +
   scale_x_continuous(breaks = unique(thor_sum$year)) +
-  theme_minimal()
+  theme_minimal() +
+  guides(fill = guide_legend(title = NULL)) +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank())    
