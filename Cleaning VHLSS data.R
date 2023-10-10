@@ -60,3 +60,5 @@ hhinc06_bombs <- left_join(hhinc06, bombs_dist, by = "district") %>%
   rename(urban = urban.x)
 
 hhinc06_bombs <- left_join(hhinc06_bombs, bombs_prov, by = "tinh")
+
+vhlss06_bombs <- vhlss06_bombs %>% mutate(war_time = ifelse(birth_year > 1960 & birth_year < 1975, 1, 0))
