@@ -62,6 +62,7 @@ bombs_district <- read_dta(file = "Corrigendum_Impact-bombing-Vietnam_Code-Data_
 bombs_province <- read_dta(file = "Corrigendum_Impact-bombing-Vietnam_Code-Data_2023-07-24/data/clean/province_bombing_corrected.dta")
 
 thor <- read.csv("datamil-vietnam-war-thor-data/datamil-vietnam-war-thor-data/thor_data_vietnam.csv")
+thor_dist <- read.csv("thor_district.csv")
 
 weapons_dict <- read.csv("datamil-vietnam-war-thor-data/datamil-vietnam-war-thor-data/THOR_VIET_WEAPON_GLOSS.csv")
 
