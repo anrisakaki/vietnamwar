@@ -52,7 +52,9 @@ bombs_prov <- bombs_province %>% select(province, tot_bmr) %>%
   rename(tot_bmr_prov = tot_bmr,
          tinh = province)
 
-vhlss06_bombs <- left_join(vhlss06, bombs_dist, by = "district")
+vhlss06_bombs <- list(vhlss06, bombs_dist, thor_dist) %>% 
+  reduce(merge, by = "district")
+
 vhlss06_bombs <- left_join(vhlss06_bombs, bombs_prov, by = "tinh")
 
 hhinc06_bombs <- left_join(hhinc06, bombs_dist, by = "district") %>% 
@@ -62,3 +64,5 @@ hhinc06_bombs <- left_join(hhinc06, bombs_dist, by = "district") %>%
 hhinc06_bombs <- left_join(hhinc06_bombs, bombs_prov, by = "tinh")
 
 vhlss06_bombs <- vhlss06_bombs %>% mutate(war_time = ifelse(birth_year > 1960 & birth_year < 1975, 1, 0))
+
+
