@@ -22,11 +22,27 @@ thor <- thor %>%
          day = as.integer(format(MSNDATE, "%d"))) %>% 
   filter(WEAPON_CLASS != "SUPPORT",
          WEAPON_CLASS != "GUN",
-         MFUNC_DESC == "AIR INTERDICTION" | MFUNC_DESC == "STRIKE") %>%
-  filter(NUMWEAPONSDELIVERED > 0)
+         MFUNC_DESC == "AIR INTERDICTION" | MFUNC_DESC == "STRIKE")
 
 # Export thor to ArcGIS 
 
 thor_dist <- thor_dist %>% 
   select(-c(OID_, Join_Count, TARGET_FID, Field1, NUMWEAPONSJETTISONED, NUMWEAPONSRETURNED, AREA, TOTPOP_CY)) %>%
-  filter(!is.na(ID))
+  filter(!is.na(ID)) %>% 
+  mutate(WEAPONSLOADEDWEIGHT = ifelse(WEAPONSLOADEDWEIGHT == -1, NA, WEAPONSLOADEDWEIGHT)) %>% 
+  group_by(NAME) %>% 
+  summarise(tot_bombs = sum(NUMWEAPONSDELIVERED),
+            tot_bombs_weight= sum(WEAPONSLOADEDWEIGHT, na.rm = T))
+
+dist_ <- district %>%
+  select(distname2019, prov2002, dist2002) %>% 
+  distinct() %>% 
+  filter(!is.na(dist2002), 
+         distname2019 != "") %>% 
+  mutate(xa = sprintf("%02d", dist2002),
+         district = paste0(as.character(prov2002), xa)) %>% 
+  select(distname2019, district) %>% 
+  rename(NAME = distname2019)
+
+thor_dist <- left_join(thor_dist, dist_, by = "NAME") %>%
+  filter(!is.na(district))
