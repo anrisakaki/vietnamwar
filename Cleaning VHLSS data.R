@@ -44,7 +44,7 @@ hhinc06 <- weights_vhlss %>%
          district = paste0(as.character(tinh), xa),
          tot_hhinc = rlincomepc * hhsize)  
 
-# Matching with Miguel's bombing data 
+# Matching with Miguel and THOR bombing data 
 
 bombs_dist <- bombs_district %>% select(district, north_lat, east_long, south, tot_bmr, tot_bmr_per, districtname, provincename, urban) %>% 
   mutate(district = as.character(district))
@@ -53,7 +53,9 @@ bombs_prov <- bombs_province %>% select(province, tot_bmr) %>%
          tinh = province)
 
 vhlss06_bombs <- list(vhlss06, bombs_dist, thor_dist) %>% 
-  reduce(merge, by = "district")
+  reduce(merge, by = "district") %>% 
+  mutate(tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         tot_bombs = ifelse(is.na(tot_bombs), 0, tot_bmr))
 
 vhlss06_bombs <- left_join(vhlss06_bombs, bombs_prov, by = "tinh")
 
