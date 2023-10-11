@@ -59,7 +59,8 @@ vhlss06_bombs <- list(vhlss06, bombs_dist, thor_dist) %>%
 
 vhlss06_bombs <- left_join(vhlss06_bombs, bombs_prov, by = "tinh")
 
-hhinc06_bombs <- left_join(hhinc06, bombs_dist, by = "district") %>% 
+hhinc06_bombs <- list(hhinc06, bombs_dist, thor_dist) %>% 
+  reduce(merge, by = "district") %>%   
   select(-"urban.y") %>% 
   rename(urban = urban.x)
 
