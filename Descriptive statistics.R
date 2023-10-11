@@ -6,13 +6,13 @@ birthcohort_sum_vhlss <- vhlss06 %>%
   mutate(educ_mean = round(educ_mean, 2)) %>% 
   filter(birth_year < 1988 & birth_year > 1945)
 
-bombs_sum_educ <- vhlss06_bombs %>% 
+bombs_sum_prov <- vhlss06_bombs %>% 
   group_by(tinh, tot_bmr_prov) %>% 
   filter(!is.na(income),
          !is.na(educ)) %>% 
   filter(birth_year < 1989 & birth_year > 1940) %>% 
-  summarise(income_mean = sum(income * hhwt)/ sum(hhwt),
-            educ_mean = sum(educ * hhwt)/ sum(hhwt))
+  summarise(income_mean_prov = sum(income * hhwt)/ sum(hhwt),
+            educ_mean_prov = sum(educ * hhwt)/ sum(hhwt))
 
 bombs_sum <- hhinc06_bombs %>% 
   group_by(tinh, tot_bmr_prov) %>% 
