@@ -15,26 +15,29 @@ bombs_sum_prov <- vhlss06_bombs %>%
             educ_mean_prov = sum(educ * hhwt)/ sum(hhwt))
 
 bombs_sum <- hhinc06_bombs %>% 
-  group_by(tinh, tot_bmr_prov) %>% 
-  summarise(income_mean = sum(tot_hhinc * wt45)/ sum(wt45))
+  group_by(tinh) %>% 
+  summarise(hh_inc = sum(tot_hhinc * wt45)/ sum(wt45))
+
+bombs_sum_prov <- merge(bombs_sum_prov, bombs_sum, by = "tinh")
 
 vet_inceduc <- varhs_16 %>% 
-  group_by(vn_army) %>%
-  filter(birth_year < 1959) %>% 
+  filter(birth_year > 1957) %>%   
+  group_by(vet_union) %>% 
   summarise(educ_mean = mean(educ, na.rm = T),
             income_mean = mean(income, na.rm = T)) %>% 
-  filter(!is.na(vn_army))
+  filter(!is.na(vet_union))
 
-vet_inceduc_pd <- varhs_16 %>% 
-  group_by(tinh_2016, quan_2016, vet_share) %>% 
-  summarise(educ_mean = mean(educ, na.rm = T),
-            income_mean = mean(income, na.rm = T))
-
-vet_inceduc_hh <- varhs_16 %>% 
+vet_inceduc_children <- varhs_16 %>% 
   group_by(hh_army) %>% 
   filter(child == 1 & birth_year < 1999) %>% 
-  summarise(educ_mean = mean(educ, na.rm = T),
-            income_mean = mean(income, na.rm = T))
+  summarise(child_educ_mean = mean(educ, na.rm = T),
+            child_income_mean = mean(income, na.rm = T))
+
+vetshare_prov <- varhs_16 %>% 
+  filter(birth_year > 1950 & birth_year < 1998) %>% 
+  group_by(tinh_2016, quan_2016, vet_share) %>% 
+  summarise(income_mean_prov = mean(income, na.rm = T),
+            educ_mean_prov = mean(educ, na.rm = T))
 
 # Birth cohort and education levels 
 
@@ -83,10 +86,10 @@ ggsave("vn_educ_birthcohort.jpeg", width = 17, height = 7)
 
 # Veteran and income 
 
-ggplot(vet_inceduc, aes(x = as.factor(vn_army), y = income_mean, fill = as.factor(vn_army))) +
+ggplot(vet_inceduc, aes(x = as.factor(vet_union), y = income_mean, fill = as.factor(vet_union))) +
   geom_bar(stat = "identity", width = 0.75) +
   labs(
-    x = "Served in Vietnamese Army",
+    x = "Part of Veteran's Union",
     y = ""
   ) +
   theme_minimal() +
@@ -100,10 +103,10 @@ ggplot(vet_inceduc, aes(x = as.factor(vn_army), y = income_mean, fill = as.facto
         text = element_text(size=10))
 ggsave("vet_avg_inc.jpeg", width = 7, height = 7)
 
-ggplot(vet_inceduc_hh, aes(x = as.factor(hh_army), y = income_mean, fill = as.factor(hh_army))) +
+ggplot(vet_inceduc_children, aes(x = as.factor(hh_army), y = child_income_mean, fill = as.factor(hh_army))) +
   geom_bar(stat = "identity", width = 0.75) +
   labs(
-    x = "Veteran parent",
+    x = "HH with veteran",
     y = ""
   ) +
   theme_minimal() +
@@ -119,10 +122,10 @@ ggsave("vet_avg_inc_hh.jpeg", width = 7, height = 7)
 
 # Veteran and education 
 
-ggplot(vet_inceduc, aes(x = as.factor(vn_army), y = educ_mean, fill = as.factor(vn_army))) +
+ggplot(vet_inceduc, aes(x = as.factor(vet_union), y = educ_mean, fill = as.factor(vet_union))) +
   geom_bar(stat = "identity", width = 0.75) +   
   labs(
-    x = "Served in Vietnamese Army",
+    x = "Part of Veteran's Union",
     y = ""
   ) +
   scale_y_continuous(breaks=seq(0,10,2)) +  
@@ -137,10 +140,10 @@ ggplot(vet_inceduc, aes(x = as.factor(vn_army), y = educ_mean, fill = as.factor(
         text = element_text(size=10))
 ggsave("vet_avg_educ.jpeg", width = 7, height = 7)
 
-ggplot(vet_inceduc_hh, aes(x = as.factor(hh_army), y = educ_mean, fill = as.factor(hh_army))) +
+ggplot(vet_inceduc_children, aes(x = as.factor(hh_army), y = child_educ_mean, fill = as.factor(hh_army))) +
   geom_bar(stat = "identity", width = 0.75) +
   labs(
-    x = "Veteran parent",
+    x = "HH with veteran",
     y = ""
   ) +
   theme_minimal() +
@@ -153,39 +156,3 @@ ggplot(vet_inceduc_hh, aes(x = as.factor(hh_army), y = educ_mean, fill = as.fact
         legend.title=element_blank(),
         text = element_text(size=10))
 ggsave("vet_avg_educ_hh.jpeg", width = 7, height = 7)
-
-# Veteran share and education 
-
-ggplot(vet_inceduc_pd, aes(x = (vet_share*100), y = educ_mean)) +
-  geom_point() +  # Add scatterplot points
-  geom_smooth(method = "lm",
-              se = T) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "Share of veteran",
-       y = "Avg. education attainment")
-ggsave("vet_avg_educ_district.jpeg", width = 7, height = 7)
-
-ggplot(vet_inceduc_pd, aes(x = (vet_share*100), y = log(income_mean))) +
-  geom_point() +  # Add scatterplot points
-  geom_smooth(method = "lm",
-              se = T) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "Share of veteran",
-       y = "log(Avg. income)")
-ggsave("vet_avg_inc_district.jpeg", width = 7, height = 7)
