@@ -7,7 +7,7 @@ birthcohort_sum_vhlss <- vhlss06 %>%
   filter(birth_year < 1988 & birth_year > 1945)
 
 bombs_sum_prov <- vhlss06_bombs %>% 
-  group_by(tinh, tot_bmr_prov) %>% 
+  group_by(tinh, tot_bmr_prov, tot_bombs_prov) %>% 
   filter(!is.na(income),
          !is.na(educ)) %>% 
   filter(birth_year < 1989 & birth_year > 1940) %>% 
@@ -33,11 +33,39 @@ vet_inceduc_children <- varhs_16 %>%
   summarise(child_educ_mean = mean(educ, na.rm = T),
             child_income_mean = mean(income, na.rm = T))
 
-vetshare_prov <- varhs_16 %>% 
-  filter(birth_year > 1950 & birth_year < 1998) %>% 
-  group_by(tinh_2016, quan_2016, vet_share) %>% 
-  summarise(income_mean_prov = mean(income, na.rm = T),
-            educ_mean_prov = mean(educ, na.rm = T))
+# Bombing intensity and education/income 
+
+ggplot(bombs_sum_prov, aes(x = log(tot_bombs_prov), y = educ_mean_prov)) +
+  geom_point() +  
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Total bombs)",
+       y = "Average Education Attainment")
+
+ggplot(bombs_sum_prov, aes(x = log(tot_bombs_prov), y = log(hh_inc))) +
+  geom_point() +  
+  geom_smooth(method = "lm",
+              se = T) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Total bombs)",
+       y = "Average HH Income")
 
 # Birth cohort and education levels 
 
