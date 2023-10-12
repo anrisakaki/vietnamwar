@@ -119,23 +119,13 @@ varhs10_16 <- varhs10_16 %>%
 
 varhs_16 <- list(varhs1_16, varhs5_16, varhs5a_16, varhs10_16) %>% 
   reduce(full_join, by = c("tinh_2016", "quan_2016", "xa_2016", "ma_h0_2016", "p1stt_")) %>% 
-  # mutate(vn_army = ifelse(is.na(vn_army), 1, 0)) %>% 
   group_by(tinh_2016, quan_2016, xa_2016, ma_h0_2016) %>% 
   mutate(hhid = cur_group_id()) %>% 
   group_by(tinh_2016, quan_2016, xa_2016, ma_h0_2016, p1stt_) %>% 
   mutate(ivid = cur_group_id()) %>% 
+  mutate(vet_union = ifelse(is.na(vet_union), 0, vet_union)) %>% 
   group_by(hhid) %>% 
   mutate(hh_army = ifelse(any(vet_union == 1), 1, 0)) %>%
   mutate(hh_army = ifelse(is.na(vet_union), 0, vet_union)) %>% 
   ungroup() %>% 
   mutate(age = 2016 - birth_year)
-
-veterans_prov <- varhs_16 %>% 
-  group_by(tinh_2016, quan_2016, vet_union) %>% 
-  summarise(count = n()) %>% 
-  group_by(tinh_2016, quan_2016) %>% 
-  mutate(vet_share = count/sum(count)) %>% 
-  filter(vet_union == 1) %>% 
-  select(tinh_2016, quan_2016, vet_share)
-  
-varhs_16 <- left_join(varhs_16, veterans_prov, by = c("tinh_2016", "quan_2016"))
