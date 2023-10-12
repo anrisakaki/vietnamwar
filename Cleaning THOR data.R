@@ -26,7 +26,7 @@ thor <- thor %>%
 
 # Export thor to ArcGIS 
 
-thor_dist <- thor_dist %>% 
+thor_dist <- thor_district %>% 
   select(-c(OID_, Join_Count, TARGET_FID, Field1, NUMWEAPONSJETTISONED, NUMWEAPONSRETURNED, AREA, TOTPOP_CY)) %>%
   filter(!is.na(ID)) %>% 
   mutate(WEAPONSLOADEDWEIGHT = ifelse(WEAPONSLOADEDWEIGHT == -1, NA, WEAPONSLOADEDWEIGHT)) %>% 
@@ -46,3 +46,8 @@ dist_ <- district %>%
 
 thor_dist <- left_join(thor_dist, dist_, by = "NAME") %>%
   filter(!is.na(district))
+
+thor_prov <- thor_dist %>% 
+  mutate(tinh = substr(district, 1, 3)) %>% 
+  group_by(tinh) %>% 
+  summarise(tot_bombs_prov = sum(tot_bombs))
