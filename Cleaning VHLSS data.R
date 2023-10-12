@@ -57,14 +57,16 @@ vhlss06_bombs <- list(vhlss06, bombs_dist, thor_dist) %>%
   mutate(tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
          tot_bombs = ifelse(is.na(tot_bombs), 0, tot_bmr))
 
-vhlss06_bombs <- left_join(vhlss06_bombs, bombs_prov, by = "tinh")
+vhlss06_bombs <- list(vhlss06_bombs, bombs_prov, thor_prov) %>% 
+  reduce(merge, by = "tinh")
 
 hhinc06_bombs <- list(hhinc06, bombs_dist, thor_dist) %>% 
   reduce(merge, by = "district") %>%   
   select(-"urban.y") %>% 
   rename(urban = urban.x)
 
-hhinc06_bombs <- left_join(hhinc06_bombs, bombs_prov, by = "tinh")
+hhinc06_bombs <- list(hhinc06_bombs, bombs_prov, thor_prov) %>% 
+  reduce(merge, by = "tinh")
 
 vhlss06_bombs <- vhlss06_bombs %>% mutate(war_time = ifelse(birth_year > 1960 & birth_year < 1975, 1, 0))
 
