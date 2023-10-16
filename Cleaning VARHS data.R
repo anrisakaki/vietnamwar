@@ -65,17 +65,17 @@ varhs10_10 <- varhs10_10 %>%
   select(tinh_2010, quan_2010, xa_2010, ma_h0_2010, p2stt_, vet_union)
 
 varhs_10 <- list(varhs1_10, varhs5_10, varhs5a_10, varhs10_10) %>% 
-  reduce(full_join, by = c("tinh_2010", "quan_2010", "xa_2010", "ma_h0_2010", "p2stt_"))
-
-varhs_10 <- varhs_10 %>% 
-  mutate(vn_army = ifelse(is.na(vn_army), 1, 0)) %>% 
+  reduce(full_join, by = c("tinh_2010", "quan_2010", "xa_2010", "ma_h0_2010", "p2stt_")) %>% 
   group_by(tinh_2010, quan_2010, xa_2010, ma_h0_2010) %>% 
   mutate(hhid = cur_group_id()) %>% 
   group_by(tinh_2010, quan_2010, xa_2010, ma_h0_2010, p2stt_) %>% 
   mutate(ivid = cur_group_id()) %>% 
+  mutate(vet_union = ifelse(is.na(vet_union), 0, vet_union)) %>% 
   group_by(hhid) %>% 
-  mutate(hh_army = ifelse(any(vn_army == 1), 1, 0)) %>% 
-  ungroup()
+  mutate(hh_army = ifelse(any(vet_union == 1), 1, 0)) %>%
+  mutate(hh_army = ifelse(is.na(vet_union), 0, vet_union)) %>% 
+  ungroup() %>% 
+  mutate(age = 2010 - birth_year)
 
 # 2016 
 
