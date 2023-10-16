@@ -10,7 +10,7 @@ bombs_sum_prov <- vhlss06_bombs %>%
   group_by(tinh, tot_bmr_prov, tot_bombs_prov) %>% 
   filter(!is.na(income),
          !is.na(educ)) %>% 
-  filter(birth_year < 1989 & birth_year > 1940) %>% 
+  filter(birth_year < 1975 & birth_year > 1965) %>% 
   summarise(income_mean_prov = sum(income * hhwt)/ sum(hhwt),
             educ_mean_prov = sum(educ * hhwt)/ sum(hhwt))
 
@@ -54,7 +54,7 @@ ggplot(bombs_sum_prov, aes(x = log(tot_bombs_prov), y = educ_mean_prov)) +
 ggplot(bombs_sum_prov, aes(x = log(tot_bombs_prov), y = log(hh_inc))) +
   geom_point() +  
   geom_smooth(method = "lm",
-              se = T) +
+              se = F) +
   theme_minimal() +
   guides(fill = "none") +  
   theme(axis.line = element_line(color='black'),
@@ -184,3 +184,7 @@ ggplot(vet_inceduc_children, aes(x = as.factor(hh_army), y = child_educ_mean, fi
         legend.title=element_blank(),
         text = element_text(size=10))
 ggsave("vet_avg_educ_hh.jpeg", width = 7, height = 7)
+
+# Province-level bombing and outcomes 
+
+
