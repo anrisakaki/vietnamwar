@@ -5,8 +5,10 @@
 m1_06 <- m1_06 %>% 
   rename(birth_year = m1ac4b,
          hk = m1ac8) %>% 
-  mutate(female = ifelse(m1ac2 == 2, 1, 0)) %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, birth_year, female, hk)
+  mutate(female = ifelse(m1ac2 == 2, 1, 0),
+         child = ifelse(m1ac3 == 3, 1, 0),
+         parent = ifelse(m1ac3 == 1| m1ac3 == 2, 1, 0)) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, birth_year, female, parent, child, hk)
 
 m2a_06 <- m2a_06 %>%
   rename(educ = m2ac1) %>% 
@@ -27,7 +29,8 @@ vhlss06 <- list(m1_06, m2a_06, m4a_06) %>%
   group_by(tinh, huyen, xa, diaban, hoso) %>% 
   mutate(hhid = cur_group_id()) %>% 
   group_by(tinh, huyen, xa, diaban, hoso, matv) %>%  
-  mutate(ivid = cur_group_id())
+  mutate(ivid = cur_group_id()) %>% 
+  mutate(age = 2006 - birth_year)
 
 # Adding weights 
 
@@ -48,9 +51,10 @@ hhinc06 <- weights_vhlss %>%
 
 bombs_dist <- bombs_district %>% select(district, north_lat, east_long, south, tot_bmr, tot_bmr_per, districtname, provincename, urban) %>% 
   mutate(district = as.character(district))
-bombs_prov <- bombs_province %>% select(province, tot_bmr) %>% 
+bombs_prov <- bombs_province %>% select(province, tot_bmr, tot_bmr_per) %>% 
   rename(tot_bmr_prov = tot_bmr,
-         tinh = province)
+         tinh = province,
+         tot_bmr_per_prov = tot_bmr_per)
 
 vhlss06_bombs <- list(vhlss06, bombs_dist, thor_dist) %>% 
   reduce(merge, by = "district") %>% 
@@ -68,6 +72,4 @@ hhinc06_bombs <- list(hhinc06, bombs_dist, thor_dist) %>%
 hhinc06_bombs <- list(hhinc06_bombs, bombs_prov, thor_prov) %>% 
   reduce(merge, by = "tinh")
 
-vhlss06_bombs <- vhlss06_bombs %>% mutate(war_time = ifelse(birth_year > 1960 & birth_year < 1975, 1, 0))
-
-
+vhlss06_bombs <- vhlss06_bombs %>% mutate(war_time = ifelse(birth_year > 1960 & birth_year < 1976, 1, 0))
