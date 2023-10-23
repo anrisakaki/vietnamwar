@@ -78,3 +78,12 @@ vnmap2 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_2.shp")
 vnmap3 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_3.shp")
 
 district <- read_dta(file = "Consistent 2019 to 1999 wards with 1999 districts.dta")
+
+# schools 
+
+educ <- list.files(pattern = "educ_(.*)csv$")
+educ <- lapply(educ, read.csv)
+
+educ_65 <- educ[[1]]
+educ_67 <- educ[[2]]
+educ_72 <- educ[[3]]
