@@ -1,5 +1,5 @@
 birthcohort_sum_vhlss <- vhlss06 %>%
-  group_by(birth_year) %>%
+  group_by(birth_year, female) %>%
   filter(!is.na(educ)) %>% 
   summarise(educ_mean = sum(educ * hhwt) / sum(hhwt),
             std_error = sd(educ) / sqrt(n())) %>% 
@@ -7,35 +7,43 @@ birthcohort_sum_vhlss <- vhlss06 %>%
   filter(birth_year < 1988 & birth_year > 1945)
 
 bombs_sum_prov <- vhlss06_bombs %>% 
-  group_by(tinh, tot_bmr_prov, tot_bombs_prov) %>% 
+  group_by(tinh, tot_bmr_prov, tot_bmr_per_prov) %>% 
   filter(!is.na(income),
          !is.na(educ)) %>% 
-  filter(birth_year < 1975 & birth_year > 1965) %>% 
+  filter(war_time == 1) %>% 
   summarise(income_mean_prov = sum(income * hhwt)/ sum(hhwt),
             educ_mean_prov = sum(educ * hhwt)/ sum(hhwt))
+
+bombs_child <- vhlss06_bombs %>% 
+  group_by(hhid) %>% 
+  mutate(parent_war = ifelse(any(parent == 1 & war_time == 1), 1, 0)) %>% 
+  filter(parent_war == 1 & child == 1 & birth_year > 1979 & birth_year < 1989) %>% 
+  group_by(tinh) %>%
+  summarise(educ_mean_child = sum(educ * hhwt)/ sum(hhwt))
 
 bombs_sum <- hhinc06_bombs %>% 
   group_by(tinh) %>% 
   summarise(hh_inc = sum(tot_hhinc * wt45)/ sum(wt45))
 
-bombs_sum_prov <- merge(bombs_sum_prov, bombs_sum, by = "tinh")
+bombs_sum_prov <- list(bombs_sum_prov, bombs_child, bombs_sum) %>% 
+  reduce(full_join, by = "tinh")
 
 vet_inceduc <- varhs_16 %>% 
-  filter(birth_year > 1957) %>%   
+  filter(war_time == 1) %>%   
   group_by(vet_union) %>% 
   summarise(educ_mean = mean(educ, na.rm = T),
             income_mean = mean(income, na.rm = T)) %>% 
   filter(!is.na(vet_union))
 
 vet_inceduc_children <- varhs_16 %>% 
-  group_by(hh_army) %>% 
-  filter(child == 1 & birth_year < 1999) %>% 
+  group_by(parent_war) %>% 
+  filter(child == 1 & birth_year > 1982 & birth_year < 1999) %>% 
   summarise(child_educ_mean = mean(educ, na.rm = T),
             child_income_mean = mean(income, na.rm = T))
 
 # Bombing intensity and education/income 
 
-ggplot(bombs_sum_prov, aes(x = log(tot_bombs_prov), y = educ_mean_prov)) +
+ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = educ_mean_prov)) +
   geom_point() +  
   geom_smooth(method = "lm",
               se = F) +
@@ -48,10 +56,11 @@ ggplot(bombs_sum_prov, aes(x = log(tot_bombs_prov), y = educ_mean_prov)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Total bombs)",
+  labs(x = "log(Bombs per squared km)",
        y = "Average Education Attainment")
+ggsave("bombs_educ.png", width = 7, height = 7)
 
-ggplot(bombs_sum_prov, aes(x = log(tot_bombs_prov), y = log(hh_inc))) +
+ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = educ_mean_child)) +
   geom_point() +  
   geom_smooth(method = "lm",
               se = F) +
@@ -64,12 +73,13 @@ ggplot(bombs_sum_prov, aes(x = log(tot_bombs_prov), y = log(hh_inc))) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Total bombs)",
-       y = "Average HH Income")
+  labs(x = "log(Bombs per squared km) of parent's province",
+       y = "Average Education Attainment of Child")
+ggsave("bombs_educ_child.png", width = 7, height = 7)
 
 # Birth cohort and education levels 
 
-ggplot(birthcohort_sum_vhlss, aes(x = birth_year, y = educ_mean)) +
+ggplot(birthcohort_sum_vhlss, aes(x = birth_year, y = educ_mean, colour = as.factor(female), group = as.factor(female))) +
   geom_line(size = 1.1) +
   # End of French rule 
   geom_vline(xintercept = 1954, linetype = "dashed", color = "blue") +  
