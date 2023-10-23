@@ -84,11 +84,12 @@ varhs1_16 <- varhs1_16 %>%
          illness = ifelse(p1q5_ == 1, 1, 0),
          mental_health = ifelse(illness == 1 & p1q6a_ == 1, 1, 0),
          vn_army = ifelse(p2q13_ == 1, 1, 0),
-         child = ifelse(p1q2_ == 3, 1, 0)) %>% 
+         child = ifelse(p1q2_ == 3, 1, 0),
+         parent = ifelse(p1q2_ == 1 | p1q2_ == 2, 1, 0)) %>% 
   rename(birth_year = p1q4b_,
          illness_length = p1q7_,
          educ = p2q10_) %>% 
-  select(tinh_2016, quan_2016, xa_2016, ma_h0_2016, p1stt_, birth_year, female, child, illness, mental_health, illness_length, educ, vn_army)
+  select(tinh_2016, quan_2016, xa_2016, ma_h0_2016, p1stt_, birth_year, female, parent, child, illness, mental_health, illness_length, educ, vn_army)
 
 varhs5_16 <- varhs5_16 %>% 
   mutate(work = ifelse(is.na(p25q2_), 1, 0)) %>% 
@@ -126,6 +127,8 @@ varhs_16 <- list(varhs1_16, varhs5_16, varhs5a_16, varhs10_16) %>%
   mutate(vet_union = ifelse(is.na(vet_union), 0, vet_union)) %>% 
   group_by(hhid) %>% 
   mutate(hh_army = ifelse(any(vet_union == 1), 1, 0)) %>%
-  mutate(hh_army = ifelse(is.na(vet_union), 0, vet_union)) %>% 
   ungroup() %>% 
-  mutate(age = 2016 - birth_year)
+  mutate(age = 2016 - birth_year,
+         war_time = ifelse(birth_year > 1959 & birth_year < 1976, 1, 0)) %>% 
+  group_by(hhid) %>% 
+  mutate(parent_war = ifelse(any(parent == 1 & war_time == 1), 1, 0))
