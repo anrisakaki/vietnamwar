@@ -12,10 +12,10 @@ thor_weapons_load <- thor %>%
 thor_sum <- list(thor_noweapons, thor_weapons_load) %>% 
   reduce(full_join, by = c("year", "WEAPON_CLASS"))
 
-ggplot(dplyr::filter(thor_sum, WEAPON_CLASS == "BOMB" | WEAPON_CLASS == "ROCKET"), aes(x = year, y = tot_weapon_del, fill = as.factor(WEAPON_CLASS))) +
+ggplot(thor_sum, aes(x = year, y = log(tot_weapon_del), fill = as.factor(WEAPON_CLASS))) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(x = "Year",
-       y = "Weapons Delivered") +
+       y = "log(Weapons Delivered)") +
   scale_x_continuous(breaks = unique(thor_sum$year)) +
   theme_minimal() + 
   guides(fill = guide_legend(title = NULL)) +
@@ -26,7 +26,7 @@ ggplot(dplyr::filter(thor_sum, WEAPON_CLASS == "BOMB" | WEAPON_CLASS == "ROCKET"
         panel.border = element_blank(),
         legend.title=element_blank())  
 
-ggplot(dplyr::filter(thor_sum, WEAPON_CLASS == "BOMB" | WEAPON_CLASS == "ROCKET" & year > 1969), aes(x = year, y = (tot_weapon_load/2204.62), fill = as.factor(WEAPON_CLASS))) +
+ggplot(dplyr::filter(thor_sum, WEAPON_CLASS == "BOMB" | WEAPON_CLASS == "ROCKET" & year > 1969), aes(x = year, y = (log(tot_weapon_load/2204.62)), fill = as.factor(WEAPON_CLASS))) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(x = "Year",
        y = "Total Weapon Load (Tonnes)") +
