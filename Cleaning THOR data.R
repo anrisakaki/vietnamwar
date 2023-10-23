@@ -3,6 +3,13 @@
 ######################
 
 thor <- thor %>% 
+  mutate(MSNDATE = ifelse(MSNDATE == "1970-02-29", "1970-03-01", MSNDATE),
+         MFUNC_DESC_CLASS = ifelse(MFUNC_DESC == "COMBT CARGO AIR  DROP", "KINETIC", MFUNC_DESC_CLASS)) %>% 
+  filter(!(SOURCERECORD == "SACCOACT" & MSNDATE >= 19710301)) %>% 
+  mutate(MSNDATE = as.Date(MSNDATE),
+         year = as.integer(format(MSNDATE, "%Y")),
+         month = as.integer(format(MSNDATE, "%m")),
+         day = as.integer(format(MSNDATE, "%d"))) %>% 
   filter(TGTCOUNTRY == "NORTH VIETNAM" | TGTCOUNTRY == "SOUTH VIETNAM") %>%
   select(-c("THOR_DATA_VIET_ID", "SOURCEID", "SOURCERECORD", "VALID_AIRCRAFT_ROOT", "TIMEONTARGET", "WEAPONTYPECLASS", "AIRCRAFT_ROOT",
             "AIRFORCESQDN", "AIRFORCEGROUP", "CALLSIGN", "NUMOFACFT", "OPERATIONSUPPORTED", "UNIT", "TGTCLOUDCOVER", "TGTCONTROL",
@@ -16,21 +23,21 @@ weapons_dict <- weapons_dict %>%
 thor <- left_join(thor, weapons_dict, by = "WEAPONTYPE")
 
 thor <- thor %>%
+  filter(WEAPON_CLASS != "SUPPORT",
+         WEAPON_CLASS != "GUN",
+         MFUNC_DESC_CLASS == "KINETIC")
+
+# Mapped bombing data to province names in ArcGIS
+
+thor_dist <- thor_district %>% 
+  select(-c(NUMWEAPONSJETTISONED, NUMWEAPONSRETURNED)) %>%
+  filter(!is.na(AREA)) %>% 
   mutate(MSNDATE = as.Date(MSNDATE),
          year = as.integer(format(MSNDATE, "%Y")),
          month = as.integer(format(MSNDATE, "%m")),
          day = as.integer(format(MSNDATE, "%d"))) %>% 
-  filter(WEAPON_CLASS != "SUPPORT",
-         WEAPON_CLASS != "GUN",
-         MFUNC_DESC == "AIR INTERDICTION" | MFUNC_DESC == "STRIKE")
-
-# Export thor to ArcGIS 
-
-thor_dist <- thor_district %>% 
-  select(-c(OID_, Join_Count, TARGET_FID, Field1, NUMWEAPONSJETTISONED, NUMWEAPONSRETURNED, AREA, TOTPOP_CY)) %>%
-  filter(!is.na(ID)) %>% 
   mutate(WEAPONSLOADEDWEIGHT = ifelse(WEAPONSLOADEDWEIGHT == -1, NA, WEAPONSLOADEDWEIGHT)) %>% 
-  group_by(NAME) %>% 
+  group_by(NAME, AREA) %>% 
   summarise(tot_bombs = sum(NUMWEAPONSDELIVERED),
             tot_bombs_weight= sum(WEAPONSLOADEDWEIGHT, na.rm = T))
 
@@ -50,4 +57,7 @@ thor_dist <- left_join(thor_dist, dist_, by = "NAME") %>%
 thor_prov <- thor_dist %>% 
   mutate(tinh = substr(district, 1, 3)) %>% 
   group_by(tinh) %>% 
-  summarise(tot_bombs_prov = sum(tot_bombs))
+  summarise(tot_bombs_prov = sum(tot_bombs),
+            prov_area = sum(AREA)) %>% 
+  mutate(across(tinh, as.double),
+         bombs_perkm_prov = tot_bombs_prov/prov_area)
