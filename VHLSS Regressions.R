@@ -1,6 +1,14 @@
-# VHLSS REGRESSIONS # 
+etable(feols(educ ~ i(as.factor(war_time), tot_bmr_per_prov) + female | birth_year, 
+             vhlss06_bombs,
+             weights = ~hhwt,
+             vcov = ~tinh))
 
-etable(list(
-  feols(educ ~ tot_bombs | birth_year, subset(vhlss06_bombs, birth_year < 1975 & birth_year > 1955), weights = ~hhwt, vcov = ~district),
-  feols(educ ~ log(tot_bombs) | birth_year, subset(vhlss06_bombs, birth_year < 1975 & birth_year > 1955), weights = ~hhwt, vcov = ~district)
-))
+feols(educ ~ tot_bmr_per_prov + female | birth_year, 
+      subset(vhlss06_bombs, war_time == 1),
+      weights = ~hhwt,
+      vcov = ~tinh)
+
+feols(educ ~ i(as.factor(female), tot_bmr_per_prov) | birth_year, 
+      subset(vhlss06_bombs, war_time == 1),
+      weights = ~hhwt,
+      vcov = ~tinh)
