@@ -28,20 +28,41 @@ bombs_sum <- hhinc06_bombs %>%
 bombs_sum_prov <- list(bombs_sum_prov, bombs_child, bombs_sum) %>% 
   reduce(full_join, by = "tinh")
 
-vet_inceduc <- varhs_16 %>% 
-  filter(war_time == 1) %>%   
-  group_by(vet_union) %>% 
-  summarise(educ_mean = mean(educ, na.rm = T),
-            income_mean = mean(income, na.rm = T)) %>% 
-  filter(!is.na(vet_union))
-
-vet_inceduc_children <- varhs_16 %>% 
-  group_by(parent_war) %>% 
-  filter(child == 1 & birth_year > 1982 & birth_year < 1999) %>% 
-  summarise(child_educ_mean = mean(educ, na.rm = T),
-            child_income_mean = mean(income, na.rm = T))
-
 # Bombing intensity and education/income 
+
+ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = log(hh_inc))) +
+  geom_point() +  
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = expression(log(Bombs~per~Km^2)),
+       y = "Average Household Income")
+ggsave("bombs_hhinc.png", width = 7, height = 7)
+
+ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = log(income_mean_prov))) +
+  geom_point() +  
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = expression(log(Bombs~per~Km^2)),
+       y = "Average Household Income")
+ggsave("bombs_inc.png", width = 7, height = 7)
 
 ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = educ_mean_prov)) +
   geom_point() +  
@@ -56,9 +77,8 @@ ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = educ_mean_prov)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Bombs per squared km)",
+  labs(x = expression(log(Bombs~per~Km^2)),
        y = "Average Education Attainment")
-ggsave("bombs_educ.png", width = 7, height = 7)
 
 ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = educ_mean_child)) +
   geom_point() +  
@@ -73,7 +93,7 @@ ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = educ_mean_child)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Bombs per squared km) of parent's province",
+  labs(x = expression(log(Bombs~per~Km^2)),
        y = "Average Education Attainment of Child")
 ggsave("bombs_educ_child.png", width = 7, height = 7)
 
@@ -121,80 +141,3 @@ ggplot(birthcohort_sum_vhlss, aes(x = birth_year, y = educ_mean, colour = as.fac
         panel.border = element_blank(),
         legend.title=element_blank())
 ggsave("vn_educ_birthcohort.jpeg", width = 17, height = 7)
-
-# Veteran and income 
-
-ggplot(vet_inceduc, aes(x = as.factor(vet_union), y = income_mean, fill = as.factor(vet_union))) +
-  geom_bar(stat = "identity", width = 0.75) +
-  labs(
-    x = "Part of Veteran's Union",
-    y = ""
-  ) +
-  theme_minimal() +
-  guides(fill = F) +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10))
-ggsave("vet_avg_inc.jpeg", width = 7, height = 7)
-
-ggplot(vet_inceduc_children, aes(x = as.factor(hh_army), y = child_income_mean, fill = as.factor(hh_army))) +
-  geom_bar(stat = "identity", width = 0.75) +
-  labs(
-    x = "HH with veteran",
-    y = ""
-  ) +
-  theme_minimal() +
-  guides(fill = F) +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10))
-ggsave("vet_avg_inc_hh.jpeg", width = 7, height = 7)
-
-# Veteran and education 
-
-ggplot(vet_inceduc, aes(x = as.factor(vet_union), y = educ_mean, fill = as.factor(vet_union))) +
-  geom_bar(stat = "identity", width = 0.75) +   
-  labs(
-    x = "Part of Veteran's Union",
-    y = ""
-  ) +
-  scale_y_continuous(breaks=seq(0,10,2)) +  
-  theme_minimal() +
-  guides(fill = F) +
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10))
-ggsave("vet_avg_educ.jpeg", width = 7, height = 7)
-
-ggplot(vet_inceduc_children, aes(x = as.factor(hh_army), y = child_educ_mean, fill = as.factor(hh_army))) +
-  geom_bar(stat = "identity", width = 0.75) +
-  labs(
-    x = "HH with veteran",
-    y = ""
-  ) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10))
-ggsave("vet_avg_educ_hh.jpeg", width = 7, height = 7)
-
-# Province-level bombing and outcomes 
-
-
