@@ -72,4 +72,6 @@ hhinc06_bombs <- list(hhinc06, bombs_dist, thor_dist) %>%
 hhinc06_bombs <- list(hhinc06_bombs, bombs_prov, thor_prov) %>% 
   reduce(merge, by = "tinh")
 
-vhlss06_bombs <- vhlss06_bombs %>% mutate(war_time = ifelse(birth_year > 1954 & birth_year < 1976, 1, 0))
+vhlss06_bombs <- vhlss06_bombs %>% 
+  mutate(war_time = ifelse(birth_year > 1959 & birth_year < 1976, 1, 0),
+         exposed = ifelse(birth_year > 1964 & birth_year < 1976, 1, 0))
