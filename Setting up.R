@@ -42,6 +42,20 @@ varhs10_12 <- read_dta(file = "2012_new/Q10a_New_12.dta")
 varhs10_14 <- read_dta(file = "2014_new/Q10a_New_14.dta")
 varhs10_16 <- read_dta(file = "2016_new/Q10a_New_16.dta")
 
+# Population 
+
+population <- list.files(pattern = "Provincial(.*)csv$")
+population <- lapply(population, read.csv)
+
+m_ppn5762 <- population[[1]]
+ppn5762 <- population[[2]]
+ppn6368 <- population[[3]]
+ppn6973 <- population[[4]]
+
+male_prewarppn <- read.csv("Provincial Male Population 1957 - 1962.csv")
+
+ppn <- read.csv("ppn.csv")
+
 # LFS 
 
 LFS_2015 <- read_dta(file = "LFS_2015_final_full.dta")
@@ -53,7 +67,9 @@ vhlss06 <- lapply(vhlss06, read_dta)
 
 m1_06 <- vhlss06[[1]]
 m2a_06 <- vhlss06[[2]]
-m4a_06 <- vhlss06[[3]]
+m3_06 <- vhlss06[[3]]
+m4a_06 <- vhlss06[[4]]
+m4ho_06 <- vhlss06[[5]] 
 weights_vhlss <- read_dta("hhinc06.dta")
 
 # Bombing data 
@@ -87,3 +103,7 @@ educ <- lapply(educ, read.csv)
 educ_65 <- educ[[1]]
 educ_67 <- educ[[2]]
 educ_72 <- educ[[3]]
+
+ # DHS
+
+dhs_97 <- read_dta(file = "DHS_1997.dta")
