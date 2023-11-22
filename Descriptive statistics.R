@@ -6,6 +6,18 @@ birthcohort_sum_vhlss <- vhlss06 %>%
   mutate(educ_mean = round(educ_mean, 2)) %>% 
   filter(birth_year < 1988 & birth_year > 1945)
 
+f_birthcohort <- vhlss06_bombs %>% 
+  filter(female == 1) %>% 
+  count(birth_year, wt = hhwt)
+
+flfp_birthcohort <- vhlss06_bombs %>% 
+  filter(female == 1 & work == 1) %>% 
+  count(birth_year, wt = hhwt) %>% 
+  rename(n_workers = n)
+
+flfp_birthyear <- merge(f_birthcohort, flfp_birthcohort, by = "birth_year") %>% 
+  mutate(flfp = n_workers/n)
+
 bombs_sum_prov <- vhlss06_bombs %>% 
   group_by(tinh, tot_bmr_prov, tot_bmr_per_prov) %>% 
   filter(!is.na(income),
@@ -96,6 +108,21 @@ ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = educ_mean_child)) +
   labs(x = expression(log(Bombs~per~Km^2)),
        y = "Average Education Attainment of Child")
 ggsave("bombs_educ_child.png", width = 7, height = 7)
+
+# Birth cohort and labour force participation rate 
+
+ggplot(flfp_birthyear, aes(x = birth_year, y = flfp*100)) +
+  geom_line(size = 1.1) + 
+  labs(x = "Birth cohort",
+       y = "FLFP rate in 2006") +
+  theme_minimal() +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank())  
+ggsave("flfp_birthcohort.jpeg", width = 7, height = 7)
 
 # Birth cohort and education levels 
 
