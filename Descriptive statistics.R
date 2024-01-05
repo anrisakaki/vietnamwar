@@ -1,49 +1,27 @@
-birthcohort_sum_vhlss <- vhlss06 %>%
-  group_by(birth_year, female) %>%
-  filter(!is.na(educ)) %>% 
-  summarise(educ_mean = sum(educ * hhwt) / sum(hhwt),
-            std_error = sd(educ) / sqrt(n())) %>% 
-  mutate(educ_mean = round(educ_mean, 2)) %>% 
-  filter(birth_year < 1988 & birth_year > 1945)
+birthcohort_sum_phc89 <- phc89 %>% 
+  group_by(birthyr, female) %>% 
+  summarise(work = sum(work * perwt) / sum(perwt)) %>% 
+  filter(birthyr > 1925 & birthyr < 1974)
 
-f_birthcohort <- vhlss06_bombs %>% 
-  filter(female == 1) %>% 
-  count(birth_year, wt = hhwt)
+prov_ppn5776 <- prov_ppn5780 %>% 
+  select(-c(Total_ppn, Male_ppn)) %>% 
+  filter(!is.na(mshare),
+         Year == 1957 | Year == 1976) %>% 
+  pivot_wider(names_from = Year, values_from = mshare) %>% 
+  rename(Y1957 = 2,
+         Y1976 = 3) %>% 
+  mutate(change = Y1957-Y1976) %>% 
+  filter(!is.na(change))
 
-flfp_birthcohort <- vhlss06_bombs %>% 
-  filter(female == 1 & work == 1) %>% 
-  count(birth_year, wt = hhwt) %>% 
-  rename(n_workers = n)
+prov_ppn5776 <- left_join(prov_ppn5776, prov7606, by = "Tinh76")
+prov_ppn5776 <- inner_join(prov_ppn5776, bombs_prov, by = c("Tinh06" = "provname2002")) %>% select(tinh, change)
 
-flfp_birthyear <- merge(f_birthcohort, flfp_birthcohort, by = "birth_year") %>% 
-  mutate(flfp = n_workers/n)
+bombs_sum_prov <- left_join(bombs_sum_prov, prov_ppn5776, by = "tinh")
 
-bombs_sum_prov <- vhlss06_bombs %>% 
-  group_by(tinh, tot_bmr_prov, tot_bmr_per_prov) %>% 
-  filter(!is.na(income),
-         !is.na(educ)) %>% 
-  filter(war_time == 1) %>% 
-  summarise(income_mean_prov = sum(income * hhwt)/ sum(hhwt),
-            educ_mean_prov = sum(educ * hhwt)/ sum(hhwt))
+# Bombing intensity versus missing men 
 
-bombs_child <- vhlss06_bombs %>% 
-  group_by(hhid) %>% 
-  mutate(parent_war = ifelse(any(parent == 1 & war_time == 1), 1, 0)) %>% 
-  filter(parent_war == 1 & child == 1 & birth_year > 1979 & birth_year < 1989) %>% 
-  group_by(tinh) %>%
-  summarise(educ_mean_child = sum(educ * hhwt)/ sum(hhwt))
-
-bombs_sum <- hhinc06_bombs %>% 
-  group_by(tinh) %>% 
-  summarise(hh_inc = sum(tot_hhinc * wt45)/ sum(wt45))
-
-bombs_sum_prov <- list(bombs_sum_prov, bombs_child, bombs_sum) %>% 
-  reduce(full_join, by = "tinh")
-
-# Bombing intensity and education/income 
-
-ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = log(hh_inc))) +
-  geom_point() +  
+ggplot(dplyr::filter(bombs_sum_prov, change < 0.5), aes(x = log(tot_bmr_per_prov), y = change*100)) +
+  geom_point() +
   geom_smooth(method = "lm",
               se = F) +
   theme_minimal() +
@@ -56,65 +34,15 @@ ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = log(hh_inc))) +
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   labs(x = expression(log(Bombs~per~Km^2)),
-       y = "Average Household Income")
-ggsave("bombs_hhinc.png", width = 7, height = 7)
-
-ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = log(income_mean_prov))) +
-  geom_point() +  
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = expression(log(Bombs~per~Km^2)),
-       y = "Average Household Income")
-ggsave("bombs_inc.png", width = 7, height = 7)
-
-ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = educ_mean_prov)) +
-  geom_point() +  
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = expression(log(Bombs~per~Km^2)),
-       y = "Average Education Attainment")
-
-ggplot(bombs_sum_prov, aes(x = log(tot_bmr_per_prov), y = educ_mean_child)) +
-  geom_point() +  
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = expression(log(Bombs~per~Km^2)),
-       y = "Average Education Attainment of Child")
-ggsave("bombs_educ_child.png", width = 7, height = 7)
+       y = "Change in province-level share of men \nbetween 1963 and 1976")
 
 # Birth cohort and labour force participation rate 
 
-ggplot(flfp_birthyear, aes(x = birth_year, y = flfp*100)) +
-  geom_line(size = 1.1) + 
+ggplot(dplyr::filter(birthcohort_sum_phc89, female == 1 & birthyr > 1925 & birthyr < 1974), aes(x = birthyr, y = work*100)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
   labs(x = "Birth cohort",
-       y = "FLFP rate in 2006") +
+       y = "FLFP rate in 1989") +
+  scale_x_continuous(breaks=seq(1925,1973,1)) +  
   theme_minimal() +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
@@ -122,7 +50,21 @@ ggplot(flfp_birthyear, aes(x = birth_year, y = flfp*100)) +
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         legend.title=element_blank())  
-ggsave("flfp_birthcohort.jpeg", width = 7, height = 7)
+ggsave("flfp89_birthcohort.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(birthcohort_sum_phc89, female == 0 & birthyr > 1925 & birthyr < 1974), aes(x = birthyr, y = work*100)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
+  labs(x = "Birth cohort",
+       y = "MLFP rate in 1989") +
+  scale_x_continuous(breaks=seq(1925,1973,1)) +  
+  theme_minimal() +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank())  
+ggsave("mlfp89_birthcohort.jpeg", width = 7, height = 7)
 
 # Birth cohort and education levels 
 
