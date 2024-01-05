@@ -5,56 +5,24 @@ library(sf)
 library(fixest)
 library(extrafont)
 library(lubridate)
+library(sjPlot)
 
-# VARHS 
+rm(list=ls())
 
-##  SECTION 1A. HOUSEHOLD ROSTER, GENERAL CHARACTERISTICS OF HOUSEHOLD MEMBERS BELONGING TO HOUSEHOLD
-varhs1_08 <- read_dta(file = "2008_new/Q1a_New.dta")
-varhs1_10 <- read_dta(file = "2010_new/Q1_New_10.dta")
-varhs1_12 <- read_dta(file = "2012_new/Q1_New_12.dta")
-varhs1_14 <- read_dta(file = "2014_new/Q1_New_14.dta")
-varhs1_16 <- read_dta(file = "2016_new/Q1_New_16.dta")
+# Population and Housing Census 
 
-## SECTION 5. OCCUPATION, TIME USE, AND OTHER SOURCES OF INCOME
-
-varhs5_08 <- read_dta(file = "2008_new/Q5_New.dta")
-varhs5_10 <- read_dta(file = "2010_new/Q5_New_10.dta")
-varhs5_10 <- read_dta(file = "2010_new/Q5_New_10.dta")
-varhs5_12 <- read_dta(file = "2012_new/Q5_New_12.dta")
-varhs5_14 <- read_dta(file = "2014_new/Q5_New_14.dta")
-varhs5_16 <- read_dta(file = "2016_new/Q5_New_16.dta")
-
-## SECTION 5A. 5A Wage/salary employment (Fill in for all individuals who answered yes to Q1A in section 5A)
-
-varhs5a_08 <- read_dta(file = "2008_new/Q5a_New.dta")
-varhs5a_10 <- read_dta(file = "2010_new/Q5a_New_10.dta")
-varhs5a_10 <- read_dta(file = "2010_new/Q5a_New_10.dta")
-varhs5a_12 <- read_dta(file = "2012_new/Q5a_New_12.dta")
-varhs5a_14 <- read_dta(file = "2014_new/Q5a_New_14.dta")
-varhs5a_16 <- read_dta(file = "2016_new/Q5a_New_16.dta")
-
-## 10A GROUP MEMBERSHIP
-
-varhs10_08 <- read_dta(file = "2008_new/Q10a_New.dta")
-varhs10_10 <- read_dta(file = "2010_new/Q10a_New_10.dta")
-varhs10_10 <- read_dta(file = "2010_new/Q10a_New_10.dta")
-varhs10_12 <- read_dta(file = "2012_new/Q10a_New_12.dta")
-varhs10_14 <- read_dta(file = "2014_new/Q10a_New_14.dta")
-varhs10_16 <- read_dta(file = "2016_new/Q10a_New_16.dta")
+phc <- read_dta(file = "ipumsi_00004.dta")
 
 # Population 
 
 population <- list.files(pattern = "Provincial(.*)csv$")
 population <- lapply(population, read.csv)
 
-m_ppn5762 <- population[[1]]
-ppn5762 <- population[[2]]
-ppn6368 <- population[[3]]
-ppn6973 <- population[[4]]
-
-male_prewarppn <- read.csv("Provincial Male Population 1957 - 1962.csv")
-
-ppn <- read.csv("ppn.csv")
+prov6306 <- population[[1]]
+prov_m_ppn5763 <- population[[2]]
+prov_m_ppn7680 <- population[[3]]
+prov_ppn5776 <- population[[4]]
+prov_ppn7680 <- population[[5]]
 
 # LFS 
 
@@ -104,6 +72,6 @@ educ_65 <- educ[[1]]
 educ_67 <- educ[[2]]
 educ_72 <- educ[[3]]
 
- # DHS
+ # Consistent District Boundaries 
 
-dhs_97 <- read_dta(file = "DHS_1997.dta")
+mccaig_boundaries <- read_dta("Consistent 2019 to 1999 wards with 1999 districts.dta")
