@@ -63,8 +63,15 @@ vhlss06 <- merge(vhlss06, m4ho_06, by = c("tinh", "huyen", "xa", "hoso"))
 vhlss06 <- left_join(vhlss06, weights_06, by = c("tinh", "huyen", "xa"))
 
 # Matching with Miguel bombing data 
+provcode <-mccaig_boundaries %>% 
+  select(prov2002, provname2002) %>% 
+  distinct() %>% filter(!is.na(prov2002)) %>% 
+  rename(province = prov2002)
+
+bombs_province <- left_join(bombs_province, provcode, by = "province")
+
 bombs_prov <- bombs_province %>%
-  select(province, tot_bmr, tot_bmr_per, area_251_500m, area_501_1000m, area_over_1000m, log_popdensity6061, south) %>% 
+  select(province, provname2002, tot_bmr, tot_bmr_per, area_251_500m, area_501_1000m, area_over_1000m, log_popdensity6061, south) %>% 
   rename(tot_bmr_prov = tot_bmr,
          tinh = province,
          tot_bmr_per_prov = tot_bmr_per)
@@ -72,8 +79,8 @@ bombs_prov <- bombs_province %>%
 vhlss06_bombs <- list(vhlss06, bombs_prov) %>% 
   reduce(merge, by = "tinh") %>% 
   mutate(war_time = ifelse(birth_year > 1965 & birth_year < 1976, 1, 0),
-         exposed = ifelse(birth_year > 1959 & birth_year < 1971, 1, 0),
+         exposed = ifelse(birth_year < 1959, 1, 0),
          work = ifelse(work == 1, 1, 0))  
 
-hhinc06_bombs <- list(hhinc06_bombs, bombs_prov) %>% 
+hhinc06_bombs <- list(hhinc06, bombs_prov) %>% 
   reduce(merge, by = "tinh")
