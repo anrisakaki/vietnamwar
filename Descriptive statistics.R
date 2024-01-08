@@ -1,5 +1,5 @@
 birthcohort_sum_phc89 <- phc89 %>% 
-  group_by(birthyr, female) %>% 
+  group_by(birthyr, age75, female) %>% 
   summarise(work = sum(work * perwt) / sum(perwt)) %>% 
   filter(birthyr > 1925 & birthyr < 1974)
 
@@ -52,6 +52,20 @@ ggplot(dplyr::filter(birthcohort_sum_phc89, female == 1 & birthyr > 1925 & birth
         legend.title=element_blank())  
 ggsave("flfp89_birthcohort.jpeg", width = 7, height = 7)
 
+ggplot(dplyr::filter(birthcohort_sum_phc89, female == 1 & birthyr > 1925 & birthyr < 1974), aes(x = age75, y = work*100)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
+  labs(x = "Age in 1975",
+       y = "FLFP rate in 1989") +
+  # scale_x_continuous(breaks=seq(1925,1973,1)) +  
+  theme_minimal() +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank())  
+ggsave("flfp89_age75.jpeg", width = 7, height = 7)
+
 ggplot(dplyr::filter(birthcohort_sum_phc89, female == 0 & birthyr > 1925 & birthyr < 1974), aes(x = birthyr, y = work*100)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
   labs(x = "Birth cohort",
@@ -65,6 +79,20 @@ ggplot(dplyr::filter(birthcohort_sum_phc89, female == 0 & birthyr > 1925 & birth
         panel.border = element_blank(),
         legend.title=element_blank())  
 ggsave("mlfp89_birthcohort.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(birthcohort_sum_phc89, female == 0 & birthyr > 1925 & birthyr < 1974), aes(x = age75, y = work*100)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
+  labs(x = "Age in 1975",
+       y = "MLFP rate in 1989") +
+  # scale_x_continuous(breaks=seq(1925,1973,1)) +  
+  theme_minimal() +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank())  
+ggsave("mlfp89_age75.jpeg", width = 7, height = 7)
 
 # Birth cohort and education levels 
 
