@@ -11,7 +11,37 @@ phc <- phc %>%
          agri = ifelse(indgen == 10, 1, 0),
          age75 = 1975 - birthyr,
          migration = ifelse(migrate5 > 19, 1, 0),
-         migration = ifelse(migrate5 == 0 | mig1_5_vn == 99, NA, migration))
+         migration = ifelse(migrate5 == 0 | mig1_5_vn == 99, NA, migration)) %>% 
+  filter(age != 999) %>% 
+  mutate(
+    age_cohort = case_when(
+      age <= 10 ~ "0-10",
+      age <= 15 ~ "11-15",
+      age <= 20 ~ "16-20",
+      age <= 25 ~ "21-25",
+      age <= 30 ~ "26-30",
+      age <= 35 ~ "31-35",
+      age <= 40 ~ "36-40",
+      age <= 45 ~ "41-45",
+      age <= 50 ~ "46-50",
+      age <= 55 ~ "51-55",
+      age <= 60 ~ "56-60",
+      age <= 65 ~ "61-65",
+      age <= 70 ~ "65+"),
+    age_cohort75 = case_when(
+      age75 <= 10 ~ "0-10",
+      age75 <= 15 ~ "11-15",
+      age75 <= 20 ~ "16-20",
+      age75 <= 25 ~ "21-25",
+      age75 <= 30 ~ "26-30",
+      age75 <= 35 ~ "31-35",
+      age75 <= 40 ~ "36-40",
+      age75 <= 45 ~ "41-45",
+      age75 <= 50 ~ "46-50",
+      age75 <= 55 ~ "51-55",
+      age75 <= 60 ~ "56-60",
+      age75 <= 65 ~ "61-65",
+      age75 <= 70 ~ "65+"))  
 
 # merge with bombing data 
 
@@ -103,18 +133,18 @@ phc <- left_join(phc, bombs_prov, by = "geo1_vn")
 
 phc89 <- phc %>% 
   filter(year == 1989) %>% 
-  select(year, serial, hhwt, geo1_vn, regnvn, pernum, perwt, nchild, age, female, marst, married, widowed,
+  select(year, serial, hhwt, geo1_vn, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
          birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
          age75, log_tot_bomb, tot_bomb_per, log_tot_bmr_per)
 
 phc99 <- phc %>% 
   filter(year == 1999) %>% 
-  select(year, serial, hhwt, geo1_vn, regnvn, pernum, perwt, nchild, age, female, marst, married, widowed,
+  select(year, serial, hhwt, geo1_vn, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
          birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
          age75, log_tot_bomb, tot_bomb_per, log_tot_bmr_per)
 
 phc09 <- phc %>% 
   filter(year == 2009) %>% 
-  select(year, serial, hhwt, geo1_vn, regnvn, pernum, perwt, nchild, age, female, marst, married, widowed,
+  select(year, serial, hhwt, geo1_vn, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
          birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
          age75, log_tot_bomb, tot_bomb_per, log_tot_bmr_per)
