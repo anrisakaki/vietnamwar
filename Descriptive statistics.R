@@ -1,7 +1,32 @@
-birthcohort_sum_phc89 <- phc89 %>% 
-  group_by(birthyr, age75, female) %>% 
+# Calculating the sex ratio and LFP of men and women by age cohort in 1989 
+
+prov_89_f <- phc89 %>% 
+  filter(female == 1) %>% 
+  group_by(geo1_vn) %>% 
+  summarise(total_f = sum(perwt),
+            log_tot_bomb = mean(log_tot_bomb),
+            log_tot_bmr_per = mean(log_tot_bmr_per))
+
+prov_89_m <- phc89 %>% 
+  filter(female == 0) %>% 
+  group_by(geo1_vn) %>% 
+  summarise(total_m = sum(perwt))
+
+sexratio_prov_89 <- merge(prov_89_f, prov_89_m, by = "geo1_vn") %>% 
+  mutate(sexratio = total_m/total_f)
+
+# Calculating the sex ratio and LFP of men and women by age cohort in 1999
+
+agecohort_work <- phc %>% 
+  group_by(year, age_cohort, female) %>%
   summarise(work = sum(work * perwt) / sum(perwt)) %>% 
-  filter(birthyr > 1925 & birthyr < 1974)
+  filter(!is.na(age_cohort),
+         !is.na(age_cohort75))
+
+agecohort75_work <- phc %>% 
+  group_by(year, age_cohort75, female) %>%
+  summarise(work = sum(work * perwt) / sum(perwt)) %>% 
+  filter(!is.na(age_cohort75))
 
 prov_ppn5776 <- prov_ppn5780 %>% 
   select(-c(Total_ppn, Male_ppn)) %>% 
@@ -18,12 +43,12 @@ prov_ppn5776 <- inner_join(prov_ppn5776, bombs_prov, by = c("Tinh06" = "provname
 
 bombs_sum_prov <- left_join(bombs_sum_prov, prov_ppn5776, by = "tinh")
 
-# Bombing intensity versus missing men 
+# Bombing intensity versus sex ratio 
 
-ggplot(dplyr::filter(bombs_sum_prov, change < 0.5), aes(x = log(tot_bmr_per_prov), y = change*100)) +
+ggplot(sexratio_prov_89, aes(x = log_tot_bmr_per, y = sexratio*100)) +
   geom_point() +
   geom_smooth(method = "lm",
-              se = F) +
+              se = T) +
   theme_minimal() +
   guides(fill = "none") +  
   theme(axis.line = element_line(color='black'),
@@ -34,27 +59,13 @@ ggplot(dplyr::filter(bombs_sum_prov, change < 0.5), aes(x = log(tot_bmr_per_prov
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   labs(x = expression(log(Bombs~per~Km^2)),
-       y = "Change in province-level share of men \nbetween 1963 and 1976")
+       y = "Province-level sex ratio in 1989")
+ggsave("bmr_sexratio89.jpeg", width = 7, height = 7)
 
-# Birth cohort and labour force participation rate 
-
-ggplot(dplyr::filter(birthcohort_sum_phc89, female == 1 & birthyr > 1925 & birthyr < 1974), aes(x = birthyr, y = work*100)) +
+# Birth cohort and labour force participation rate by age cohort 
+ggplot(dplyr::filter(agecohort_work, female == 1 & year == 1989), aes(x = as.factor(age_cohort), y = work*100)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
-  labs(x = "Birth cohort",
-       y = "FLFP rate in 1989") +
-  scale_x_continuous(breaks=seq(1925,1973,1)) +  
-  theme_minimal() +
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank())  
-ggsave("flfp89_birthcohort.jpeg", width = 7, height = 7)
-
-ggplot(dplyr::filter(birthcohort_sum_phc89, female == 1 & birthyr > 1925 & birthyr < 1974), aes(x = age75, y = work*100)) +
-  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
-  labs(x = "Age in 1975",
+  labs(x = "Age cohort",
        y = "FLFP rate in 1989") +
   # scale_x_continuous(breaks=seq(1925,1973,1)) +  
   theme_minimal() +
@@ -64,26 +75,12 @@ ggplot(dplyr::filter(birthcohort_sum_phc89, female == 1 & birthyr > 1925 & birth
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         legend.title=element_blank())  
-ggsave("flfp89_age75.jpeg", width = 7, height = 7)
+ggsave("flfp89_agecohort.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(birthcohort_sum_phc89, female == 0 & birthyr > 1925 & birthyr < 1974), aes(x = birthyr, y = work*100)) +
+ggplot(dplyr::filter(agecohort_work, female == 1 & year == 1999), aes(x = as.factor(age_cohort), y = work*100)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
-  labs(x = "Birth cohort",
-       y = "MLFP rate in 1989") +
-  scale_x_continuous(breaks=seq(1925,1973,1)) +  
-  theme_minimal() +
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank())  
-ggsave("mlfp89_birthcohort.jpeg", width = 7, height = 7)
-
-ggplot(dplyr::filter(birthcohort_sum_phc89, female == 0 & birthyr > 1925 & birthyr < 1974), aes(x = age75, y = work*100)) +
-  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
-  labs(x = "Age in 1975",
-       y = "MLFP rate in 1989") +
+  labs(x = "Age cohort",
+       y = "FLFP rate in 1999") +
   # scale_x_continuous(breaks=seq(1925,1973,1)) +  
   theme_minimal() +
   theme(axis.line = element_line(color='black'),
@@ -92,7 +89,63 @@ ggplot(dplyr::filter(birthcohort_sum_phc89, female == 0 & birthyr > 1925 & birth
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         legend.title=element_blank())  
-ggsave("mlfp89_age75.jpeg", width = 7, height = 7)
+ggsave("flfp99_agecohort.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(agecohort_work, female == 1 & year == 2009), aes(x = as.factor(age_cohort), y = work*100)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
+  labs(x = "Age cohort",
+       y = "FLFP rate in 2009") +
+  # scale_x_continuous(breaks=seq(1925,1973,1)) +  
+  theme_minimal() +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank())  
+ggsave("flfp09_agecohort.jpeg", width = 7, height = 7)
+
+# Birth cohort and labour force participation rate by age cohort 
+ggplot(dplyr::filter(agecohort75_work, female == 1 & year == 1989), aes(x = as.factor(age_cohort75), y = work*100)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
+  labs(x = "Age cohort in 1975",
+       y = "FLFP rate in 1989") +
+  # scale_x_continuous(breaks=seq(1925,1973,1)) +  
+  theme_minimal() +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank())  
+ggsave("flfp89_agecohort75.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(agecohort75_work, female == 1 & year == 1999), aes(x = as.factor(age_cohort75), y = work*100)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
+  labs(x = "Age cohort in 1975",
+       y = "FLFP rate in 1999") +
+  # scale_x_continuous(breaks=seq(1925,1973,1)) +  
+  theme_minimal() +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank())  
+ggsave("flfp99_agecohort75.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(agecohort75_work, female == 1 & year == 2009), aes(x = as.factor(age_cohort75), y = work*100)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
+  labs(x = "Age cohort in 1975",
+       y = "FLFP rate in 2009") +
+  theme_minimal() +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank()) 
+ggsave("flfp09_agecohort75.jpeg", width = 7, height = 7)
 
 # Birth cohort and education levels 
 
