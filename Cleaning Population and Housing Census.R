@@ -46,10 +46,14 @@ phc <- phc %>%
 # merge with bombing data 
 
 provcodes <- phc %>% 
-  select(geo1_vn) %>%
+  select(geo1_vn, geo1_vn1989, geo1_vn1999, geo1_vn2009) %>%
   distinct()
 
-bombs_provcodes <- bombs_province %>%
+provcodes89 <- provcodes %>% select(geo1_vn, geo1_vn1989) %>% filter(!is.na(geo1_vn1989))
+provcodes99 <- provcodes %>% select(geo1_vn, geo1_vn1999) %>% filter(!is.na(geo1_vn1999))
+provcodes09 <- provcodes %>% select(geo1_vn, geo1_vn2009) %>% filter(!is.na(geo1_vn2009))
+
+bombs_provcodes89 <- bombs_province %>%
   select(provincename) %>%
   distinct() %>%
   mutate(geo1_vn = recode(provincename,
@@ -114,13 +118,20 @@ bombs_provcodes <- bombs_province %>%
                           'Soc Trang' = 704092,
                           'Bac Lieu' = 704095,
                           'Ca Mau' = 704095,
-                          .default = NA_real_
-  )) 
+                          .default = NA_real_)) 
 
-bombs_province <- left_join(bombs_province, bombs_provcodes, by = "provincename")
+bombs_province <- left_join(bombs_province, bombs_provcodes, by = "provincename") %>% distinct()
 
-bombs_prov <- bombs_province %>% 
+bombs_prov_geo1_vn <- bombs_province %>% 
   group_by(geo1_vn) %>% 
+  summarise(tot_bomb = sum(tot_bomb),
+            area_sum = sum(area_sum)) %>% 
+  mutate(log_tot_bomb = log(tot_bomb),
+         tot_bomb_per = tot_bomb/area_sum,
+         log_tot_bmr_per = log(tot_bomb_per))
+
+bombs_prov_geo1_vn1989 <- bombs_province %>% 
+  group_by(geo1_) %>% 
   summarise(tot_bomb = sum(tot_bomb),
             area_sum = sum(area_sum)) %>% 
   mutate(log_tot_bomb = log(tot_bomb),
@@ -133,18 +144,52 @@ phc <- left_join(phc, bombs_prov, by = "geo1_vn")
 
 phc89 <- phc %>% 
   filter(year == 1989) %>% 
-  select(year, serial, hhwt, geo1_vn, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
+  select(year, serial, hhwt, geo1_vn, geo1_vn1989, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
          birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
          age75, log_tot_bomb, tot_bomb_per, log_tot_bmr_per)
 
 phc99 <- phc %>% 
   filter(year == 1999) %>% 
-  select(year, serial, hhwt, geo1_vn, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
+  select(year, serial, hhwt, geo1_vn, geo1_vn1999, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
          birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
          age75, log_tot_bomb, tot_bomb_per, log_tot_bmr_per)
 
 phc09 <- phc %>% 
   filter(year == 2009) %>% 
-  select(year, serial, hhwt, geo1_vn, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
+  select(year, serial, hhwt, geo1_vn, geo1_vn2009, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
          birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
          age75, log_tot_bomb, tot_bomb_per, log_tot_bmr_per)
+
+# Calculating the sex ratio and LFP of men and women by age cohort in 1989 
+
+prov_89_f <- phc89 %>% 
+  filter(female == 1) %>% 
+  group_by(geo1_vn) %>% 
+  summarise(total_f = sum(perwt),
+            log_tot_bomb = mean(log_tot_bomb),
+            log_tot_bmr_per = mean(log_tot_bmr_per),
+            widowed_f = sum(widowed * perwt) / sum(perwt),
+            work_f = sum(work * perwt) / sum(perwt))
+
+prov_89_m <- phc89 %>% 
+  filter(female == 0) %>% 
+  group_by(geo1_vn) %>% 
+  summarise(total_m = sum(perwt))
+
+sexratio_prov_89 <- merge(prov_89_f, prov_89_m, by = "geo1_vn") %>% 
+  mutate(sexratio = total_m/total_f)
+
+# Calculating the sex ratio and LFP of men and women by age cohort in 1989, 1999 and 2009
+
+agecohort_sum <- phc %>% 
+  group_by(year, age_cohort, female) %>%
+  summarise(work = sum(work * perwt) / sum(perwt),
+            widowed = sum(widowed * perwt) / sum(perwt)) %>% 
+  filter(!is.na(age_cohort))
+
+agecohort75_sum <- phc %>% 
+  group_by(year, age_cohort75, female) %>%
+  summarise(work = sum(work * perwt) / sum(perwt),
+            widowed = sum(widowed * perwt) / sum(perwt)) %>% 
+  filter(!is.na(age_cohort75))
+
