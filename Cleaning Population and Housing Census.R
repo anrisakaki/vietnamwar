@@ -59,18 +59,11 @@ phc99 <- phc %>%
          age75)
 phc99 <- merge(phc99, bombs_province99, by = "geo1_vn1999") %>% distinct()
 
-phc09 <- phc %>% 
-  filter(year == 2009) %>% 
-  select(year, serial, hhwt, geo1_vn, geo1_vn2009, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
-         birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
-         age75)
-phc09 <- left_join(phc09, bombs_province09, by = "geo1_vn2009") %>% distinct()
-
 # Calculating the sex ratio and LFP of men and women by age cohort in 1989 
 
 prov_89_f <- phc89 %>% 
   filter(female == 1) %>% 
-  group_by(geo1_vn) %>% 
+  group_by(geo1_vn1989) %>% 
   summarise(total_f = sum(perwt),
             log_tot_bomb = mean(log_tot_bomb),
             log_tot_bmr_per = mean(log_tot_bmr_per),
@@ -79,10 +72,10 @@ prov_89_f <- phc89 %>%
 
 prov_89_m <- phc89 %>% 
   filter(female == 0) %>% 
-  group_by(geo1_vn) %>% 
+  group_by(geo1_vn1989) %>% 
   summarise(total_m = sum(perwt))
 
-sexratio_prov_89 <- merge(prov_89_f, prov_89_m, by = "geo1_vn") %>% 
+sexratio_prov_89 <- merge(prov_89_f, prov_89_m, by = "geo1_vn1989") %>% 
   mutate(sexratio = total_m/total_f)
 
 # Calculating the sex ratio and LFP of men and women by age cohort in 1989, 1999 and 2009
