@@ -1,52 +1,35 @@
-prov6576 <- prov6306 %>% select(Tinh65, Tinh76) %>% distinct() %>% rename(Tinh63 = Tinh65)
-prov7606 <- prov6306 %>% select(Tinh76, Tinh06) %>% distinct()
+# Sex ratio in 1979 and merging with bombing data 
 
-m_ppn5763 <- prov_m_ppn5763 %>% 
-  select(-Tinh63) %>% 
-  pivot_longer(!Tinh76, names_to = "Year", values_to = "Male_ppn") %>% 
-  mutate(Year = as.numeric(str_extract(Year, "\\d+"))) %>% 
-  mutate(Male_ppn = as.numeric(gsub(",", "", Male_ppn)))  %>% 
-  filter(!is.na(Year),
-         !is.na(Tinh76)) %>% 
-  mutate(Male_ppn = ifelse(is.na(Male_ppn), 0, Male_ppn)) %>% 
-  group_by(Tinh76, Year) %>% 
-  summarise(Male_ppn = sum(Male_ppn)) %>% 
-  mutate(Male_ppn = ifelse(Male_ppn == 0, NA, Male_ppn)) %>% 
-  ungroup()
+ppn79 <- left_join(ppn79, bombs_provcodes, by = "provincename")
 
-m_ppn7680 <- prov_m_ppn7680 %>% 
-  rename(Tinh76 = Tinh) %>% 
-  pivot_longer(!Tinh76, names_to = "Year", values_to = "Male_ppn") %>% 
-  mutate(Year = as.numeric(str_extract(Year, "\\d+")),
-         Male_ppn = as.numeric(gsub(",", "", Male_ppn))) %>% 
-  filter(!is.na(Year),
-         !Tinh76 == "Total")  
+province79 <- ppn79 %>% select(Tinh79, provincename) %>% distinct()
 
-prov_ppn5776 <- prov_ppn5776 %>% 
-  select(-Tinh63) %>% 
-  pivot_longer(!Tinh76, names_to = "Year", values_to = "Total_ppn") %>% 
-  mutate(Year = as.numeric(str_extract(Year, "\\d+"))) %>% 
-  mutate(Total_ppn = as.numeric(gsub(",", "", Total_ppn)))  %>% 
-  filter(!is.na(Year),
-         !is.na(Tinh76)) %>% 
-  mutate(Total_ppn = ifelse(is.na(Total_ppn), 0, Total_ppn)) %>% 
-  group_by(Tinh76, Year) %>% 
-  summarise(Total_ppn = sum(Total_ppn)) %>% 
-  mutate(Total_ppn = ifelse(Total_ppn == 0, NA, Total_ppn)) %>% 
-  ungroup()  
+bombs_province79 <- bombs_province %>% select(provincename, tot_bomb, area_sum)
 
-prov_ppn7680 <- prov_ppn7680 %>% 
-  rename(Tinh76 = Tinh) %>% 
-  pivot_longer(!Tinh76, names_to = "Year", values_to = "Total_ppn") %>% 
-  mutate(Year = as.numeric(str_extract(Year, "\\d+")),
-         Total_ppn = as.numeric(gsub(",", "", Total_ppn))) %>% 
-  filter(!is.na(Year),
-         !Tinh76 == "Total")   
+bombs_province79 <- left_join(province79, bombs_province79, by = "provincename") %>% 
+  group_by(Tinh79) %>% 
+  summarise(tot_bomb = sum(tot_bomb),
+            area_sum = sum(area_sum)) %>% 
+  mutate(log_tot_bomb = log(tot_bomb),
+         tot_bomb_per = tot_bomb/area_sum,
+         log_tot_bmr_per = log(tot_bomb_per))
 
-m_ppn5780 <- bind_rows(m_ppn5763, m_ppn7680)
-prov_ppn5780 <- bind_rows(prov_ppn5776, prov_ppn7680)
+prov_ppn79 <- ppn79 %>% 
+  mutate(m_population = ifelse(is.na(m_population), 0, m_population),
+         f_population = ifelse(is.na(f_population), 0, f_population)) %>% 
+  group_by(Tinh79) %>% 
+  summarise(m_population = sum(m_population) * 1000,
+            f_population= sum(f_population) * 1000) %>% 
+  mutate(sexratio = m_population/f_population)
 
-prov_ppn5780 <- full_join(prov_ppn5780, m_ppn5780, by = c("Tinh76", "Year")) %>% 
-  arrange(Tinh76) %>% 
-  mutate(mshare = Male_ppn/Total_ppn)
+sexratio_prov79 <- merge(prov_ppn79, bombs_province79, by = "Tinh79")
 
+# Merging 1979 sex ratio data with FLFP in 1989
+
+prov_ppn79a <- ppn79 %>% 
+  mutate(m_population = ifelse(is.na(m_population), 0, m_population),
+         f_population = ifelse(is.na(f_population), 0, f_population)) %>% 
+  group_by(geo1_vn) %>% 
+  summarise(m_population = sum(m_population) * 1000,
+            f_population= sum(f_population) * 1000) %>% 
+  mutate(sexratio = m_population/f_population)
