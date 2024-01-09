@@ -11,7 +11,7 @@ rm(list=ls())
 
 # Population and Housing Census 
 
-phc <- read_dta(file = "ipumsi_00004.dta")
+phc <- read_dta(file = "ipumsi_00005.dta")
 
 # Population 
 
@@ -23,6 +23,8 @@ prov_m_ppn5763 <- population[[2]]
 prov_m_ppn7680 <- population[[3]]
 prov_ppn5776 <- population[[4]]
 prov_ppn7680 <- population[[5]]
+
+ppn79  <- read.csv("Male and Female Population 1979.csv")
 
 # LFS 
 
