@@ -64,11 +64,28 @@ province_mfunc_sum <- province_bombs %>%
   ungroup() %>% 
   mutate(mfunc_desc = ifelse(mfunc_desc == "DIR AIR SUPPT", "DIRECT AIR SUPPORT", mfunc_desc)) %>% 
   filter(!is.na(varname_1),
-         mfunc_desc == "STRIKE" | mfunc_desc == "DIRECT AIR SUPPORT" | mfunc_desc == "HEAVY BOMBARD" | mfunc_desc == "CLOSE AIR SUPPORT" | mfunc_desc == "AIR INTERDICTION") %>% 
+         mfunc_desc %in% c("STRIKE", "DIRECT AIR SUPPORT", "HEAVY BOMBARD", "CLOSE AIR SUPPORT", "AIR INTERDICTION") == T) %>% 
   group_by(varname_1, name_1, mfunc_desc) %>% 
   summarise(tot_bmr = sum(numweaponsdelivered)) %>% 
   ungroup()
 province_mfunc_sum <- sf::st_drop_geometry(province_mfunc_sum)
+province_mfunc_sum <- province_mfunc_sum %>% 
+  pivot_wider(names_from = "mfunc_desc", values_from = "tot_bmr", values_fill = 0)
+
+province_dualuse_sum <- province_bombs %>% 
+  ungroup() %>% 
+  group_by(varname_1, name_1, dualuse) %>% 
+  summarise(tot_dualuse = sum(numweaponsdelivered)) %>% 
+  ungroup() %>% 
+  filter(!is.na(varname_1))
+province_dualuse_sum <- sf::st_drop_geometry(province_dualuse_sum)
+
+province_dualuse_sum <-  province_dualuse_sum %>% 
+  filter(!is.na(dualuse)) %>%
+  pivot_wider(names_from = "dualuse", values_from = "tot_dualuse") %>%
+  rename(non_dualuse = 3,
+         dualuse = 4) %>% 
+  mutate(ratio_dualuse = dualuse/non_dualuse)
 
 provarea <- provarea %>% 
   rename(name_1 = Province) %>%
@@ -77,8 +94,20 @@ provarea <- provarea %>%
          name_1 = ifelse(name_1 == "TP.Hồ Chí Minh", "Hồ Chí Minh", name_1),
          name_1 = ifelse(name_1 == "Thanh Hoá", "Thanh Hóa", name_1))
 
+vnmap1 <- vnmap1 %>% rename(name_1 = NAME_1)
+
 province_bombs_sum <- list(province_bombs_sum, provarea, vnmap1) %>% 
   reduce(full_join, by = "name_1") %>% 
   mutate(bmr_per = tot_bmr/Area)
 
 province_bombs_sf <- province_bombs_sum %>% st_as_sf()
+
+province_bombs_sum <- province_bombs_sum %>% select(varname_1, name_1, tot_bmr, Area, bmr_per)
+province_bombs_sum <- sf::st_drop_geometry(province_bombs_sum)
+
+province_bombs_sum <- list(province_bombs_sum, province_dualuse_sum, province_mfunc_sum) %>% 
+  reduce(full_join, by = c("varname_1", "name_1"))
+
+colnames(province_bombs_sum) <- tolower(colnames(province_bombs_sum))
+
+save(province_bombs_sum, file = "province_bombs_sum.rda")
