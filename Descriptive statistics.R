@@ -17,6 +17,8 @@ ggplot(dplyr::filter(sexratio_prov79, Tinh79!= "Cao Bang"), aes(x = log_tot_bmr_
        y = "Province-level sex ratio in 1979")
 ggsave("bmr_sexratio89.jpeg", width = 7, height = 7)
 
+# 1989
+
 ggplot(sexratio_prov_89, aes(x = log_tot_bmr_per, y = sexratio*100)) +
   geom_point() +
   geom_smooth(method = "lm",
@@ -67,6 +69,41 @@ ggplot(sexratio_prov_89, aes(x = log_tot_bmr_per, y = work_f*100)) +
   labs(x = expression(log(Bombs~per~Km^2)),
        y = "Province-level FLFP in 1989")
 ggsave("bmr_work_f89.jpeg", width = 7, height = 7)
+
+# 1999
+ggplot(sexratio_prov_99, aes(x = log_tot_bmr_per, y = sexratio*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = T) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = expression(log(Bombs~per~Km^2)),
+       y = "Province-level sex ratio in 1999")
+ggsave("bmr_sexratio99.jpeg", width = 7, height = 7)
+
+ggplot(sexratio_prov_99, aes(x = log_tot_bmr_per, y = work_f*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = T) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = expression(log(Bombs~per~Km^2)),
+       y = "Province-level FLFP in 1999")
+ggsave("bmr_work_f99.jpeg", width = 7, height = 7)
 
 # Sex ratio versus 
 
