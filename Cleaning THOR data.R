@@ -58,5 +58,8 @@ provarea <- provarea %>%
          name_1 = ifelse(name_1 == "TP.Hồ Chí Minh", "Hồ Chí Minh", name_1),
          name_1 = ifelse(name_1 == "Thanh Hoá", "Thanh Hóa", name_1))
 
-province_bombs_sum <- left_join(province_bombs_sum, provarea, by = "name_1") %>% 
+province_bombs_sum <- list(province_bombs_sum, provarea, vnmap1) %>% 
+  reduce(full_join, by = "name_1") %>% 
   mutate(bmr_per = tot_bmr/Area)
+
+province_bombs_sf <- province_bombs_sum %>% st_as_sf()
