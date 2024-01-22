@@ -6,7 +6,6 @@ library(fixest)
 library(extrafont)
 library(lubridate)
 library(sjPlot)
-library(r-vietnam-map)
 
 rm(list=ls())
 
