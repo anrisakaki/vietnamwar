@@ -1,3 +1,16 @@
+# Map of bombing intensity 
+
+ggplot(province_bombs_sf) + 
+  geom_sf(aes(fill = log(bmr_per))) +
+  scale_fill_gradient(name = expression(log(Bombs~per~Km^2)), low = "green", high = "red", na.value = "white") + 
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title.y=element_blank(),
+        axis.title.x=element_blank(),
+        panel.background = element_blank()) +
+  ggtitle("")
+
 # Bombing intensity versus 
 
 ggplot(dplyr::filter(sexratio_prov79, Tinh79!= "Cao Bang"), aes(x = log_tot_bmr_per, y = sexratio*100)) +
