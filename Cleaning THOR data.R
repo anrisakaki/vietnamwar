@@ -3,17 +3,19 @@
 ######################
 
 thor <- thor %>% 
-  mutate(MSNDATE = ifelse(MSNDATE == "1970-02-29", "1970-03-01", MSNDATE),
-         MFUNC_DESC_CLASS = ifelse(MFUNC_DESC == "COMBT CARGO AIR  DROP", "KINETIC", MFUNC_DESC_CLASS)) %>% 
   filter(!(SOURCERECORD == "SACCOACT" & MSNDATE >= 19710301)) %>% 
+  mutate(MSNDATE = ifelse(MSNDATE == "1970-02-29", "1970-03-01", MSNDATE),
+         MFUNC_DESC_CLASS = ifelse(MFUNC_DESC == "COMBT CARGO AIR  DROP", "KINETIC", MFUNC_DESC_CLASS)) %>%
+  filter(!(SOURCERECORD == "SACCOACT" & MSNDATE >= 19710301)) %>%
   mutate(MSNDATE = as.Date(MSNDATE),
          year = as.integer(format(MSNDATE, "%Y")),
          month = as.integer(format(MSNDATE, "%m")),
-         day = as.integer(format(MSNDATE, "%d"))) %>% 
-  filter(TGTCOUNTRY == "NORTH VIETNAM" | TGTCOUNTRY == "SOUTH VIETNAM") %>%
-  select(-c("THOR_DATA_VIET_ID", "SOURCEID", "SOURCERECORD", "VALID_AIRCRAFT_ROOT", "TIMEONTARGET", "WEAPONTYPECLASS", "AIRCRAFT_ROOT",
-            "AIRFORCESQDN", "AIRFORCEGROUP", "CALLSIGN", "NUMOFACFT", "OPERATIONSUPPORTED", "UNIT", "TGTCLOUDCOVER", "TGTCONTROL",
-            "ADDITIONALINFO", "GEOZONE", "ID", "RELEASEALTITUDE", "RELEASEFLTSPEED", "TIMEOFFTARGET", "TIMEONTARGET", "TGTID", "TGTORIGCOORDS", "TGTORIGCOORDSFORMAT")) %>%
+         day = as.integer(format(MSNDATE, "%d")),
+         TGTTYPE = ifelse(TGTTYPE == "", NA, TGTTYPE),
+         MFUNC_DESC = ifelse(MFUNC_DESC == "", NA, MFUNC_DESC),
+         MFUNC_DESC_CLASS = ifelse(MFUNC_DESC == "COMBT CARGO AIR  DROP", "KINETIC", MFUNC_DESC_CLASS),
+         MFUNC_DESC = ifelse(MFUNC_DESC == "COMBT CARGO AIR  DROP", "HEAVY BOMBARD", MFUNC_DESC)) %>% 
+  filter(TGTCOUNTRY == "NORTH VIETNAM" | TGTCOUNTRY == "SOUTH VIETNAM") %>% 
   filter(!is.na(TGTLATDD_DDD_WGS84),
          !is.na(TGTLONDDD_DDD_WGS84))
 
@@ -27,37 +29,34 @@ thor <- thor %>%
          WEAPON_CLASS != "GUN",
          MFUNC_DESC_CLASS == "KINETIC")
 
-# Mapped bombing data to province names in ArcGIS
+# Convert to a GeoDataFrame
+gdf <- st_as_sf(thor, coords = c("TGTLONDDD_DDD_WGS84", "TGTLATDD_DDD_WGS84"), crs = 4326)
 
-thor_dist <- thor_district %>% 
-  select(-c(NUMWEAPONSJETTISONED, NUMWEAPONSRETURNED)) %>%
-  filter(!is.na(AREA)) %>% 
-  mutate(MSNDATE = as.Date(MSNDATE),
-         year = as.integer(format(MSNDATE, "%Y")),
-         month = as.integer(format(MSNDATE, "%m")),
-         day = as.integer(format(MSNDATE, "%d"))) %>% 
-  mutate(WEAPONSLOADEDWEIGHT = ifelse(WEAPONSLOADEDWEIGHT == -1, NA, WEAPONSLOADEDWEIGHT)) %>% 
-  group_by(NAME, AREA) %>% 
-  summarise(tot_bombs = sum(NUMWEAPONSDELIVERED),
-            tot_bombs_weight= sum(WEAPONSLOADEDWEIGHT, na.rm = T))
+# Extract lat and lon separately
+gdf$tgtlonddd_ddd_wgs84 <- st_coordinates(gdf)[, "X"]
+gdf$tgtlatdd_ddd_wgs84 <- st_coordinates(gdf)[, "Y"]
 
-dist_ <- district %>%
-  select(distname2019, prov2002, dist2002) %>% 
-  distinct() %>% 
-  filter(!is.na(dist2002), 
-         distname2019 != "") %>% 
-  mutate(xa = sprintf("%02d", dist2002),
-         district = paste0(as.character(prov2002), xa)) %>% 
-  select(distname2019, district) %>% 
-  rename(NAME = distname2019)
+# Spatial Join 
 
-thor_dist <- left_join(thor_dist, dist_, by = "NAME") %>%
-  filter(!is.na(district))
+province_bombs <- st_join(gdf, vnmap1)
 
-thor_prov <- thor_dist %>% 
-  mutate(tinh = substr(district, 1, 3)) %>% 
-  group_by(tinh) %>% 
-  summarise(tot_bombs_prov = sum(tot_bombs),
-            prov_area = sum(AREA)) %>% 
-  mutate(across(tinh, as.double),
-         bombs_perkm_prov = tot_bombs_prov/prov_area)
+colnames(province_bombs) <- tolower(colnames(province_bombs))
+
+province_bombs_sum <- province_bombs %>% 
+  ungroup() %>% 
+  filter(!is.na(varname_1)) %>% 
+  group_by(varname_1, name_1) %>% 
+  summarise(tot_bmr = sum(numweaponsdelivered)) %>% 
+  ungroup()
+
+province_bombs_sum <- sf::st_drop_geometry(province_bombs_sum)
+
+provarea <- provarea %>% 
+  rename(name_1 = Province) %>%
+  select(name_1, Area) %>%
+  mutate(name_1 = ifelse(name_1 == "Khánh Hoà", "Khánh Hòa", name_1),
+         name_1 = ifelse(name_1 == "TP.Hồ Chí Minh", "Hồ Chí Minh", name_1),
+         name_1 = ifelse(name_1 == "Thanh Hoá", "Thanh Hóa", name_1))
+
+province_bombs_sum <- left_join(province_bombs_sum, provarea, by = "name_1") %>% 
+  mutate(bmr_per = tot_bmr/Area)
