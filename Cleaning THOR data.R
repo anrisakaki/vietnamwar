@@ -27,7 +27,17 @@ thor <- left_join(thor, weapons_dict, by = "WEAPONTYPE")
 thor <- thor %>%
   filter(WEAPON_CLASS != "SUPPORT",
          WEAPON_CLASS != "GUN",
-         MFUNC_DESC_CLASS == "KINETIC")
+         MFUNC_DESC_CLASS == "KINETIC") %>% 
+  mutate(
+    dualuse = case_when(
+      TGTTYPE %in% c("AGRICULTURAL AREA", "BRIDGE", "BUILDINGS", "CIV POPULATN CENTR", 
+                     "CONSTRUCTION SITE", "FACTORY INDUSTRIAL", "FACTORY,ANY", "ELEC. PWR. FAC.", 
+                     "FERRY", "FERRY CROSSING", "HUTS", "LIGHTS ON ROAD", "PIER", "PLANTS", 
+                     "TUNNEL", "TUNNELS", "VILLAGE") ~ 1,
+      grepl("RAILROAD|BRIDGE|ROAD", TGTTYPE, ignore.case = TRUE) ~ 1,
+      TRUE ~ 0
+    )
+  )
 
 # Convert to a GeoDataFrame
 gdf <- st_as_sf(thor, coords = c("TGTLONDDD_DDD_WGS84", "TGTLATDD_DDD_WGS84"), crs = 4326)
@@ -48,8 +58,17 @@ province_bombs_sum <- province_bombs %>%
   group_by(varname_1, name_1) %>% 
   summarise(tot_bmr = sum(numweaponsdelivered)) %>% 
   ungroup()
-
 province_bombs_sum <- sf::st_drop_geometry(province_bombs_sum)
+
+province_mfunc_sum <- province_bombs %>% 
+  ungroup() %>% 
+  mutate(mfunc_desc = ifelse(mfunc_desc == "DIR AIR SUPPT", "DIRECT AIR SUPPORT", mfunc_desc)) %>% 
+  filter(!is.na(varname_1),
+         mfunc_desc == "STRIKE" | mfunc_desc == "DIRECT AIR SUPPORT" | mfunc_desc == "HEAVY BOMBARD" | mfunc_desc == "CLOSE AIR SUPPORT" | mfunc_desc == "AIR INTERDICTION") %>% 
+  group_by(varname_1, name_1, mfunc_desc) %>% 
+  summarise(tot_bmr = sum(numweaponsdelivered)) %>% 
+  ungroup()
+province_mfunc_sum <- sf::st_drop_geometry(province_mfunc_sum)
 
 provarea <- provarea %>% 
   rename(name_1 = Province) %>%
