@@ -1,10 +1,12 @@
-bombs_provcodes <- bombs_province %>%
-  select(provincename) %>%
+load("province_bombs_sum.Rda")
+
+bombs_provcodes <- province_bombs_sum %>%
+  select(varname_1) %>%
   distinct() %>%
-  mutate(geo1_vn = recode(provincename,
-                          'Ha Noi (City)' = 704001,
-                          'Hai Phong (City)' = 704031,
-                          'Ha Tay' = 704001,
+  mutate(geo1_vn = recode(varname_1,
+                          'Hau Giang' = 704092,
+                          'Ha Noi' = 704001,
+                          'Hai Phong' = 704031,
                           'Hai Duong' = 704030,
                           'Hung Yen' = 704030,
                           'Nam Dinh' = 704035,
@@ -25,6 +27,7 @@ bombs_provcodes <- bombs_province %>%
                           'Bac Ninh' = 704024,
                           'Quang Ninh' = 704022,
                           'Lai Chau' = 704010,
+                          'Dien Bien' = 704010,
                           'Son La' = 704010,
                           'Hoa Binh' = 704001,
                           'Thanh Hoa' = 704038,
@@ -32,8 +35,8 @@ bombs_provcodes <- bombs_province %>%
                           'Ha Tinh' = 704040,
                           'Quang Binh' = 704044,
                           'Quang Tri' = 704045,
-                          'Thuathien-Hue' = 704046,
-                          'Da Nang (City)' = 704048,
+                          'Thua Thien Hue' = 704046,
+                          'Da Nang' = 704048,
                           'Quang Nam' = 704048,
                           'Quang Ngai' = 704051,
                           'Binh Dinh' = 704052,
@@ -42,7 +45,8 @@ bombs_provcodes <- bombs_province %>%
                           'Kon Tum' = 704062,
                           'Gia Lai' = 704062,
                           'Dak Lak' = 704066,
-                          'Ho Chi Minh (City)' = 704079,
+                          'Dak Nong' = 704066,
+                          'Ho Chi Minh' = 704079,
                           'Lam Dong' = 704068,
                           'Ninh Thuan' = 704058,
                           'Binh Phuoc' = 704070,
@@ -50,7 +54,7 @@ bombs_provcodes <- bombs_province %>%
                           'Binh Duong' = 704070,
                           'Dong Nai' = 704075,
                           'Binh Thuan' = 704058,
-                          'Ba Ria' = 704075,
+                          'Ba Ria - Vung Tau' = 704075,
                           'Long An' = 704080,
                           'Dong Thap' = 704087,
                           'An Giang' = 704089,
@@ -65,12 +69,13 @@ bombs_provcodes <- bombs_province %>%
                           'Ca Mau' = 704095,
                           .default = NA_real_)) 
 
-bombs_provcodes89 <- bombs_province %>%
-  select(provincename) %>%
+bombs_provcodes89 <- province_bombs_sum %>%
+  select(varname_1) %>%
   distinct() %>%
-  mutate(geo1_vn1989 = recode(provincename,
-                              'Ha Noi (City)' = 1,
-                              'Hai Phong (City)' = 3,
+  mutate(geo1_vn1989 = recode(varname_1,
+                              'Hau Giang' = 43,
+                              'Ha Noi' = 1,
+                              'Hai Phong' = 3,
                               'Ha Tay' = 11,
                               'Hai Duong' = 21,
                               'Hung Yen' = 21,
@@ -99,8 +104,8 @@ bombs_provcodes89 <- bombs_province %>%
                               'Ha Tinh' = 25,
                               'Quang Binh' = 26,
                               'Quang Tri' = 49,
-                              'Thuathien-Hue' = 50,
-                              'Da Nang (City)' = 27,
+                              'Thua Thien Hue' = 50,
+                              'Da Nang' = 27,
                               'Quang Nam' = 27,
                               'Quang Ngai' = 47,
                               'Binh Dinh' = 28,
@@ -109,7 +114,8 @@ bombs_provcodes89 <- bombs_province %>%
                               'Kon Tum' = 31,
                               'Gia Lai' = 31,
                               'Dak Lak' = 32,
-                              'Ho Chi Minh (City)' = 2,
+                              'Dak Nong' = 32,
+                              'Ho Chi Minh' = 2,
                               'Lam Dong' = 33,
                               'Ninh Thuan' = 30,
                               'Binh Phuoc' = 34,
@@ -117,7 +123,7 @@ bombs_provcodes89 <- bombs_province %>%
                               'Binh Duong' = 34,
                               'Dong Nai' = 36,
                               'Binh Thuan' = 30,
-                              'Ba Ria' = 46,
+                              'Ba Ria - Vung Tau' = 46,
                               'Long An' = 37,
                               'Dong Thap' = 38,
                               'An Giang' = 39,
@@ -130,14 +136,16 @@ bombs_provcodes89 <- bombs_province %>%
                               'Soc Trang' = 43,
                               'Bac Lieu' = 45,
                               'Ca Mau' = 45,
+                              'Dien Bien' = 13,
                               .default = NA_real_)) 
 
-bombs_provcodes99 <- bombs_province %>%
-  select(provincename) %>%
+bombs_provcodes99 <- province_bombs_sum %>%
+  select(varname_1) %>%
   distinct() %>%
-  mutate(geo1_vn1999 = recode(provincename,
-                              'Ha Noi (City)' = 101,
-                              'Hai Phong (City)' = 103,
+  mutate(geo1_vn1999 = recode(varname_1,
+                              'Hau Giang' = 301,
+                              'Ha Noi' = 101,
+                              'Hai Phong' = 103,
                               'Ha Tay' = 105,
                               'Hai Duong' = 107,
                               'Hung Yen' = 109,
@@ -166,8 +174,8 @@ bombs_provcodes99 <- bombs_province %>%
                               'Ha Tinh' = 405,
                               'Quang Binh' = 407,
                               'Quang Tri' = 409,
-                              'Thuathien-Hue' = 411,
-                              'Da Nang (City)' = 501,
+                              'Thua Thien Hue' = 411,
+                              'Da Nang' = 501,
                               'Quang Nam' = 507,
                               'Quang Ngai' = 503,
                               'Binh Dinh' = 505,
@@ -176,7 +184,8 @@ bombs_provcodes99 <- bombs_province %>%
                               'Kon Tum' = 601,
                               'Gia Lai' = 603,
                               'Dak Lak' = 605,
-                              'Ho Chi Minh (City)' = 701,
+                              'Dak Nong' = 605,
+                              'Ho Chi Minh' = 701,
                               'Lam Dong' = 703,
                               'Ninh Thuan' = 705,
                               'Binh Phuoc' = 707,
@@ -184,7 +193,7 @@ bombs_provcodes99 <- bombs_province %>%
                               'Binh Duong' = 711,
                               'Dong Nai' = 713,
                               'Binh Thuan' = 715,
-                              'Ba Ria' = 717,
+                              'Ba Ria - Vung Tau' = 717,
                               'Long An' = 801,
                               'Dong Thap' = 803,
                               'An Giang' = 805,
@@ -197,14 +206,18 @@ bombs_provcodes99 <- bombs_province %>%
                               'Soc Trang' = 819,
                               'Bac Lieu' = 821,
                               'Ca Mau' = 823,
+                              'Dien Bien' = 301,
                               .default = NA_real_)) 
 
-bombs_provcodes09 <- bombs_province %>%
-  select(provincename) %>%
+bombs_provcodes09 <- province_bombs_sum %>%
+  select(varname_1) %>%
   distinct() %>%
-  mutate(geo1_vn2009 = recode(provincename,
-                              'Ha Noi (City)' = 1,
-                              'Hai Phong (City)' = 31,
+  mutate(geo1_vn2009 = recode(varname_1,
+                              'Dak Nong' = 67,
+                              'Dien Bien' = 11,
+                              'Hau Giang' = 93,
+                              'Ha Noi' = 1,
+                              'Hai Phong' = 31,
                               'Ha Tay' = 1,
                               'Hai Duong' = 30,
                               'Hung Yen' = 33,
@@ -233,8 +246,8 @@ bombs_provcodes09 <- bombs_province %>%
                               'Ha Tinh' = 42,
                               'Quang Binh' = 44,
                               'Quang Tri' = 45,
-                              'Thuathien-Hue' = 46,
-                              'Da Nang (City)' = 48,
+                              'Thua Thien Hue' = 46,
+                              'Da Nang' = 48,
                               'Quang Nam' = 49,
                               'Quang Ngai' = 51,
                               'Binh Dinh' = 52,
@@ -243,7 +256,7 @@ bombs_provcodes09 <- bombs_province %>%
                               'Kon Tum' = 62,
                               'Gia Lai' = 64,
                               'Dak Lak' = 66,
-                              'Ho Chi Minh (City)' = 79,
+                              'Ho Chi Minh' = 79,
                               'Lam Dong' = 68,
                               'Ninh Thuan' = 58,
                               'Binh Phuoc' = 70,
@@ -251,7 +264,7 @@ bombs_provcodes09 <- bombs_province %>%
                               'Binh Duong' = 74,
                               'Dong Nai' = 75,
                               'Binh Thuan' = 60,
-                              'Ba Ria' = 77,
+                              'Ba Ria - Vung Tau' = 77,
                               'Long An' = 80,
                               'Dong Thap' = 87,
                               'An Giang' = 89,
@@ -266,38 +279,53 @@ bombs_provcodes09 <- bombs_province %>%
                               'Ca Mau' = 96,
                               .default = NA_real_)) 
 
-bombs_province <- left_join(bombs_province, bombs_provcodes, by = "provincename") %>%
+bombs_province <- left_join(province_bombs_sum, bombs_provcodes, by = "varname_1")
+bombs_province <- bombs_province %>%
   distinct() %>% 
-  group_by(provincename) %>% 
-  summarise(tot_bomb = sum(tot_bomb),
-            area_sum = sum(area_sum)) %>% 
-  mutate(log_tot_bomb = log(tot_bomb),
-         tot_bomb_per = tot_bomb/area_sum,
-         log_tot_bmr_per = log(tot_bomb_per))
+  group_by(geo1_vn) %>% 
+  summarise(tot_bomb = sum(tot_bmr),
+            area_sum = sum(area),
+            non_dualuse = sum(non_dualuse),
+            dualuse = sum(dualuse),
+            AI = sum(`air interdiction`),
+            CAS = sum(`close air support`) + sum(`direct air support`),
+            strike = sum(strike)) %>% 
+  mutate(tot_bomb_per = tot_bomb/area_sum)
 
-bombs_province89 <- left_join(bombs_province, bombs_provcodes89, by = "provincename") %>% 
+bombs_province89 <- left_join(province_bombs_sum, bombs_provcodes89, by = "varname_1") %>% 
   distinct() %>% 
   group_by(geo1_vn1989) %>% 
-  summarise(tot_bomb = sum(tot_bomb),
-            area_sum = sum(area_sum)) %>% 
-  mutate(log_tot_bomb = log(tot_bomb),
-         tot_bomb_per = tot_bomb/area_sum,
-         log_tot_bmr_per = log(tot_bomb_per))
+  summarise(tot_bomb = sum(tot_bmr),
+            area_sum = sum(area),
+            non_dualuse = sum(non_dualuse),
+            dualuse = sum(dualuse),
+            AI = sum(`air interdiction`),
+            CAS = sum(`close air support`) + sum(`direct air support`),
+            strike = sum(strike)) %>% 
+  mutate(tot_bomb_per = tot_bomb/area_sum)
 
-bombs_province99 <- left_join(bombs_province, bombs_provcodes99, by = "provincename") %>% 
+bombs_province99 <- left_join(province_bombs_sum, bombs_provcodes99, by = "varname_1") %>% 
   distinct() %>% 
   group_by(geo1_vn1999) %>% 
-  summarise(tot_bomb = sum(tot_bomb),
-            area_sum = sum(area_sum)) %>% 
-  mutate(log_tot_bomb = log(tot_bomb),
-         tot_bomb_per = tot_bomb/area_sum,
-         log_tot_bmr_per = log(tot_bomb_per))
+  summarise(tot_bomb = sum(tot_bmr),
+            area_sum = sum(area),
+            non_dualuse = sum(non_dualuse),
+            dualuse = sum(dualuse),
+            AI = sum(`air interdiction`),
+            CAS = sum(`close air support`) + sum(`direct air support`),
+            strike = sum(strike)) %>% 
+  mutate(tot_bomb_per = tot_bomb/area_sum)
 
-bombs_province09 <- left_join(bombs_province, bombs_provcodes09, by = "provincename") %>% 
+bombs_province09 <- left_join(province_bombs_sum, bombs_provcodes09, by = "varname_1") %>% 
   distinct() %>% 
   group_by(geo1_vn2009) %>% 
-  summarise(tot_bomb = sum(tot_bomb),
-            area_sum = sum(area_sum)) %>% 
-  mutate(log_tot_bomb = log(tot_bomb),
-         tot_bomb_per = tot_bomb/area_sum,
-         log_tot_bmr_per = log(tot_bomb_per))
+  summarise(tot_bomb = sum(tot_bmr),
+            area_sum = sum(area),
+            non_dualuse = sum(non_dualuse),
+            dualuse = sum(dualuse),
+            AI = sum(`air interdiction`),
+            CAS = sum(`close air support`) + sum(`direct air support`),
+            strike = sum(strike)) %>% 
+  mutate(tot_bomb_per = tot_bomb/area_sum)
+
+save(bombs_province89, )
