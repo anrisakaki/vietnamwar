@@ -29,7 +29,8 @@ phc <- phc %>%
       age <= 65 ~ "61-65",
       age <= 70 ~ "65+"),
     age_cohort75 = case_when(
-      age75 <= 10 ~ "0-10",
+      age75 <= 5 ~ "0-5",
+      age75 <= 10 ~ "6-10",
       age75 <= 15 ~ "11-15",
       age75 <= 20 ~ "16-20",
       age75 <= 25 ~ "21-25",
@@ -54,10 +55,19 @@ phc89 <- merge(phc89, bombs_province89, by = "geo1_vn1989") %>% distinct()
 
 phc99 <- phc %>% 
   filter(year == 1999) %>% 
+  # Ha Tay merged with Hanoi 
+  mutate(geo1_vn1999 = ifelse(geo1_vn1999 == 105, 101, geo1_vn1999)) %>% 
   select(year, serial, hhwt, geo1_vn, geo1_vn1999, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
          birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
          age75)
 phc99 <- merge(phc99, bombs_province99, by = "geo1_vn1999") %>% distinct()
+
+phc09 <- phc %>% 
+  filter(year == 2009) %>% 
+  select(year, serial, hhwt, geo1_vn, geo1_vn2009, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
+         birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
+         age75)
+phc09 <- merge(phc09, bombs_province09, by = "geo1_vn2009") %>% distinct()
 
 # Calculating the sex ratio and LFP of men and women by age cohort in 1989 
 
@@ -65,8 +75,6 @@ prov_89_f <- phc89 %>%
   filter(female == 1 & age > 15 & age < 65) %>% 
   group_by(geo1_vn1989) %>% 
   summarise(total_f = sum(perwt),
-            log_tot_bomb = mean(log_tot_bomb),
-            log_tot_bmr_per = mean(log_tot_bmr_per),
             widowed_f = sum(widowed * perwt) / sum(perwt),
             work_f = sum(work * perwt) / sum(perwt))
 
@@ -75,7 +83,8 @@ prov_89_m <- phc89 %>%
   group_by(geo1_vn1989) %>% 
   summarise(total_m = sum(perwt))
 
-sexratio_prov_89 <- merge(prov_89_f, prov_89_m, by = "geo1_vn1989") %>% 
+sexratio_prov_89 <- list(prov_89_f, prov_89_m, bombs_province89) %>% 
+  reduce(full_join, by = "geo1_vn1989") %>% 
   mutate(sexratio = total_m/total_f)
 
 # Calculating the sex ratio and LFP of men and women by age cohort in 1999 
@@ -84,8 +93,6 @@ prov_99_f <- phc99 %>%
   filter(female == 1 & age > 15 & age < 65) %>% 
   group_by(geo1_vn1999) %>% 
   summarise(total_f = sum(perwt),
-            log_tot_bomb = mean(log_tot_bomb),
-            log_tot_bmr_per = mean(log_tot_bmr_per),
             widowed_f = sum(widowed * perwt) / sum(perwt),
             work_f = sum(work * perwt) / sum(perwt))
 
@@ -94,20 +101,25 @@ prov_99_m <- phc99 %>%
   group_by(geo1_vn1999) %>% 
   summarise(total_m = sum(perwt))
 
-sexratio_prov_99 <- merge(prov_99_f, prov_99_m, by = "geo1_vn1999") %>% 
+sexratio_prov_99 <- list(prov_99_f, prov_99_m, bombs_province99) %>% 
+  reduce(full_join, by = "geo1_vn1999") %>% 
   mutate(sexratio = total_m/total_f)
 
-# Calculating the sex ratio and LFP of men and women by age cohort in 1989, 1999 and 2009
+# Calculating the sex ratio and LFP of men and women by age cohort in 2009
 
-agecohort_sum <- phc %>% 
-  group_by(year, age_cohort, female) %>%
-  summarise(work = sum(work * perwt) / sum(perwt),
-            widowed = sum(widowed * perwt) / sum(perwt)) %>% 
-  filter(!is.na(age_cohort))
+prov_09_f <- phc09 %>% 
+  filter(female == 1 & age > 15 & age < 65) %>% 
+  group_by(geo1_vn2009) %>% 
+  summarise(total_f = sum(perwt),
+            widowed_f = sum(widowed * perwt) / sum(perwt),
+            work_f = sum(work * perwt) / sum(perwt))
 
-agecohort75_sum <- phc %>% 
-  group_by(year, age_cohort75, female) %>%
-  summarise(work = sum(work * perwt) / sum(perwt),
-            widowed = sum(widowed * perwt) / sum(perwt)) %>% 
-  filter(!is.na(age_cohort75))
+prov_09_m <- phc09 %>% 
+  filter(female == 0 & age > 15 & age < 65) %>% 
+  group_by(geo1_vn2009) %>% 
+  summarise(total_m = sum(perwt))
+
+sexratio_prov_09 <- list(prov_09_f, prov_09_m, bombs_province09) %>% 
+  reduce(full_join, by = "geo1_vn2009") %>% 
+  mutate(sexratio = total_m/total_f)
 
