@@ -33,12 +33,22 @@ LFS_2015 <- read_dta(file = "LFS_2015_final_full.dta")
 # Bombing data 
 
 bombs_district <- read_dta(file = "Corrigendum_Impact-bombing-Vietnam_Code-Data_2023-07-24/data/clean/district_bombing_corrected.dta")
-bombs_province <- read_dta(file = "Corrigendum_Impact-bombing-Vietnam_Code-Data_2023-07-24/data/clean/province_bombing_corrected.dta")
+bombs_province_miguel <- read_dta(file = "Corrigendum_Impact-bombing-Vietnam_Code-Data_2023-07-24/data/clean/province_bombing_corrected.dta")
 
 thor <- read.csv("datamil-vietnam-war-thor-data/datamil-vietnam-war-thor-data/thor_data_vietnam.csv")
 thor_district <- read.csv("thor_district.csv")
 
 weapons_dict <- read.csv("datamil-vietnam-war-thor-data/datamil-vietnam-war-thor-data/THOR_VIET_WEAPON_GLOSS.csv")
+
+# Casualties data 
+
+aad_folder <- "C:/Users/Anri Sakakibara/OneDrive/PhD Political Economy/Vietnam War/AAD"
+
+casualties_csv_files <- list.files(path = aad_folder, pattern = "casualties(.*)csv$")
+
+casualties_list <- lapply(casualties_csv_files, function(file) read.csv(file.path(aad_folder, file)))
+
+cl_provcodes <- read.csv("AAD/cl_69.csv")
 
 # Young Lives 
 
