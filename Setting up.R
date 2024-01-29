@@ -6,6 +6,9 @@ library(fixest)
 library(extrafont)
 library(lubridate)
 library(sjPlot)
+library(sfheaders)
+library(mgrs)
+library(sfheaders)
 
 rm(list=ls())
 
@@ -49,6 +52,8 @@ casualties_csv_files <- list.files(path = aad_folder, pattern = "casualties(.*)c
 casualties_list <- lapply(casualties_csv_files, function(file) read.csv(file.path(aad_folder, file)))
 
 cl_provcodes <- read.csv("AAD/cl_69.csv")
+
+zones <- read.csv("AAD/Zone Codes.csv")
 
 # Young Lives 
 
