@@ -9,7 +9,7 @@ zones <- zones %>%
     )
   )
 
-process_dataframe <- function(df) {
+process_casualties_sf <- function(df) {
   df <- df %>%
     mutate(ID = substr(UTM.MAP.COORDINATE, 1, 2),
            MAJOR.PROVINCE.CODE = as.character(MAJOR.PROVINCE.CODE)) %>%
@@ -25,12 +25,6 @@ process_dataframe <- function(df) {
   
   df <- left_join(df, zones, by = "ID")
   
-  return(df)
-}
-
-casualties <- lapply(casualties_list, process_dataframe)
-
-casualties_sf_fn <- function(df) {
   df <- df %>%
     filter(!is.na(Zone),
            !grepl("000000", UTM.MAP.COORDINATE)) %>%
@@ -49,7 +43,7 @@ casualties_sf_fn <- function(df) {
   return(df)
 }
 
-casualties_sf <- lapply(casualties, casualties_sf_fn)
+casualties_sf <- lapply(casualties_list, process_casualties_sf)
 
 prov_casualties <- combined_casualties %>% 
   mutate(
