@@ -1,7 +1,8 @@
 # Cleaning casualties data 
 process_dataframe <- function(df) {
   df <- df %>%
-    mutate(ID = substr(UTM.MAP.COORDINATE, 1, 2)) %>%
+    mutate(ID = substr(UTM.MAP.COORDINATE, 1, 2),
+           MAJOR.PROVINCE.CODE = as.character(MAJOR.PROVINCE.CODE)) %>%
     select(
       MAJOR.PROVINCE.CODE,
       NUMBER.DESTROYED.OF.KILLED,
@@ -13,6 +14,8 @@ process_dataframe <- function(df) {
     )
   
   df <- left_join(df, zones, by = "ID")
+  
+  df <- left_join(df, cl_provcodes, by = "MAJOR.PROVINCE.CODE")
   
   return(df)
 }
@@ -30,19 +33,55 @@ casualties_sf_fn <- function(df) {
 
 casualties_sf <- lapply(casualties, casualties_sf_fn)
 
-casualties_sf[[1]] <- st_as_sf(casualties_sf[[1]], coords = "MGRS")
+casualties_sf[[1]] <- casualties_sf[[1]] %>% 
+  mutate(
+    x = lapply(MGRS, mgrs_to_latlng, include_mgrs_ref = FALSE)
+  ) %>% 
+  unnest(x) %>% 
+  st_as_sf(
+    coords = c("lng", "lat"),
+    crs = 4326
+  )
 
-combined_casualties <- do.call(rbind, casualties_selected[1:44])
+casualties_sf[[2]] <- casualties_sf[[2]] %>% 
+  mutate(
+    x = lapply(MGRS, mgrs_to_latlng, include_mgrs_ref = FALSE)
+  ) %>% 
+  unnest(x) %>% 
+  st_as_sf(
+    coords = c("lng", "lat"),
+    crs = 4326
+  )
 
-combined_casualties <- combined_casualties %>% 
-  mutate(ID = substr(UTM.MAP.COORDINATE, 1, 2))
+casualties_sf[[3]] <- casualties_sf[[3]] %>% 
+  mutate(
+    x = lapply(MGRS, mgrs_to_latlng, include_mgrs_ref = FALSE)
+  ) %>% 
+  unnest(x) %>% 
+  st_as_sf(
+    coords = c("lng", "lat"),
+    crs = 4326
+  )
 
-combined_casualties <- left_join(combined_casualties, zones, by = "ID") %>% 
-  filter(!is.na(Zone),
-         !grepl("000000", UTM.MAP.COORDINATE)) %>% 
-  mutate(MGRS = paste0(Zone, UTM.MAP.COORDINATE))
+casualties_sf[[4]] <- casualties_sf[[4]] %>% 
+  mutate(
+    x = lapply(MGRS, mgrs_to_latlng, include_mgrs_ref = FALSE)
+  ) %>% 
+  unnest(x) %>% 
+  st_as_sf(
+    coords = c("lng", "lat"),
+    crs = 4326
+  )
 
-combined_casualties_sf <- st_as_sf(combined_casualties, coords = "UTM.MAP.COORDINATE")
+casualties_sf[[5]] <- casualties_sf[[5]] %>% 
+  mutate(
+    x = lapply(MGRS, mgrs_to_latlng, include_mgrs_ref = FALSE)
+  ) %>% 
+  unnest(x) %>% 
+  st_as_sf(
+    coords = c("lng", "lat"),
+    crs = 4326
+  )
 
 prov_casualties <- combined_casualties %>% 
   mutate(
