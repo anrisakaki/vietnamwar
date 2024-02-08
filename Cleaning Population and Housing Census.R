@@ -123,3 +123,12 @@ sexratio_prov_09 <- list(prov_09_f, prov_09_m, bombs_province09) %>%
   reduce(full_join, by = "geo1_vn2009") %>% 
   mutate(sexratio = total_m/total_f)
 
+# Saving data
+
+save(phc89, file = "phc89.Rda")
+save(phc99, file = "phc99.Rda")
+save(phc09, file = "phc09.Rda")
+
+save(sexratio_prov_89, file = "sexratio_prov_89.Rda")
+save(sexratio_prov_99, file = "sexratio_prov_99.Rda")
+save(sexratio_prov_09, file = "sexratio_prov_09.Rda")
