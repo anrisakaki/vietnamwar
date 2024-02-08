@@ -9,6 +9,9 @@ library(sjPlot)
 library(sfheaders)
 library(mgrs)
 library(sfheaders)
+library(rvest)
+library(htmltools)
+library(RSelenium)
 
 rm(list=ls())
 
@@ -28,10 +31,6 @@ prov_ppn5776 <- population[[4]]
 prov_ppn7680 <- population[[5]]
 
 ppn79  <- read.csv("Male and Female Population 1979.csv")
-
-# LFS 
-
-LFS_2015 <- read_dta(file = "LFS_2015_final_full.dta")
 
 # Bombing data 
 
