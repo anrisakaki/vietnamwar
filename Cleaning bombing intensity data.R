@@ -301,8 +301,12 @@ bombs_province89 <- left_join(province_bombs_sum, bombs_provcodes89, by = "varna
             dualuse = sum(dualuse),
             AI = sum(`air interdiction`),
             CAS = sum(`close air support`) + sum(`direct air support`),
-            strike = sum(strike)) %>% 
-  mutate(tot_bomb_per = tot_bomb/area_sum)
+            strike = sum(strike),
+            tot_killed = sum(killed_tot),
+            tot_wounded = sum(wounded_tot),
+            tot_missing = sum(missing_tot)) %>% 
+  mutate(tot_bomb_per = tot_bomb/area_sum,
+         tot_casualties_per = tot_killed/area_sum)
 
 bombs_province99 <- left_join(province_bombs_sum, bombs_provcodes99, by = "varname_1") %>% 
   distinct() %>% 
@@ -313,8 +317,12 @@ bombs_province99 <- left_join(province_bombs_sum, bombs_provcodes99, by = "varna
             dualuse = sum(dualuse),
             AI = sum(`air interdiction`),
             CAS = sum(`close air support`) + sum(`direct air support`),
-            strike = sum(strike)) %>% 
-  mutate(tot_bomb_per = tot_bomb/area_sum)
+            strike = sum(strike),
+            tot_killed = sum(killed_tot),
+            tot_wounded = sum(wounded_tot),
+            tot_missing = sum(missing_tot)) %>% 
+  mutate(tot_bomb_per = tot_bomb/area_sum,
+         tot_casualties_per = tot_killed/area_sum)
 
 bombs_province09 <- left_join(province_bombs_sum, bombs_provcodes09, by = "varname_1") %>% 
   distinct() %>% 
@@ -325,7 +333,9 @@ bombs_province09 <- left_join(province_bombs_sum, bombs_provcodes09, by = "varna
             dualuse = sum(dualuse),
             AI = sum(`air interdiction`),
             CAS = sum(`close air support`) + sum(`direct air support`),
-            strike = sum(strike)) %>% 
-  mutate(tot_bomb_per = tot_bomb/area_sum)
-
-save(bombs_province89, )
+            strike = sum(strike),
+            tot_killed = sum(killed_tot),
+            tot_wounded = sum(wounded_tot),
+            tot_missing = sum(missing_tot)) %>% 
+  mutate(tot_bomb_per = tot_bomb/area_sum,
+         tot_casualties_per = tot_killed/area_sum)
