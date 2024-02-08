@@ -98,11 +98,14 @@ vnmap1 <- vnmap1 %>% rename(name_1 = NAME_1)
 
 province_bombs_sum <- list(province_bombs_sum, provarea, vnmap1) %>% 
   reduce(full_join, by = "name_1") %>% 
-  mutate(bmr_per = tot_bmr/Area)
+  mutate(bmr_per = tot_bmr/Area,
+         deaths_per = killed_tot/Area)
+
+province_bombs_sum <- left_join(province_bombs_sum, prov_casualties, by = "varname_1")
 
 province_bombs_sf <- province_bombs_sum %>% st_as_sf()
 
-province_bombs_sum <- province_bombs_sum %>% select(varname_1, name_1, tot_bmr, Area, bmr_per)
+province_bombs_sum <- province_bombs_sum %>% select(varname_1, name_1, tot_bmr, Area, bmr_per, killed_tot, wounded_tot, missing_tot)
 province_bombs_sum <- sf::st_drop_geometry(province_bombs_sum)
 
 province_bombs_sum <- list(province_bombs_sum, province_dualuse_sum, province_mfunc_sum) %>% 
