@@ -1,35 +1,12 @@
 # 1989
 
-iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)) | geo1_vn1989,
+iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)),
             subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
-            weights = ~perwt), main = " ")
+            weights = ~perwt), main = " ", xlab = "Age Cohort")
 
 iplot(feols(work ~ i(age_cohort75, log(tot_bomb_per) | geo1_vn1989),
             subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
             weights = ~perwt), main = " ")
-
-iplot(feols(work ~ i(birthyr) + as.factor(minority) + yrschool + nchild + married | geo1_vn1989,
-            subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
-            weights = ~perwt), xlab = "Birth Year", main = "")
-
-iplot(feols(work ~ i(birthyr) + as.factor(minority) + yrschool + as.factor(geo1_vn) + nchild + married,
-            subset(phc89, female == 0 & birthyr > 1925 & birthyr < 1974),
-            weights = ~perwt), xlab = "Birth Year", main = "")
-
-iplot(feols(work ~ i(age, log(tot_bomb_per)) + as.factor(minority) + yrschool + nchild + married | geo1_vn1989,
-            subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
-            vcov = ~geo1_vn1989,
-            weights = ~perwt), xlab = "Age", main = "")
-
-iplot(feols(work ~ i(age75, log(tot_bomb_per)) + as.factor(minority) + yrschool + nchild + married | geo1_vn1989,
-            subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
-            vcov = ~geo1_vn1989,
-            weights = ~perwt), xlab = "Age in 1975", main = "")
-
-iplot(feols(work ~ i(age75, log(tot_bomb_per)) + as.factor(minority) + yrschool + nchild + married | geo1_vn1989,
-            subset(phc89, female == 0 & birthyr > 1925 & birthyr < 1974 & migration == 0),
-            vcov = ~geo1_vn1989,
-            weights = ~perwt), xlab = "Age in 1975", main = "")
 
 # 1999
 
