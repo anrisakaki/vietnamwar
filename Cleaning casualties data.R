@@ -171,60 +171,6 @@ prov_casualties <- combined_casualties %>%
             missing_tot = sum(NUMBER.CAPTURED.OR.MISSING)) %>% 
   rename(VARNAME_1 = prov)
 
-prov_casualties_old <- combined_casualties %>% 
-  mutate(Meaning = case_when(
-    MAJOR.PROVINCE.CODE = 39 & is.na(Meaning) ~ "An Xuyen",
-    MAJOR.PROVINCE.CODE == "Thua Thien" & is.na(Meaning) ~ "Thua Thien",
-    TRUE ~ Meaning
-  )) %>% 
-  group_by(Meaning) %>% 
-  summarise(killed_tot = sum(NUMBER.DESTROYED.OF.KILLED),
-            wounded_tot = sum(NUMBER.DAMAGED.OR.WOUNDED),
-            missing_tot = sum(NUMBER.CAPTURED.OR.MISSING)) %>% 
-  filter(!is.na(Meaning)) %>% 
-  mutate(prov = Meaning) %>% 
-  mutate(
-    prov = case_when(
-      prov == "An Xuyen" ~ "Ca Mau",
-      prov == 'BA Xuyen' ~ 'Soc Trang',
-      prov == 'Bien Hoa' ~ 'Dong Nai',
-      prov == 'Binh Long' ~ 'Binh Phuoc',
-      prov == 'Chau Doc' ~ 'An Giang',
-      prov == 'Darlac' ~ 'Dak Lak',
-      prov == 'Dinh Tuong' ~ 'Tien Giang',
-      prov == 'Ghuong Thien' ~ 'Hau Giang',
-      prov == 'Gia Dinh' ~ 'Ho Chi Minh',
-      prov == 'Go Cong' ~ 'Tien Giang',
-      prov == 'Hau Nghia' ~ 'Long An',
-      prov == 'Khank Hoa' ~ 'Khanh Hoa',
-      prov == 'Kien Hoa' ~ 'Ben Tre',
-      prov == 'Kien Phong' ~ 'Dong Thap',
-      prov == 'Kien Tuong' ~ 'Long An',
-      prov == 'Kontum' ~ 'Kon Tum',
-      prov == 'Long Khanh' ~ 'Dong Nai',
-      prov == 'Phong Dinh' ~ 'Can Tho',
-      prov == 'Phu Bon' ~ 'Gia Lai',
-      prov == 'Phuoc Long' ~ 'Binh Phuoc',
-      prov == 'Phuoc Tuy' ~ 'Ba Ria - Vung Tau',
-      prov == 'Pleiku' ~ 'Dak Lak',
-      prov == 'Quang Duc' ~ 'Dak Nong',
-      prov == 'Quang Tin' ~ 'Quang Nam',
-      prov == 'SA Dec' ~ 'Dong Thap',
-      prov == 'Trung Phon' ~ 'An Giang',
-      prov == 'Tuyen Duc' ~ 'Lam Dong',
-      prov == 'Vinh Binh' ~ 'Tra Vinh',
-      prov == 'Thua Thien' ~ 'Thua Thien Hue',
-      prov == 'Binh Tuy' ~ 'Binh Thuan',
-      TRUE ~ prov
-    ))
-
-prov_casualties_old <- left_join(prov_casualties_old, prewar_ppn, by = "Meaning")
-
-prov_casualties_old <- prov_casualties_old %>% 
-  mutate(Y1963 = as.numeric(gsub(",", "", Y1963)),
-         Y1964 = as.numeric(gsub(",", "", Y1964)),
-         casualties_per_ppn = killed_tot/Y1963)
-
 colnames(prov_casualties) <- tolower(colnames(prov_casualties))
 
 save(prov_casualties, file = "prov_casualties.Rda")
