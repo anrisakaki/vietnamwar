@@ -1,3 +1,9 @@
+sex_ratios <- c("sexratio_prov_89.Rda", "sexratio_prov_99.Rda", "sexratio_prov_09.Rda")
+
+for (i in sex_ratios) {
+  load(i)
+}
+
 # Map of bombing intensity 
 
 ggplot(province_bombs_sf) + 
