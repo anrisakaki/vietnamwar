@@ -1,3 +1,9 @@
+phc <- c("phc89.Rda", "phc99.Rda", "phc09.Rda")
+
+for (i in phc) {
+  load(i)
+}
+
 # 1989
 
 iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)),
