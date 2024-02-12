@@ -7,11 +7,6 @@ library(extrafont)
 library(lubridate)
 library(sjPlot)
 library(sfheaders)
-library(mgrs)
-library(sfheaders)
-library(rvest)
-library(htmltools)
-library(RSelenium)
 
 rm(list=ls())
 
@@ -21,16 +16,7 @@ phc <- read_dta(file = "ipumsi_00005.dta")
 
 # Population 
 
-population <- list.files(pattern = "Provincial(.*)csv$")
-population <- lapply(population, read.csv)
-
-prov6306 <- population[[1]]
-prov_m_ppn5763 <- population[[2]]
-prov_m_ppn7680 <- population[[3]]
-prov_ppn5776 <- population[[4]]
-prov_ppn7680 <- population[[5]]
-
-ppn79  <- read.csv("Male and Female Population 1979.csv")
+prewar_ppn <- read.csv("prewar_ppn.csv")
 
 # Bombing data 
 
