@@ -25,7 +25,11 @@ agecohort_flfp_sum <- phc %>%
   filter(!is.na(age_cohort))
 
 agecohort_sum <- left_join(agecohort_sum, agecohort_flfp_sum, by = c("year", "age_cohort")) %>% 
-  mutate(flfp = work/n_female)
+  mutate(flfp = (work/n_female)*100) %>% 
+  mutate(
+    sex_ratio = round(sex_ratio, 2),
+    flfp = round(flfp, 2)
+  )  
 
 # Sex ratio by age cohort, by province 
 agecohort_sum_prov <- phc %>% 
