@@ -339,3 +339,7 @@ bombs_province09 <- left_join(province_bombs_sum, bombs_provcodes09, by = "varna
             tot_missing = sum(missing_tot)) %>% 
   mutate(tot_bomb_per = tot_bomb/area_sum,
          tot_casualties_per = tot_killed/area_sum)
+
+save(bombs_province89, file = "bombs_province89.Rda")
+save(bombs_province99, file = "bombs_province99.Rda")
+save(bombs_province09, file = "bombs_province09.Rda")
