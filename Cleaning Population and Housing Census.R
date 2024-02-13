@@ -1,3 +1,9 @@
+provbombs <- c("bombs_province89.Rda", "bombs_province99.Rda", "bombs_province09.Rda")
+
+for (i in provbombs) {
+  load(i)
+}
+
 # Cleaning Population and Housing Census 
 
 phc <- phc %>%
@@ -15,7 +21,8 @@ phc <- phc %>%
   filter(age != 999) %>% 
   mutate(
     age_cohort = case_when(
-      age <= 10 ~ "0-10",
+      age <= 5 ~ "0-5",
+      age <= 10 ~ "6-10",
       age <= 15 ~ "11-15",
       age <= 20 ~ "16-20",
       age <= 25 ~ "21-25",
@@ -27,7 +34,7 @@ phc <- phc %>%
       age <= 55 ~ "51-55",
       age <= 60 ~ "56-60",
       age <= 65 ~ "61-65",
-      age <= 70 ~ "65+"),
+      age <= 70 ~ "66+"),
     age_cohort75 = case_when(
       age75 <= 5 ~ "0-5",
       age75 <= 10 ~ "6-10",
@@ -43,6 +50,8 @@ phc <- phc %>%
       age75 <= 60 ~ "56-60",
       age75 <= 65 ~ "61-65",
       age75 <= 70 ~ "65+"))  
+
+save(phc, file = "phc.Rda")
 
 # Separating by year 
 
@@ -125,6 +134,7 @@ sexratio_prov_09 <- list(prov_09_f, prov_09_m, bombs_province09) %>%
 
 # Saving data
 
+save(phc, file = "phc.Rda")
 save(phc89, file = "phc89.Rda")
 save(phc99, file = "phc99.Rda")
 save(phc09, file = "phc09.Rda")
