@@ -20,7 +20,7 @@ iplot(list(
 
 # 1989
 
-iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)),
+iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)) + yrschool + nchild + married + as.factor(minority),
             subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
             weights = ~perwt), main = " ")
 
