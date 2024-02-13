@@ -1,14 +1,17 @@
-phc <- c("phc89.Rda", "phc99.Rda", "phc09.Rda")
+phc <- c("phc.Rda", "phc89.Rda", "phc99.Rda", "phc09.Rda")
 
 for (i in phc) {
   load(i)
 }
 
+dict <- c("age_cohort" = "Age Cohort $\times$ log(Bombs/km^2)")
+setFixest_coefplot(dict = dict, grid = F, zero.par = list( type="dotted", lty=2), main = "")
+
 # 1989
 
 iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)),
             subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
-            weights = ~perwt), main = " ", xlab = "Age Cohort")
+            weights = ~perwt), main = " ")
 
 iplot(feols(work ~ i(age_cohort75, log(tot_bomb_per) | geo1_vn1989),
             subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
