@@ -7,6 +7,17 @@ for (i in phc) {
 dict <- c("age_cohort" = "Age Cohort $\times$ log(Bombs/km^2)")
 setFixest_coefplot(dict = dict, grid = F, zero.par = list( type="dotted", lty=2), main = "")
 
+iplot(list(
+  feols(work ~ i(age_cohort),
+        subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
+        weights = ~perwt),
+  feols(work ~ i(age_cohort),
+        subset(phc99, female == 1 & birthyr > 1935 & birthyr < 1984 & migration == 0),
+        weights = ~perwt),
+  feols(work ~ i(age_cohort),
+        subset(phc09, female == 1 & birthyr > 1945 & birthyr < 1994 & migration == 0),
+        weights = ~perwt)))
+
 # 1989
 
 iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)),
