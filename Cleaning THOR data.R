@@ -1,3 +1,5 @@
+load("prov_casualties.Rda")
+
 ######################
 # CLEANING THOR DATA #
 ######################
