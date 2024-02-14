@@ -262,8 +262,8 @@ ggplot(sexratio_prov_89, aes(x = widowed_f*100, y = work_f*100)) +
        y = "Province-level FLFP in 1989")
 
 # Birth cohort and labour force participation rate by age cohort
-s
-ggplot(dplyr::filter(agecohort_sum, female == 1 & year == 1989), aes(x = as.factor(age_cohort), y = work*100)) +
+
+ggplot(dplyr::filter(agecohort_sum,  year == 1989 & !(age_cohort == "6-10" | age_cohort == "0-5")), aes(x = as.factor(age_cohort), y = flfp)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
   labs(x = "Age cohort",
        y = "FLFP rate in 1989") +
@@ -277,7 +277,7 @@ ggplot(dplyr::filter(agecohort_sum, female == 1 & year == 1989), aes(x = as.fact
         legend.title=element_blank())  
 ggsave("flfp89_agecohort.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(agecohort_sum, female == 1 & year == 1999), aes(x = as.factor(age_cohort), y = work*100)) +
+ggplot(dplyr::filter(agecohort_sum,  year == 1999 & !(age_cohort == "6-10" | age_cohort == "0-5")), aes(x = as.factor(age_cohort), y = flfp)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
   labs(x = "Age cohort",
        y = "FLFP rate in 1999") +
@@ -291,7 +291,7 @@ ggplot(dplyr::filter(agecohort_sum, female == 1 & year == 1999), aes(x = as.fact
         legend.title=element_blank())  
 ggsave("flfp99_agecohort.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(agecohort_sum, female == 1 & year == 2009), aes(x = as.factor(age_cohort), y = work*100)) +
+ggplot(dplyr::filter(agecohort_sum,  year == 2009 & !(age_cohort == "6-10" | age_cohort == "0-5")), aes(x = as.factor(age_cohort), y = flfp)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
   labs(x = "Age cohort",
        y = "FLFP rate in 2009") +
@@ -304,60 +304,6 @@ ggplot(dplyr::filter(agecohort_sum, female == 1 & year == 2009), aes(x = as.fact
         panel.border = element_blank(),
         legend.title=element_blank())  
 ggsave("flfp09_agecohort.jpeg", width = 7, height = 7)
-
-# Birth cohort and labour force participation rate by age cohort 
-ggplot(dplyr::filter(agecohort75_sum, female == 1 & year == 1989), aes(x = as.factor(age_cohort75), y = work*100)) +
-  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
-  labs(x = "Age cohort in 1975",
-       y = "FLFP rate in 1989") +
-  # scale_x_continuous(breaks=seq(1925,1973,1)) +  
-  theme_minimal() +
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank())  
-ggsave("flfp89_agecohort75.jpeg", width = 7, height = 7)
-
-ggplot(dplyr::filter(agecohort75_sum, female == 1 & year == 1999), aes(x = as.factor(age_cohort75), y = work*100)) +
-  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
-  labs(x = "Age cohort in 1975",
-       y = "FLFP rate in 1999") +
-  # scale_x_continuous(breaks=seq(1925,1973,1)) +  
-  theme_minimal() +
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank())  
-ggsave("flfp99_agecohort75.jpeg", width = 7, height = 7)
-
-ggplot(dplyr::filter(agecohort75_sum, female == 1 & year == 2009), aes(x = as.factor(age_cohort75), y = work*100)) +
-  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
-  labs(x = "Age cohort in 1975",
-       y = "FLFP rate in 2009") +
-  theme_minimal() +
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank()) 
-ggsave("flfp09_agecohort75.jpeg", width = 7, height = 7)
-
-
-# Age cohort and work 
-
-setFixest_coefplot(zero.par = list( type="dotted", lwd = 1, lty=2))
-
-setFixest_dict(c("age_cohort" = "Age Cohort x log(Bombs/Km^2)", "log(tot_bomb_per)" = "$log(Bombs/Km^2)$"),
-               "age_cohort75" = "Age Cohort in 1975 x log(Bombs/Km^2)")
-
-iplot(feols(work ~ i(age_cohort),
-            subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
-            weights = ~perwt), xlab = "Age Cohort", main = "")
 
 # Birth cohort and education levels 
 
