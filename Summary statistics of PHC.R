@@ -15,7 +15,12 @@ agecohort_sum <- phc %>%
   filter(!is.na(age_cohort)) %>% 
   rename(n_male = 3,
          n_female = 4) %>% 
-  mutate(sex_ratio =( n_male/n_female)*100)  
+  mutate(sex_ratio = (n_male / n_female) * 100,
+         group89 = "Before 1976",
+         group99 = case_when(year == 1999 & age_cohort %in% c("11-15", "16-20", "21-25") ~ "After 1976",
+                             TRUE ~ "Before 1975"),
+         group09 = case_when(year == 2009 & age_cohort %in% c("11-15", "16-20", "21-25", "26-30", "31-35") ~ "After 1976",
+                             TRUE ~ "Before 1975"))
 
 ## FLFP by age cohort 
 agecohort_flfp_sum <- phc %>% 
@@ -41,8 +46,8 @@ agecohort_sum_prov <- phc %>%
   filter(!is.na(age_cohort)) %>% 
   rename(n_male = 6,
          n_female = 7) %>% 
-  mutate(sex_ratio =( n_male/n_female)*100)  
 
+  mutate(sex_ratio = (n_male / n_female) * 100)
 agecohort_flfp_sum_prov <- phc %>% 
   filter(female == 1 & work == 1) %>% 
   group_by(year, age_cohort, geo1_vn1989, geo1_vn1999, geo1_vn2009) %>%
