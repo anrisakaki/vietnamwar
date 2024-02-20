@@ -159,6 +159,7 @@ combined_casualties <- left_join(combined_casualties, operation_prov, by = "OPER
 
 prov_casualties <- combined_casualties %>% 
   mutate(
+    Viet = ifelse(LOSS.NATIONALITY == "Viet Cong", NUMBER.DESTROYED.OF.KILLED, 0),
     LOSS.NATIONALITY = case_when(
       LOSS.NATIONALITY == 'RVN' ~ 'A',
       LOSS.NATIONALITY == 'Viet Cong' ~ 'V',
@@ -166,7 +167,8 @@ prov_casualties <- combined_casualties %>%
     )
   ) %>%
   group_by(prov) %>% 
-  summarise(killed_tot = sum(NUMBER.DESTROYED.OF.KILLED),
+  summarise(viet_cong_deaths = sum(Viet),
+            killed_tot = sum(NUMBER.DESTROYED.OF.KILLED),
             wounded_tot = sum(NUMBER.DAMAGED.OR.WOUNDED),
             missing_tot = sum(NUMBER.CAPTURED.OR.MISSING)) %>% 
   rename(VARNAME_1 = prov)
