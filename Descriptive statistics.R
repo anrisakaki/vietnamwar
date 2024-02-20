@@ -263,46 +263,46 @@ ggplot(sexratio_prov_89, aes(x = widowed_f*100, y = work_f*100)) +
 
 # Birth cohort and labour force participation rate by age cohort
 
-ggplot(dplyr::filter(agecohort_sum,  year == 1989 & !(age_cohort == "6-10" | age_cohort == "0-5")), aes(x = as.factor(age_cohort), y = flfp)) +
+ggplot(dplyr::filter(agecohort_sum,  year == 1989 & !(age_cohort == "6-10" | age_cohort == "0-5")), aes(x = as.factor(age_cohort), y = flfp, fill = group89)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
   labs(x = "Age cohort",
        y = "FLFP rate in 1989") +
-  # scale_x_continuous(breaks=seq(1925,1973,1)) +  
   theme_minimal() +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
-        legend.title=element_blank())  
+        legend.title=element_blank()) +
+  scale_fill_manual(values = c("#EE3B3B"), labels = c("Born before 1975"))
 ggsave("flfp89_agecohort.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(agecohort_sum,  year == 1999 & !(age_cohort == "6-10" | age_cohort == "0-5")), aes(x = as.factor(age_cohort), y = flfp)) +
+ggplot(dplyr::filter(agecohort_sum,  year == 1999 & !(age_cohort == "6-10" | age_cohort == "0-5" | age_cohort == "66+")), aes(x = as.factor(age_cohort), y = flfp, fill = group99)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
   labs(x = "Age cohort",
        y = "FLFP rate in 1999") +
-  # scale_x_continuous(breaks=seq(1925,1973,1)) +  
   theme_minimal() +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
-        legend.title=element_blank())  
+        legend.title=element_blank()) +
+  scale_fill_manual(values = c("#FF7256", "#EE3B3B"), labels = c("Born after 1975", "Born before 1975"))
 ggsave("flfp99_agecohort.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(agecohort_sum,  year == 2009 & !(age_cohort == "6-10" | age_cohort == "0-5")), aes(x = as.factor(age_cohort), y = flfp)) +
+ggplot(dplyr::filter(agecohort_sum,  year == 2009 & !(age_cohort == "6-10" | age_cohort == "0-5" | age_cohort == "66+")), aes(x = as.factor(age_cohort), y = flfp, fill = group09)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
   labs(x = "Age cohort",
        y = "FLFP rate in 2009") +
-  # scale_x_continuous(breaks=seq(1925,1973,1)) +  
   theme_minimal() +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
-        legend.title=element_blank())  
+        legend.title=element_blank()) +
+  scale_fill_manual(values = c("#FF7256", "#EE3B3B"), labels = c("Born after 1975", "Born before 1975"))
 ggsave("flfp09_agecohort.jpeg", width = 7, height = 7)
 
 # Birth cohort and education levels 
