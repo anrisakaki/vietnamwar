@@ -285,60 +285,92 @@ bombs_province <- bombs_province %>%
   group_by(geo1_vn) %>% 
   summarise(tot_bomb = sum(tot_bmr),
             area_sum = sum(area),
-            non_dualuse = sum(non_dualuse),
-            dualuse = sum(dualuse),
+            dualuse = sum(tot_dualuse),
             AI = sum(`air interdiction`),
             CAS = sum(`close air support`) + sum(`direct air support`),
-            strike = sum(strike)) %>% 
-  mutate(tot_bomb_per = tot_bomb/area_sum)
+            strike = sum(strike),
+            tot_killed = sum(killed_tot),
+            tot_wounded = sum(wounded_tot),
+            tot_missing = sum(missing_tot),
+            tot_civilian = sum(tot_civilian),
+            tot_infrastructure = sum(tot_infrastructure),
+            tot_industry = sum(tot_industry)) %>% 
+  mutate(tot_bomb_per = tot_bomb/area_sum,
+         tot_casualties_per = tot_killed/area_sum,
+         dualuse_per = dualuse/area_sum,
+         strikes_per = strike/area_sum,
+         cas_per = CAS/area_sum,
+         infrastructure_per = tot_infrastructure/area_sum,
+         industry_per = tot_industry/area_sum)
 
 bombs_province89 <- left_join(province_bombs_sum, bombs_provcodes89, by = "varname_1") %>% 
   distinct() %>% 
   group_by(geo1_vn1989) %>% 
   summarise(tot_bomb = sum(tot_bmr),
             area_sum = sum(area),
-            non_dualuse = sum(non_dualuse),
-            dualuse = sum(dualuse),
+            dualuse = sum(tot_dualuse),
             AI = sum(`air interdiction`),
             CAS = sum(`close air support`) + sum(`direct air support`),
             strike = sum(strike),
             tot_killed = sum(killed_tot),
             tot_wounded = sum(wounded_tot),
-            tot_missing = sum(missing_tot)) %>% 
+            tot_missing = sum(missing_tot),
+            tot_civilian = sum(tot_civilian),
+            tot_infrastructure = sum(tot_infrastructure),
+            tot_industry = sum(tot_industry)) %>% 
   mutate(tot_bomb_per = tot_bomb/area_sum,
-         tot_casualties_per = tot_killed/area_sum)
+         tot_casualties_per = tot_killed/area_sum,
+         dualuse_per = dualuse/area_sum,
+         strikes_per = strike/area_sum,
+         cas_per = CAS/area_sum,
+         infrastructure_per = tot_infrastructure/area_sum,
+         industry_per = tot_industry/area_sum)
 
 bombs_province99 <- left_join(province_bombs_sum, bombs_provcodes99, by = "varname_1") %>% 
   distinct() %>% 
   group_by(geo1_vn1999) %>% 
   summarise(tot_bomb = sum(tot_bmr),
             area_sum = sum(area),
-            non_dualuse = sum(non_dualuse),
-            dualuse = sum(dualuse),
+            dualuse = sum(tot_dualuse),
             AI = sum(`air interdiction`),
             CAS = sum(`close air support`) + sum(`direct air support`),
             strike = sum(strike),
             tot_killed = sum(killed_tot),
             tot_wounded = sum(wounded_tot),
-            tot_missing = sum(missing_tot)) %>% 
+            tot_missing = sum(missing_tot),
+            tot_civilian = sum(tot_civilian),
+            tot_infrastructure = sum(tot_infrastructure),
+            tot_industry = sum(tot_industry)) %>% 
   mutate(tot_bomb_per = tot_bomb/area_sum,
-         tot_casualties_per = tot_killed/area_sum)
+         tot_casualties_per = tot_killed/area_sum,
+         dualuse_per = dualuse/area_sum,
+         strikes_per = strike/area_sum,
+         cas_per = CAS/area_sum,
+         infrastructure_per = tot_infrastructure/area_sum,
+         industry_per = tot_industry/area_sum)
 
 bombs_province09 <- left_join(province_bombs_sum, bombs_provcodes09, by = "varname_1") %>% 
   distinct() %>% 
   group_by(geo1_vn2009) %>% 
   summarise(tot_bomb = sum(tot_bmr),
             area_sum = sum(area),
-            non_dualuse = sum(non_dualuse),
-            dualuse = sum(dualuse),
+            dualuse = sum(tot_dualuse),
             AI = sum(`air interdiction`),
             CAS = sum(`close air support`) + sum(`direct air support`),
             strike = sum(strike),
             tot_killed = sum(killed_tot),
             tot_wounded = sum(wounded_tot),
-            tot_missing = sum(missing_tot)) %>% 
+            tot_missing = sum(missing_tot),
+            tot_civilian = sum(tot_civilian),
+            tot_infrastructure = sum(tot_infrastructure),
+            tot_industry = sum(tot_industry)) %>% 
   mutate(tot_bomb_per = tot_bomb/area_sum,
-         tot_casualties_per = tot_killed/area_sum)
+         tot_casualties_per = tot_killed/area_sum,
+         dualuse_per = dualuse/area_sum,
+         strikes_per = strike/area_sum,
+         cas_per = CAS/area_sum,
+         infrastructure_per = tot_infrastructure/area_sum,
+         industry_per = tot_industry/area_sum)
 
 save(bombs_province89, file = "bombs_province89.Rda")
 save(bombs_province99, file = "bombs_province99.Rda")
