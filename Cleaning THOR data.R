@@ -38,8 +38,21 @@ thor <- thor %>%
                      "TUNNEL", "TUNNELS", "VILLAGE") ~ 1,
       grepl("RAILROAD|BRIDGE|ROAD", TGTTYPE, ignore.case = TRUE) ~ 1,
       TRUE ~ 0
-    )
-  )
+    ),
+    civilian = case_when(
+      TGTTYPE %in% c("AGRICULTURAL AREA", "CIV POPULATN CENTR", "VILLAGE") ~ 1,
+      TRUE ~ 0 
+    ),
+    industry = case_when(
+      TGTTYPE %in% c("CONSTRUCTION SITE", "FACTORY INDUSTRIAL", "FACTORY,ANY", "ELEC. PWR. FAC.") ~ 1,
+      TRUE ~ 0
+    ),
+    infrastructure = case_when(
+      TGTTYPE %in% c("BRIDGE", "FERRY", "FERRY CROSSING", "PIER",
+                     "TUNNEL", "TUNNELS", "VILLAGE") ~ 1,
+      grepl("RAILROAD|BRIDGE|ROAD", TGTTYPE, ignore.case = TRUE) ~ 1,
+      TRUE ~ 0
+  ))
 
 # Convert to a GeoDataFrame
 gdf <- st_as_sf(thor, coords = c("TGTLONDDD_DDD_WGS84", "TGTLATDD_DDD_WGS84"), crs = 4326)
@@ -76,18 +89,45 @@ province_mfunc_sum <- province_mfunc_sum %>%
 
 province_dualuse_sum <- province_bombs %>% 
   ungroup() %>% 
-  group_by(varname_1, name_1, dualuse) %>% 
+  filter(dualuse == 1) %>% 
+  group_by(varname_1, name_1) %>% 
   summarise(tot_dualuse = sum(numweaponsdelivered)) %>% 
   ungroup() %>% 
   filter(!is.na(varname_1))
 province_dualuse_sum <- sf::st_drop_geometry(province_dualuse_sum)
 
-province_dualuse_sum <-  province_dualuse_sum %>% 
-  filter(!is.na(dualuse)) %>%
-  pivot_wider(names_from = "dualuse", values_from = "tot_dualuse") %>%
-  rename(non_dualuse = 3,
-         dualuse = 4) %>% 
-  mutate(ratio_dualuse = dualuse/non_dualuse)
+province_civilian_sum <- province_bombs %>% 
+  ungroup() %>% 
+  filter(civilian == 1) %>% 
+  group_by(varname_1) %>% 
+  summarise(tot_civilian = sum(numweaponsdelivered)) %>% 
+  ungroup() %>% 
+  filter(!is.na(varname_1))
+province_civilian_sum <- sf::st_drop_geometry(province_civilian_sum)
+
+province_infra_sum <- province_bombs %>% 
+  ungroup() %>% 
+  filter(infrastructure == 1) %>% 
+  group_by(varname_1) %>% 
+  summarise(tot_infrastructure = sum(numweaponsdelivered)) %>% 
+  ungroup() %>% 
+  filter(!is.na(varname_1))
+province_infra_sum <- sf::st_drop_geometry(province_infra_sum)
+
+province_industry_sum <- province_bombs %>% 
+  ungroup() %>% 
+  filter(industry == 1) %>% 
+  group_by(varname_1) %>% 
+  summarise(tot_industry = sum(numweaponsdelivered)) %>% 
+  ungroup() %>% 
+  filter(!is.na(varname_1))
+province_industry_sum <- sf::st_drop_geometry(province_industry_sum)
+
+province_dualuse_sum <- list(province_dualuse_sum, province_civilian_sum, province_infra_sum, province_industry_sum) %>% 
+  reduce(full_join, by = "varname_1") %>% 
+  mutate(tot_industry = ifelse(is.na(tot_industry), 0, tot_industry),
+         tot_infrastructure = ifelse(is.na(tot_infrastructure), 0, tot_infrastructure),
+         tot_civilian = ifelse(is.na(tot_civilian), 0, tot_civilian))
 
 provarea <- provarea %>% 
   rename(name_1 = Province) %>%
