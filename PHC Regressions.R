@@ -21,7 +21,7 @@ iplot(list(
 # 1989
 
 png("flfp_bombs_89.png")
-iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)) + yrschool + nchild + married + as.factor(minority),
+iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)) + yrschool + nchild + married + as.factor(minority) | geo1_vn1989,
             subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
             weights = ~perwt,
             vcov = ~geo1_vn1989), main = " ", xlab = "")
@@ -29,7 +29,7 @@ dev.off()
 
 # 1999
 png("flfp_bombs_99.png")
-iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)) + yrschool + nchild + married + as.factor(minority),
+iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)) + yrschool + nchild + married + as.factor(minority) | geo1_vn1999,
             subset(phc99, female == 1 & birthyr > 1935 & birthyr < 1984 & migration == 0),
             weights = ~perwt,
             vcov = ~geo1_vn1999), main = " ")
@@ -38,7 +38,7 @@ dev.off()
 # 2009
 
 png("flfp_bombs_09.png")
-iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)) + yrschool + nchild + married + as.factor(minority),
+iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)) + yrschool + nchild + married + as.factor(minority) | geo1_vn2009,
             subset(phc09, female == 1 & birthyr > 1945 & birthyr < 1994 & migration == 0),
             weights = ~perwt,
             vcov = ~geo1_vn2009), main = " ")
