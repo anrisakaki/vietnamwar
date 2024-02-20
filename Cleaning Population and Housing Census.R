@@ -34,7 +34,7 @@ phc <- phc %>%
       age <= 55 ~ "51-55",
       age <= 60 ~ "56-60",
       age <= 65 ~ "61-65",
-      age <= 70 ~ "66+"),
+      age <= 100 ~ "66+"),
     age_cohort75 = case_when(
       age75 <= 5 ~ "0-5",
       age75 <= 10 ~ "6-10",
@@ -49,7 +49,7 @@ phc <- phc %>%
       age75 <= 55 ~ "51-55",
       age75 <= 60 ~ "56-60",
       age75 <= 65 ~ "61-65",
-      age75 <= 70 ~ "65+"))  
+      age75 <= 110 ~ "65+"))  
 
 save(phc, file = "phc.Rda")
 
@@ -134,7 +134,6 @@ sexratio_prov_09 <- list(prov_09_f, prov_09_m, bombs_province09) %>%
 
 # Saving data
 
-save(phc, file = "phc.Rda")
 save(phc89, file = "phc89.Rda")
 save(phc99, file = "phc99.Rda")
 save(phc09, file = "phc09.Rda")
