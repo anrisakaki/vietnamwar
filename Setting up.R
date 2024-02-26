@@ -13,7 +13,7 @@ rm(list=ls())
 
 # Population and Housing Census 
 
-phc <- read_dta(file = "ipumsi_00005.dta")
+phc <- read_dta(file = "ipumsi_00006.dta")
 
 # Population 
 
@@ -25,9 +25,8 @@ bombs_district <- read_dta(file = "Corrigendum_Impact-bombing-Vietnam_Code-Data_
 bombs_province_miguel <- read_dta(file = "Corrigendum_Impact-bombing-Vietnam_Code-Data_2023-07-24/data/clean/province_bombing_corrected.dta")
 
 thor <- read.csv("datamil-vietnam-war-thor-data/datamil-vietnam-war-thor-data/thor_data_vietnam.csv")
-thor_district <- read.csv("thor_district.csv")
 
-weapons_dict <- read.csv("datamil-vietnam-war-thor-data/datamil-vietnam-war-thor-data/THOR_VIET_WEAPON_GLOSS.csv")
+weapons_dict <- read.csv("THOR_VIET_WEAPON_GLOSS.csv")
 
 # Casualties data 
 
