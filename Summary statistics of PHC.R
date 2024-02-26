@@ -9,13 +9,14 @@ for (i in bombs_prov) {
 agecohort_sum <- phc %>% 
   group_by(year, age_cohort, female) %>%
   summarise(tot = sum(perwt)) %>% 
-  filter(!is.na(age_cohort)) %>% 
   group_by(year, age_cohort) %>% 
   pivot_wider(names_from = female, values_from = tot) %>% 
   filter(!is.na(age_cohort)) %>% 
   rename(n_male = 3,
          n_female = 4) %>% 
   mutate(sex_ratio = (n_male / n_female) * 100,
+         sex_ratio = round(sex_ratio, 2),
+         prov_ppn = n_male + n_female,
          group89 = "Before 1976",
          group99 = case_when(year == 1999 & age_cohort %in% c("11-15", "16-20", "21-25") ~ "After 1976",
                              TRUE ~ "Before 1975"),
@@ -56,11 +57,5 @@ agecohort_flfp_sum_prov <- phc %>%
 
 agecohort_sum_prov <- left_join(agecohort_sum_prov, agecohort_flfp_sum_prov, by = c("year", "age_cohort", "geo1_vn1989", "geo1_vn1999", "geo1_vn2009")) %>% 
   mutate(flfp = work/n_female)
-
-bombs_province89 <- bombs_province89 %>% mutate(year = 1989)
-bombs_province99 <- bombs_province99 %>% mutate(year = 1999)
-bombs_province09 <- bombs_province09 %>% mutate(year = 2009)
-
-provbombs_sum <- bind_rows(bombs_province89, bombs_province99, bombs_province09)
 
 agecohort_sum_prov <- left_join(agecohort_sum_prov, provbombs_sum, by = c("year", "geo1_vn1989", "geo1_vn1999", "geo1_vn2009"))
