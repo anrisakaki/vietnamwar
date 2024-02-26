@@ -17,24 +17,24 @@ phc <- phc %>%
          agri = ifelse(indgen == 10, 1, 0),
          age75 = 1975 - birthyr,
          migration = ifelse(migrate5 > 19, 1, 0),
-         migration = ifelse(migrate5 == 0 | mig1_5_vn == 99, NA, migration)) %>% 
-  filter(age != 999) %>% 
+         migration = ifelse(migrate5 == 0 | mig1_5_vn == 99, NA, migration),
+         age = ifelse(age == 999, NA, age)) %>% 
   mutate(
     age_cohort = case_when(
-      age <= 5 ~ "0-5",
-      age <= 10 ~ "6-10",
-      age <= 15 ~ "11-15",
-      age <= 20 ~ "16-20",
-      age <= 25 ~ "21-25",
-      age <= 30 ~ "26-30",
-      age <= 35 ~ "31-35",
-      age <= 40 ~ "36-40",
-      age <= 45 ~ "41-45",
-      age <= 50 ~ "46-50",
-      age <= 55 ~ "51-55",
-      age <= 60 ~ "56-60",
-      age <= 65 ~ "61-65",
-      age <= 100 ~ "66+"),
+      age <= 4 ~ "0-4",
+      age <= 9 ~ "5-9",
+      age <= 14 ~ "10-14",
+      age <= 19 ~ "15-19",
+      age <= 24 ~ "20-24",
+      age <= 29 ~ "25-29",
+      age <= 34 ~ "30-34",
+      age <= 39 ~ "35-39",
+      age <= 44 ~ "40-44",
+      age <= 49 ~ "45-49",
+      age <= 54 ~ "50-54",
+      age <= 59 ~ "55-59",
+      age <= 64 ~ "60-64",
+      age <= 100 ~ "65+"),
     age_cohort75 = case_when(
       age75 <= 5 ~ "0-5",
       age75 <= 10 ~ "6-10",
@@ -51,32 +51,38 @@ phc <- phc %>%
       age75 <= 65 ~ "61-65",
       age75 <= 110 ~ "65+"))  
 
+phc <- left_join(phc, bombs_province, by = "geo1_vn")
+phc <- left_join(phc, provbombs_sum, by = c("year", "geo1_vn1989", "geo1_vn1999", "geo1_vn2009"))
+
 save(phc, file = "phc.Rda")
 
 # Separating by year 
 
 phc89 <- phc %>% 
   filter(year == 1989) %>% 
-  select(year, serial, hhwt, geo1_vn, geo1_vn1989, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
-         birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
-         age75)
-phc89 <- merge(phc89, bombs_province89, by = "geo1_vn1989") %>% distinct()
+  select(year, serial, hhwt, geo1_vn, geo1_vn1989, regnvn, pernum, perwt, nchild, age, age75, age_cohort, age_cohort75, female, marst, married, widowed,
+         birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5, tot_killed, 
+         tot_wounded, tot_missing, tot_civilian, tot_infrastructure, tot_industry, tot_bomb_per, tot_casualties_per, dualuse_per,
+         strikes_per, cas_per, infrastructure_per, industry_per, civilians_per, tot_bomb_ppn, tot_casualties_ppn,
+         strikes_ppn, cas_ppn, infrastructure_ppn, industry_ppn, civilians_ppn)
 
 phc99 <- phc %>% 
   filter(year == 1999) %>% 
   # Ha Tay merged with Hanoi 
   mutate(geo1_vn1999 = ifelse(geo1_vn1999 == 105, 101, geo1_vn1999)) %>% 
-  select(year, serial, hhwt, geo1_vn, geo1_vn1999, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
-         birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
-         age75)
-phc99 <- merge(phc99, bombs_province99, by = "geo1_vn1999") %>% distinct()
+  select(year, serial, hhwt, geo1_vn, geo1_vn1999, regnvn, pernum, perwt, nchild, age, age75, age_cohort, age_cohort75, female, marst, married, widowed,
+         birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5, tot_killed, 
+         tot_wounded, tot_missing, tot_civilian, tot_infrastructure, tot_industry, tot_bomb_per, tot_casualties_per, dualuse_per,
+         strikes_per, cas_per, infrastructure_per, industry_per, civilians_per, tot_bomb_ppn, tot_casualties_ppn,
+         strikes_ppn, cas_ppn, infrastructure_ppn, industry_ppn, civilians_ppn)
 
 phc09 <- phc %>% 
   filter(year == 2009) %>% 
-  select(year, serial, hhwt, geo1_vn, geo1_vn2009, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
-         birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5,
-         age75)
-phc09 <- merge(phc09, bombs_province09, by = "geo1_vn2009") %>% distinct()
+  select(year, serial, hhwt, geo1_vn, geo1_vn2009, regnvn, pernum, perwt, nchild, age, age75, age_cohort, age_cohort75, female, marst, married, widowed,
+         birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5, tot_killed, 
+         tot_wounded, tot_missing, tot_civilian, tot_infrastructure, tot_industry, tot_bomb_per, tot_casualties_per, dualuse_per,
+         strikes_per, cas_per, infrastructure_per, industry_per, civilians_per, tot_bomb_ppn, tot_casualties_ppn,
+         strikes_ppn, cas_ppn, infrastructure_ppn, industry_ppn, civilians_ppn)
 
 # Calculating the sex ratio and LFP of men and women by age cohort in 1989 
 
@@ -94,9 +100,12 @@ prov_89_m <- phc89 %>%
 
 sexratio_prov_89 <- list(prov_89_f, prov_89_m, bombs_province89) %>% 
   reduce(full_join, by = "geo1_vn1989") %>% 
-  mutate(sexratio = total_m/total_f)
+  mutate(sexratio = total_m/total_f,
+         prov_ppn = total_m + total_f)
 
 # Calculating the sex ratio and LFP of men and women by age cohort in 1999 
+
+
 
 prov_99_f <- phc99 %>% 
   filter(female == 1 & age > 15 & age < 65) %>% 
