@@ -1,5 +1,10 @@
 load("province_bombs_sum.Rda")
 
+prewar_ppn <- prewar_ppn %>% 
+  filter(!is.na(Y1964)) %>% 
+  group_by(geo1_vn) %>% 
+  summarise(tot_ppn64 = sum(Y1964))
+
 bombs_provcodes <- province_bombs_sum %>%
   select(varname_1) %>%
   distinct() %>%
@@ -280,6 +285,7 @@ bombs_provcodes09 <- province_bombs_sum %>%
                               .default = NA_real_)) 
 
 bombs_province <- left_join(province_bombs_sum, bombs_provcodes, by = "varname_1")
+bombs_province <- left_join(bombs_province, prewar_ppn, by = "geo1_vn")
 bombs_province <- bombs_province %>%
   distinct() %>% 
   group_by(geo1_vn) %>% 
@@ -294,14 +300,18 @@ bombs_province <- bombs_province %>%
             tot_missing = sum(missing_tot),
             tot_civilian = sum(tot_civilian),
             tot_infrastructure = sum(tot_infrastructure),
-            tot_industry = sum(tot_industry)) %>% 
-  mutate(tot_bomb_per = tot_bomb/area_sum,
-         tot_casualties_per = tot_killed/area_sum,
-         dualuse_per = dualuse/area_sum,
-         strikes_per = strike/area_sum,
-         cas_per = CAS/area_sum,
-         infrastructure_per = tot_infrastructure/area_sum,
-         industry_per = tot_industry/area_sum)
+            tot_industry = sum(tot_industry),
+            ppn64 = mean(tot_ppn64)) %>% 
+  mutate(tot_bomb_ppn = tot_bomb/ppn64,
+         tot_casualties_ppn = tot_killed/ppn64,
+         dualuse_ppn = dualuse/ppn64,
+         strikes_ppn = strike/ppn64,
+         cas_ppn = CAS/ppn64,
+         infrastructure_ppn = tot_infrastructure/ppn64,
+         industry_ppn = tot_industry/ppn64,
+         civilians_ppn= tot_civilian/ppn64) %>% 
+  select(geo1_vn, tot_bomb_ppn, tot_casualties_ppn, strikes_ppn, cas_ppn, infrastructure_ppn,
+         industry_ppn, civilians_ppn)
 
 bombs_province89 <- left_join(province_bombs_sum, bombs_provcodes89, by = "varname_1") %>% 
   distinct() %>% 
@@ -324,7 +334,8 @@ bombs_province89 <- left_join(province_bombs_sum, bombs_provcodes89, by = "varna
          strikes_per = strike/area_sum,
          cas_per = CAS/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
-         industry_per = tot_industry/area_sum)
+         industry_per = tot_industry/area_sum,
+         civilians_per = tot_civilian/area_sum)
 
 bombs_province99 <- left_join(province_bombs_sum, bombs_provcodes99, by = "varname_1") %>% 
   distinct() %>% 
@@ -347,7 +358,8 @@ bombs_province99 <- left_join(province_bombs_sum, bombs_provcodes99, by = "varna
          strikes_per = strike/area_sum,
          cas_per = CAS/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
-         industry_per = tot_industry/area_sum)
+         industry_per = tot_industry/area_sum,
+         civilians_per = tot_civilian/area_sum)
 
 bombs_province09 <- left_join(province_bombs_sum, bombs_provcodes09, by = "varname_1") %>% 
   distinct() %>% 
@@ -370,8 +382,16 @@ bombs_province09 <- left_join(province_bombs_sum, bombs_provcodes09, by = "varna
          strikes_per = strike/area_sum,
          cas_per = CAS/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
-         industry_per = tot_industry/area_sum)
+         industry_per = tot_industry/area_sum,
+         civilians_per = tot_civilian/area_sum)
 
+bombs_province89 <- bombs_province89 %>% mutate(year = 1989)
+bombs_province99 <- bombs_province99 %>% mutate(year = 1999)
+bombs_province09 <- bombs_province09 %>% mutate(year = 2009)
+
+provbombs_sum <- bind_rows(bombs_province89, bombs_province99, bombs_province09)
+
+save(bombs_provcodes, file = "bombs_provcodes.Rda")
 save(bombs_province89, file = "bombs_province89.Rda")
 save(bombs_province99, file = "bombs_province99.Rda")
 save(bombs_province09, file = "bombs_province09.Rda")
