@@ -21,7 +21,7 @@ iplot(list(
 # 1989
 
 png("flfp_bombs_89.png")
-iplot(feols(work ~ i(age_cohort, log(tot_bomb_per)) + yrschool + nchild + married + as.factor(minority) | geo1_vn1989,
+iplot(feols(work ~ i(age_cohort, civilians_per) + yrschool + nchild + married + as.factor(minority) | geo1_vn1989 + age_cohort,
             subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
             weights = ~perwt,
             vcov = ~geo1_vn1989), main = " ", xlab = "")
