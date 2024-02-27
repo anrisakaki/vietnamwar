@@ -6,9 +6,9 @@ for (i in sex_ratios) {
 
 # Map of bombing intensity 
 
-ggplot(province_bombs_sf) + 
-  geom_sf(aes(fill = log(bmr_per))) +
-  scale_fill_gradient(name = expression(log(Bombs~per~Km^2)), low = "green", high = "red", na.value = "white") + 
+ggplot(province_bmr_sf) + 
+  geom_sf(aes(fill = log(tot_bmr))) +
+  scale_fill_gradient(name = "log(Total Bombs, \nMissiles and Rockets)", low = "green", high = "red", na.value = "white") + 
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks = element_blank(),
@@ -18,8 +18,7 @@ ggplot(province_bombs_sf) +
   ggtitle("")
 ggsave("province_bombs_sf.jpeg", width = 7, height = 7)
 
-
-ggplot(province_bombs_sf) + 
+ggplot(province_bmr_sf) + 
   geom_sf(aes(fill = log(killed_tot))) +
   scale_fill_gradient(name = expression(log(Casualties)), low = "green", high = "red", na.value = "grey") + 
   theme(axis.text.x = element_blank(),
@@ -31,10 +30,10 @@ ggplot(province_bombs_sf) +
   ggtitle("")
 ggsave("province_casualties_sf.jpeg", width = 7, height = 7)
 
-# Casualties versus 
+# By target 
 # 1989
 
-ggplot(sexratio_prov_89, aes(x = log(tot_casualties_per), y = sexratio*100)) +
+ggplot(sexratio_prov_89, aes(x = log(tot_civilian), y = sexratio*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = T) +
@@ -47,9 +46,28 @@ ggplot(sexratio_prov_89, aes(x = log(tot_casualties_per), y = sexratio*100)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = expression(log(Casualties~per~Km^2)),
+  labs(x = "log(Civilian Targets)",
        y = "Province-level sex ratio in 1989")
-ggsave("casualties_sexratio89.jpeg", width = 7, height = 7)
+ggsave("civ_sexratio89.jpeg", width = 7, height = 7)
+
+# 1999
+
+ggplot(sexratio_prov_99, aes(x = log(tot_civilian), y = sexratio*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Civilian Targets)",
+       y = "Province-level sex ratio in 1999")
+ggsave("civ_sexratio99.jpeg", width = 7, height = 7)
 
 # Bombing intensity versus 
 
