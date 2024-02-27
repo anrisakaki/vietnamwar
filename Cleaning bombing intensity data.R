@@ -1,11 +1,11 @@
-load("province_bombs_sum.Rda")
+load("province_bmr_sum.Rda")
 
 prewar_ppn <- prewar_ppn %>% 
   filter(!is.na(Y1964)) %>% 
   group_by(geo1_vn) %>% 
   summarise(tot_ppn64 = sum(Y1964))
 
-bombs_provcodes <- province_bombs_sum %>%
+bombs_provcodes <- province_bmr_sum %>%
   select(varname_1) %>%
   distinct() %>%
   mutate(geo1_vn = recode(varname_1,
@@ -74,7 +74,7 @@ bombs_provcodes <- province_bombs_sum %>%
                           'Ca Mau' = 704095,
                           .default = NA_real_)) 
 
-bombs_provcodes89 <- province_bombs_sum %>%
+bombs_provcodes89 <- province_bmr_sum %>%
   select(varname_1) %>%
   distinct() %>%
   mutate(geo1_vn1989 = recode(varname_1,
@@ -144,7 +144,7 @@ bombs_provcodes89 <- province_bombs_sum %>%
                               'Dien Bien' = 13,
                               .default = NA_real_)) 
 
-bombs_provcodes99 <- province_bombs_sum %>%
+bombs_provcodes99 <- province_bmr_sum %>%
   select(varname_1) %>%
   distinct() %>%
   mutate(geo1_vn1999 = recode(varname_1,
@@ -214,7 +214,7 @@ bombs_provcodes99 <- province_bombs_sum %>%
                               'Dien Bien' = 301,
                               .default = NA_real_)) 
 
-bombs_provcodes09 <- province_bombs_sum %>%
+bombs_provcodes09 <- province_bmr_sum %>%
   select(varname_1) %>%
   distinct() %>%
   mutate(geo1_vn2009 = recode(varname_1,
@@ -284,17 +284,12 @@ bombs_provcodes09 <- province_bombs_sum %>%
                               'Ca Mau' = 96,
                               .default = NA_real_)) 
 
-bombs_province <- left_join(province_bombs_sum, bombs_provcodes, by = "varname_1")
+bombs_province <- left_join(province_bmr_sum, bombs_provcodes, by = "varname_1")
 bombs_province <- left_join(bombs_province, prewar_ppn, by = "geo1_vn")
 bombs_province <- bombs_province %>%
   distinct() %>% 
   group_by(geo1_vn) %>% 
   summarise(tot_bomb = sum(tot_bmr),
-            area_sum = sum(area),
-            dualuse = sum(tot_dualuse),
-            AI = sum(`air interdiction`),
-            CAS = sum(`close air support`) + sum(`direct air support`),
-            strike = sum(strike),
             tot_killed = sum(killed_tot),
             tot_wounded = sum(wounded_tot),
             tot_missing = sum(missing_tot),
@@ -304,83 +299,55 @@ bombs_province <- bombs_province %>%
             ppn64 = mean(tot_ppn64)) %>% 
   mutate(tot_bomb_ppn = tot_bomb/ppn64,
          tot_casualties_ppn = tot_killed/ppn64,
-         dualuse_ppn = dualuse/ppn64,
-         strikes_ppn = strike/ppn64,
-         cas_ppn = CAS/ppn64,
          infrastructure_ppn = tot_infrastructure/ppn64,
          industry_ppn = tot_industry/ppn64,
          civilians_ppn= tot_civilian/ppn64) %>% 
-  select(geo1_vn, tot_bomb_ppn, tot_casualties_ppn, strikes_ppn, cas_ppn, infrastructure_ppn,
-         industry_ppn, civilians_ppn)
+  select(geo1_vn, tot_bomb_ppn, tot_casualties_ppn, infrastructure_ppn, industry_ppn, civilians_ppn)
 
-bombs_province89 <- left_join(province_bombs_sum, bombs_provcodes89, by = "varname_1") %>% 
+bombs_province89 <- left_join(province_bmr_sum, bombs_provcodes89, by = "varname_1") %>% 
   distinct() %>% 
   group_by(geo1_vn1989) %>% 
   summarise(tot_bomb = sum(tot_bmr),
-            area_sum = sum(area),
-            dualuse = sum(tot_dualuse),
-            AI = sum(`air interdiction`),
-            CAS = sum(`close air support`) + sum(`direct air support`),
-            strike = sum(strike),
+            area_sum = sum(Area),
             tot_killed = sum(killed_tot),
             tot_wounded = sum(wounded_tot),
             tot_missing = sum(missing_tot),
             tot_civilian = sum(tot_civilian),
             tot_infrastructure = sum(tot_infrastructure),
             tot_industry = sum(tot_industry)) %>% 
-  mutate(tot_bomb_per = tot_bomb/area_sum,
-         tot_casualties_per = tot_killed/area_sum,
-         dualuse_per = dualuse/area_sum,
-         strikes_per = strike/area_sum,
-         cas_per = CAS/area_sum,
+  mutate(tot_casualties_per = tot_killed/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
          industry_per = tot_industry/area_sum,
          civilians_per = tot_civilian/area_sum)
 
-bombs_province99 <- left_join(province_bombs_sum, bombs_provcodes99, by = "varname_1") %>% 
+bombs_province99 <- left_join(province_bmr_sum, bombs_provcodes99, by = "varname_1") %>% 
   distinct() %>% 
   group_by(geo1_vn1999) %>% 
   summarise(tot_bomb = sum(tot_bmr),
-            area_sum = sum(area),
-            dualuse = sum(tot_dualuse),
-            AI = sum(`air interdiction`),
-            CAS = sum(`close air support`) + sum(`direct air support`),
-            strike = sum(strike),
+            area_sum = sum(Area),
             tot_killed = sum(killed_tot),
             tot_wounded = sum(wounded_tot),
             tot_missing = sum(missing_tot),
             tot_civilian = sum(tot_civilian),
             tot_infrastructure = sum(tot_infrastructure),
             tot_industry = sum(tot_industry)) %>% 
-  mutate(tot_bomb_per = tot_bomb/area_sum,
-         tot_casualties_per = tot_killed/area_sum,
-         dualuse_per = dualuse/area_sum,
-         strikes_per = strike/area_sum,
-         cas_per = CAS/area_sum,
+  mutate(tot_casualties_per = tot_killed/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
          industry_per = tot_industry/area_sum,
          civilians_per = tot_civilian/area_sum)
 
-bombs_province09 <- left_join(province_bombs_sum, bombs_provcodes09, by = "varname_1") %>% 
+bombs_province09 <- left_join(province_bmr_sum, bombs_provcodes09, by = "varname_1") %>% 
   distinct() %>% 
   group_by(geo1_vn2009) %>% 
   summarise(tot_bomb = sum(tot_bmr),
-            area_sum = sum(area),
-            dualuse = sum(tot_dualuse),
-            AI = sum(`air interdiction`),
-            CAS = sum(`close air support`) + sum(`direct air support`),
-            strike = sum(strike),
+            area_sum = sum(Area),
             tot_killed = sum(killed_tot),
             tot_wounded = sum(wounded_tot),
             tot_missing = sum(missing_tot),
             tot_civilian = sum(tot_civilian),
             tot_infrastructure = sum(tot_infrastructure),
             tot_industry = sum(tot_industry)) %>% 
-  mutate(tot_bomb_per = tot_bomb/area_sum,
-         tot_casualties_per = tot_killed/area_sum,
-         dualuse_per = dualuse/area_sum,
-         strikes_per = strike/area_sum,
-         cas_per = CAS/area_sum,
+  mutate(tot_casualties_per = tot_killed/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
          industry_per = tot_industry/area_sum,
          civilians_per = tot_civilian/area_sum)
