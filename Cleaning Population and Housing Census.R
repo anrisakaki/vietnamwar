@@ -62,9 +62,8 @@ phc89 <- phc %>%
   filter(year == 1989) %>% 
   select(year, serial, hhwt, geo1_vn, geo1_vn1989, regnvn, pernum, perwt, nchild, age, age75, age_cohort, age_cohort75, female, marst, married, widowed,
          birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5, tot_killed, 
-         tot_wounded, tot_missing, tot_civilian, tot_infrastructure, tot_industry, tot_bomb_per, tot_casualties_per, dualuse_per,
-         strikes_per, cas_per, infrastructure_per, industry_per, civilians_per, tot_bomb_ppn, tot_casualties_ppn,
-         strikes_ppn, cas_ppn, infrastructure_ppn, industry_ppn, civilians_ppn)
+         tot_wounded, tot_missing, tot_civilian, tot_infrastructure, tot_industry, infrastructure_per, industry_per, civilians_per, tot_bomb_ppn, tot_casualties_ppn,
+         infrastructure_ppn, industry_ppn, civilians_ppn)
 
 phc99 <- phc %>% 
   filter(year == 1999) %>% 
@@ -72,17 +71,15 @@ phc99 <- phc %>%
   mutate(geo1_vn1999 = ifelse(geo1_vn1999 == 105, 101, geo1_vn1999)) %>% 
   select(year, serial, hhwt, geo1_vn, geo1_vn1999, regnvn, pernum, perwt, nchild, age, age75, age_cohort, age_cohort75, female, marst, married, widowed,
          birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5, tot_killed, 
-         tot_wounded, tot_missing, tot_civilian, tot_infrastructure, tot_industry, tot_bomb_per, tot_casualties_per, dualuse_per,
-         strikes_per, cas_per, infrastructure_per, industry_per, civilians_per, tot_bomb_ppn, tot_casualties_ppn,
-         strikes_ppn, cas_ppn, infrastructure_ppn, industry_ppn, civilians_ppn)
+         tot_wounded, tot_missing, tot_civilian, tot_infrastructure, tot_industry, infrastructure_per, industry_per, civilians_per, tot_bomb_ppn, tot_casualties_ppn,
+         infrastructure_ppn, industry_ppn, civilians_ppn)
 
 phc09 <- phc %>% 
   filter(year == 2009) %>% 
   select(year, serial, hhwt, geo1_vn, geo1_vn2009, regnvn, pernum, perwt, nchild, age, age75, age_cohort, age_cohort75, female, marst, married, widowed,
          birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5, tot_killed, 
-         tot_wounded, tot_missing, tot_civilian, tot_infrastructure, tot_industry, tot_bomb_per, tot_casualties_per, dualuse_per,
-         strikes_per, cas_per, infrastructure_per, industry_per, civilians_per, tot_bomb_ppn, tot_casualties_ppn,
-         strikes_ppn, cas_ppn, infrastructure_ppn, industry_ppn, civilians_ppn)
+         tot_wounded, tot_missing, tot_civilian, tot_infrastructure, tot_industry, infrastructure_per, industry_per, civilians_per, tot_bomb_ppn, tot_casualties_ppn,
+         infrastructure_ppn, industry_ppn, civilians_ppn)
 
 # Calculating the sex ratio and LFP of men and women by age cohort in 1989 
 
@@ -104,9 +101,6 @@ sexratio_prov_89 <- list(prov_89_f, prov_89_m, bombs_province89) %>%
          prov_ppn = total_m + total_f)
 
 # Calculating the sex ratio and LFP of men and women by age cohort in 1999 
-
-
-
 prov_99_f <- phc99 %>% 
   filter(female == 1 & age > 15 & age < 65) %>% 
   group_by(geo1_vn1999) %>% 
