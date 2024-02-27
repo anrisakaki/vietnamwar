@@ -38,14 +38,6 @@ thor <- thor %>%
       TGTTYPE %in% c("AGRICULTURAL AREA", "CIV POPULATN CENTR", "VILLAGE", "BUILDINGS", "HUTS") ~ 1,
       grepl("PERSONNEL", TGTTYPE, ignore.case = TRUE) ~ 1,
       TRUE ~ 0 
-    ),
-    air = case_when(
-      grepl("AIR", MFUNC_DESC, ignore.case = TRUE) ~ 1,
-      TRUE ~ 0
-    ),
-    civilian_ex_per = case_when(
-      TGTTYPE %in% c("AGRICULTURAL AREA", "CIV POPULATN CENTR", "VILLAGE", "BUILDINGS", "HUTS") ~ 1,
-      TRUE ~ 0 
     ),    
     industry = case_when(
       TGTTYPE %in% c("CONSTRUCTION SITE", "FACTORY INDUSTRIAL", "FACTORY,ANY", "ELEC. PWR. FAC.") ~ 1,
@@ -70,60 +62,55 @@ gdf$tgtlatdd_ddd_wgs84 <- st_coordinates(gdf)[, "Y"]
 
 # Spatial Join 
 
-province_bombs <- st_join(gdf, vnmap1)
+province_bmr <- st_join(gdf, vnmap1)
 
-colnames(province_bombs) <- tolower(colnames(province_bombs))
+colnames(province_bmr) <- tolower(colnames(province_bmr))
 
-province_bombs_sum <- province_bombs %>% 
+province_bmr_sum <- province_bmr %>% 
   ungroup() %>% 
   filter(!is.na(varname_1)) %>% 
   group_by(varname_1, name_1) %>% 
   summarise(tot_bmr = sum(numweaponsdelivered),
             tot_bmr_lb = sum(weightdelivered)) %>% 
   ungroup()
-province_bombs_sum <- sf::st_drop_geometry(province_bombs_sum)
+province_bmr_sum <- sf::st_drop_geometry(province_bmr_sum)
 
-province_civilian_ex_per_sum <- province_bombs %>% 
-  ungroup() %>% 
-  filter(civilian_ex_per == 1) %>% 
-  group_by(varname_1, name_1) %>% 
-  summarise(tot_civilian_ex_per = sum(numweaponsdelivered)) %>% 
-  ungroup() %>% 
-  filter(!is.na(varname_1))
-province_dualuse_sum <- sf::st_drop_geometry(province_dualuse_sum)
-
-province_civilian_sum <- province_bombs %>% 
+province_civilian_sum <- province_bmr %>% 
   ungroup() %>% 
   filter(civilian == 1) %>% 
-  group_by(varname_1) %>% 
-  summarise(tot_civilian = sum(numweaponsdelivered)) %>% 
+  group_by(varname_1) %>%
+  summarise(tot_civilian = sum(numweaponsdelivered),
+            tot_civilian_lb = sum(weightdelivered)) %>% 
   ungroup() %>% 
   filter(!is.na(varname_1))
 province_civilian_sum <- sf::st_drop_geometry(province_civilian_sum)
 
-province_infra_sum <- province_bombs %>% 
+province_infra_sum <- province_bmr %>% 
   ungroup() %>% 
   filter(infrastructure == 1) %>% 
   group_by(varname_1) %>% 
-  summarise(tot_infrastructure = sum(numweaponsdelivered)) %>% 
+  summarise(tot_infrastructure = sum(numweaponsdelivered),
+            tot_infrastructure_lb = sum(weightdelivered)) %>% 
   ungroup() %>% 
   filter(!is.na(varname_1))
 province_infra_sum <- sf::st_drop_geometry(province_infra_sum)
 
-province_industry_sum <- province_bombs %>% 
+province_industry_sum <- province_bmr %>% 
   ungroup() %>% 
   filter(industry == 1) %>% 
   group_by(varname_1) %>% 
-  summarise(tot_industry = sum(numweaponsdelivered)) %>% 
+  summarise(tot_industry = sum(numweaponsdelivered),
+            tot_industry_lb = sum(weightdelivered)) %>% 
   ungroup() %>% 
   filter(!is.na(varname_1))
 province_industry_sum <- sf::st_drop_geometry(province_industry_sum)
 
-province_dualuse_sum <- list(province_dualuse_sum, province_civilian_sum, province_infra_sum, province_industry_sum) %>% 
+province_target_sum <- list(province_civilian_sum, province_infra_sum, province_industry_sum) %>% 
   reduce(full_join, by = "varname_1") %>% 
-  mutate(tot_industry = ifelse(is.na(tot_industry), 0, tot_industry),
-         tot_infrastructure = ifelse(is.na(tot_infrastructure), 0, tot_infrastructure),
-         tot_civilian = ifelse(is.na(tot_civilian), 0, tot_civilian))
+  mutate_all(~replace_na(., 0))
+
+province_bmr_sum <- list(province_bmr_sum, province_target_sum, prov_casualties) %>% 
+  reduce(full_join, by = "varname_1")
 
 provarea <- provarea %>% 
   rename(name_1 = Province) %>%
@@ -132,23 +119,12 @@ provarea <- provarea %>%
          name_1 = ifelse(name_1 == "TP.Hồ Chí Minh", "Hồ Chí Minh", name_1),
          name_1 = ifelse(name_1 == "Thanh Hoá", "Thanh Hóa", name_1))
 
+province_bmr_sum <- list(province_bmr_sum, provarea) %>% 
+  reduce(full_join, by = "name_1")
+
 vnmap1 <- vnmap1 %>% rename(name_1 = NAME_1)
 
-province_bombs_sum <- list(province_bombs_sum, provarea, vnmap1) %>% 
-  reduce(full_join, by = "name_1") %>% 
-  mutate(bmr_per = tot_bmr/Area)
+province_bmr_sf <- left_join(province_bmr_sum, vnmap1, by = "name_1")
+province_bmr_sf <- province_bmr_sf %>% st_as_sf()
 
-province_bombs_sum <- left_join(province_bombs_sum, prov_casualties, by = "varname_1") %>% 
-  mutate(deaths_per = killed_tot/Area)
-
-province_bombs_sf <- province_bombs_sum %>% st_as_sf()
-
-province_bombs_sum <- province_bombs_sum %>% select(varname_1, name_1, tot_bmr, Area, bmr_per, killed_tot, deaths_per, wounded_tot, missing_tot)
-province_bombs_sum <- sf::st_drop_geometry(province_bombs_sum)
-
-province_bombs_sum <- list(province_bombs_sum, province_dualuse_sum, province_mfunc_sum) %>% 
-  reduce(full_join, by = c("varname_1", "name_1"))
-
-colnames(province_bombs_sum) <- tolower(colnames(province_bombs_sum))
-
-save(province_bombs_sum, file = "province_bombs_sum.rda")
+save(province_bmr_sum, file = "province_bmr_sum.Rda")
