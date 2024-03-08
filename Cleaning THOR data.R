@@ -60,6 +60,9 @@ gdf <- st_as_sf(thor, coords = c("TGTLONDDD_DDD_WGS84", "TGTLATDD_DDD_WGS84"), c
 gdf$tgtlonddd_ddd_wgs84 <- st_coordinates(gdf)[, "X"]
 gdf$tgtlatdd_ddd_wgs84 <- st_coordinates(gdf)[, "Y"]
 
+civilian_targets <- gdf %>% filter(civilian == 1)
+infrastructure_targets <- gdf %>% filter(infrastructure == 1)
+
 # Spatial Join 
 
 province_bmr <- st_join(gdf, vnmap1)
@@ -126,5 +129,22 @@ vnmap1 <- vnmap1 %>% rename(name_1 = NAME_1)
 
 province_bmr_sf <- left_join(province_bmr_sum, vnmap1, by = "name_1")
 province_bmr_sf <- province_bmr_sf %>% st_as_sf()
+
+bases <- st_transform(bases, crs = 4326)
+hcmtrail <- st_transform(hcmtrail, crs = 4326)
+
+nearest_base <- st_nearest_feature(province_bmr_sf, bases)
+province_bmr_sf$dist_nearest_base <-
+  as.numeric(st_distance(province_bmr_sf, bases[nearest_base, ], by_element = TRUE)) / 1000
+
+nearest_trail <- st_nearest_feature(province_bmr_sf, hcmtrail)
+province_bmr_sf$dist_nearest_hochi <-
+  as.numeric(st_distance(province_bmr_sf, hcmtrail[nearest_trail, ], by_element = TRUE)) / 1000
+
+distance_info <- province_bmr_sf %>% 
+  select(varname_1, dist_nearest_base, dist_nearest_hochi)
+distance_info <- sf::st_drop_geometry(distance_info)
+
+province_bmr_sum <- left_join(province_bmr_sum, distance_info, by = "varname_1")
 
 save(province_bmr_sum, file = "province_bmr_sum.Rda")
