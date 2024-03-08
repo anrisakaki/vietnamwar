@@ -8,8 +8,12 @@ library(lubridate)
 library(sjPlot)
 library(sfheaders)
 library(mgrs)
+library(mapview)
 
 rm(list=ls())
+
+# DHC 
+dhc_97 <- read_dta(file = "DHC/VNIR31FL.dta")
 
 # Population and Housing Census 
 
@@ -18,6 +22,8 @@ phc <- read_dta(file = "ipumsi_00006.dta")
 # Population 
 
 prewar_ppn <- read.csv("prewar_ppn.csv")
+
+prewar_area <- prewar_ppn
 
 # Bombing data 
 
@@ -50,6 +56,10 @@ vnmap0 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_0.shp")
 vnmap1 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_1.shp")
 vnmap2 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_2.shp")
 vnmap3 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_3.shp")
+hcmtrail <- st_read("3-replication package/3-replication package/rawdata/shapefiles/HoChiMinhGeoreference.shp")
+bases <- st_read("3-replication package/3-replication package/rawdata/shapefiles/AirBases-point.shp")
+popcenter <-
+  st_read("3-replication package/3-replication package/rawdata/shapefiles/ne_10m_populated_places.shp")
 
 provarea <- read.csv("province_area.csv")
 
