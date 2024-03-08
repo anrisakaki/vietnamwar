@@ -175,4 +175,60 @@ prov_casualties <- combined_casualties %>%
 
 colnames(prov_casualties) <- tolower(colnames(prov_casualties))
 
+prov_casualties_sexratio <- combined_casualties %>% 
+  mutate(
+    Meaning = case_when(
+      prov == 'An Giang' & is.na(Meaning) ~ 'An Giang',
+      prov == 'Soc Trang' & is.na(Meaning) ~ 'BA Xuyen',
+      prov == 'Bac Lieu' & is.na(Meaning) ~ 'Bac Lieu',
+      prov == 'Dong Nai' & is.na(Meaning) ~ 'Bien Hoa',
+      prov == 'Binh Dinh' & is.na(Meaning) ~ 'Binh Dinh',
+      prov == 'Binh Duong' & is.na(Meaning) ~ 'Binh Duong',
+      prov == 'Binh Phuoc' & is.na(Meaning) ~ 'Binh Long',
+      prov == 'Binh Thuan' & is.na(Meaning) ~ 'Binh Thuan',
+      prov == 'An Giang' & is.na(Meaning) ~ 'Chau Doc',
+      prov == 'Dak Lak' & is.na(Meaning) ~ 'Darlac',
+      prov == 'Tien Giang' & is.na(Meaning) ~ 'Dinh Tuong',
+      prov == 'Hau Giang' & is.na(Meaning) ~ 'Ghuong Thien',
+      prov == 'Ho Chi Minh' & is.na(Meaning) ~ 'Gia Dinh',
+      prov == 'Tien Giang' & is.na(Meaning) ~ 'Go Cong',
+      prov == 'Long An' & is.na(Meaning) ~ 'Hau Nghia',
+      prov == 'Khanh Hoa' & is.na(Meaning) ~ 'Khank Hoa',
+      prov == 'Kien Giang' & is.na(Meaning) ~ 'Kien Giang',
+      prov == 'Ben Tre' & is.na(Meaning) ~ 'Kien Hoa',
+      prov == 'Dong Thap' & is.na(Meaning) ~ 'Kien Phong',
+      prov == 'Long An' & is.na(Meaning) ~ 'Kien Tuong',
+      prov == 'Kon Tum' & is.na(Meaning) ~ 'Kontum',
+      prov == 'Lam Dong' & is.na(Meaning) ~ 'Lam Dong',
+      prov == 'Long An' & is.na(Meaning) ~ 'Long An',
+      prov == 'Dong Nai' & is.na(Meaning) ~ 'Long Khanh',
+      prov == 'Ninh Thuan' & is.na(Meaning) ~ 'Ninh Thuan',
+      prov == 'Can Tho' & is.na(Meaning) ~ 'Phong Dinh',
+      prov == 'Gia Lai' & is.na(Meaning) ~ 'Phu Bon',
+      prov == 'Phu Yen' & is.na(Meaning) ~ 'Phu Yen',
+      prov == 'Binh Phuoc' & is.na(Meaning) ~ 'Phuoc Long',
+      prov == 'Ba Ria - Vung Tau' & is.na(Meaning) ~ 'Phuoc Tuy',
+      prov == 'Dak Lak' & is.na(Meaning) ~ 'Pleiku',
+      prov == 'Dak Nong' & is.na(Meaning) ~ 'Quang Duc',
+      prov == 'Quang Nam' & is.na(Meaning) ~ 'Quang Nam',
+      prov == 'Quang Ngai' & is.na(Meaning) ~ 'Quang Ngai',
+      prov == 'Quang Nam' & is.na(Meaning) ~ 'Quang Tin',
+      prov == 'Quang Tri' & is.na(Meaning) ~ 'Quang Tri',
+      prov == 'Dong Thap' & is.na(Meaning) ~ 'SA Dec',
+      prov == 'Tay Ninh' & is.na(Meaning) ~ 'Tay Ninh',
+      prov == 'An Giang' & is.na(Meaning) ~ 'Trung Phon',
+      prov == 'Lam Dong' & is.na(Meaning) ~ 'Tuyen Duc',
+      prov == 'Vinh Long' & is.na(Meaning) ~ 'Vinh Long',
+      prov == 'Tra Vinh' & is.na(Meaning) ~ 'Vinh Binh',
+      MAJOR.PROVINCE.CODE == 'Thua Thien' & prov == "Thua Thien Hue" ~ 'Thua Thien',
+      MAJOR.PROVINCE.CODE == 39 & prov == 'Ca Mau' ~ 'An Xuyen',
+      MAJOR.PROVINCE.CODE == 'Binh Tuy' & prov == 'Binh Thuan' ~ 'Binh Tuy',      
+      TRUE ~ Meaning
+    )) %>% 
+  group_by(Meaning) %>% 
+  summarise(killed_tot = sum(NUMBER.DESTROYED.OF.KILLED),
+            wounded_tot = sum(NUMBER.DAMAGED.OR.WOUNDED),
+            missing_tot = sum(NUMBER.CAPTURED.OR.MISSING)) %>% 
+  filter(!is.na(Meaning))
+
 save(prov_casualties, file = "prov_casualties.Rda")
