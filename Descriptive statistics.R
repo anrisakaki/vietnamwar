@@ -269,8 +269,8 @@ ggsave("casualties_work_f99.jpeg", width = 7, height = 7)
 
 ggplot(sexratio_prov_99, aes(x = log(tot_infrastructure), y = sexratio*100)) +
   geom_point() +
-  # geom_smooth(method = "lm",
-  #             se = F) +
+  geom_smooth(method = "lm",
+              se = F) +
   theme_minimal() +
   guides(fill = "none") +  
   theme(axis.line = element_line(color='black'),
