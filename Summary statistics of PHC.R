@@ -17,11 +17,11 @@ agecohort_sum <- phc %>%
   mutate(sex_ratio = (n_male / n_female) * 100,
          sex_ratio = round(sex_ratio, 2),
          prov_ppn = n_male + n_female,
-         group89 = "Before 1976",
-         group99 = case_when(year == 1999 & age_cohort %in% c("11-15", "16-20", "21-25") ~ "After 1976",
-                             TRUE ~ "Before 1975"),
-         group09 = case_when(year == 2009 & age_cohort %in% c("11-15", "16-20", "21-25", "26-30", "31-35") ~ "After 1976",
-                             TRUE ~ "Before 1975"))
+         group89 = "Born before war",
+         group99 = case_when(year == 1999 & age_cohort %in% c("10-14", "15-19", "20-24") ~ "Born after war",
+                             TRUE ~ "Born before war"),
+         group09 = case_when(year == 2009 & age_cohort %in% c("10-14", "15-19", "20-24", "25-29", "30-34") ~ "Born after war",
+                             TRUE ~ "Born before war"))
 
 ## FLFP by age cohort 
 agecohort_flfp_sum <- phc %>% 
