@@ -7,21 +7,25 @@ for (i in phc) {
 dict <- c("age_cohort" = "Age Cohort $\times$ log(Bombs/km^2)")
 setFixest_coefplot(dict = dict, grid = F, zero.par = list( type="dotted", lty=2), main = "")
 
-iplot(list(
-  feols(work ~ i(age_cohort),
-        subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
-        weights = ~perwt),
-  feols(work ~ i(age_cohort),
-        subset(phc99, female == 1 & birthyr > 1935 & birthyr < 1984 & migration == 0),
-        weights = ~perwt),
-  feols(work ~ i(age_cohort),
-        subset(phc09, female == 1 & birthyr > 1945 & birthyr < 1994 & migration == 0),
-        weights = ~perwt)))
+etable(list(
+  feols(work ~ as.factor(female)/log(tot_civilian) + yrschool + nchild + married + as.factor(minority) + age,
+        subset(phc89, birthyr > 1925 & birthyr < 1974 & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female)/log(tot_civilian) + yrschool + nchild + married + as.factor(minority) + age,
+        subset(phc99, birthyr > 1935 & birthyr < 1984 & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female)/log(tot_civilian) + yrschool + nchild + married + as.factor(minority) + age,
+        subset(phc09, birthyr > 1945 & birthyr < 1994 & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)), tex = T)
+
 
 # 1989
 
 png("flfp_bombs_89.png")
-iplot(feols(work ~ i(age_cohort, civilians_per) + yrschool + nchild + married + as.factor(minority) | geo1_vn1989 + age_cohort,
+iplot(feols(work ~ i(age_cohort, tot_killed) + yrschool + nchild + married + as.factor(minority) | geo1_vn1989 + age_cohort,
             subset(phc89, female == 1 & birthyr > 1925 & birthyr < 1974 & migration == 0),
             weights = ~perwt,
             vcov = ~geo1_vn1989), main = " ", xlab = "")
