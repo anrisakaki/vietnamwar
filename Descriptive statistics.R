@@ -30,30 +30,6 @@ ggplot(province_bmr_sf) +
   ggtitle("")
 ggsave("province_casualties_sf.jpeg", width = 7, height = 7)
 
-ggplot(province_bmr_sf) + 
-  geom_sf(aes(fill = log(tot_infrastructure))) +
-  scale_fill_gradient(name = "log(Infrastructure Targets)", low = "green", high = "red", na.value = "white") + 
-  theme(axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks = element_blank(),
-        axis.title.y=element_blank(),
-        axis.title.x=element_blank(),
-        panel.background = element_blank()) +
-  ggtitle("")
-ggsave("infra_targets_sf.jpeg", width = 7, height = 7)
-
-ggplot(province_bmr_sf) + 
-  geom_sf(aes(fill = log(tot_infrastructure))) +
-  scale_fill_gradient(name = "log(Civilian Targets)", low = "green", high = "red", na.value = "white") + 
-  theme(axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks = element_blank(),
-        axis.title.y=element_blank(),
-        axis.title.x=element_blank(),
-        panel.background = element_blank()) +
-  ggtitle("")
-ggsave("infra_targets_sf.jpeg", width = 7, height = 7)
-
 # Overall BMR 
 
 ggplot(dplyr::filter(sexratio_prov_09, tot_casualties_per > 0), aes(x = log(tot_bomb), y = log(tot_killed))) +
