@@ -73,23 +73,6 @@ ggplot(dplyr::filter(sexratio_prov_09, tot_casualties_per > 0), aes(x = log(tot_
        y = "log(Casualties)")
 ggsave("bombs_casualties.jpeg", width = 7, height = 7)
 
-ggplot(sexratio_prov_99, aes(x = log(tot_bomb), y = sexratio*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Bombs, Missiles and Rockets)",
-       y = "Province-level Sex Ratio in 1989")
-ggsave("bmr_sexratio89.jpeg", width = 7, height = 7)
-
 ggplot(dplyr::filter(sexratio_prov_89, tot_casualties_per > 0), aes(x = log(tot_killed), y = sexratio*100)) +
   geom_point() +
   geom_smooth(method = "lm",
@@ -106,6 +89,59 @@ ggplot(dplyr::filter(sexratio_prov_89, tot_casualties_per > 0), aes(x = log(tot_
   labs(x = "log(Casualties)",
        y = "Province-level Sex Ratio in 1989")
 ggsave("casualties_sexratio89.jpeg", width = 7, height = 7)
+
+# 1976
+
+ggplot(oldprov_sexratio, aes(x = log(tot_bmr), y = sexratio*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Sex Ratio in 1976")
+ggsave("bmr_sexratio76.jpeg", width = 7, height = 7)
+
+ggplot(oldprov_sexratio, aes(x = log(tot_infrastructure), y = sexratio)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Infrastructure Targets)",
+       y = "Sex Ratio in 1976")
+ggsave("infra_sexratio76.jpeg", width = 7, height = 7)
+
+ggplot(oldprov_sexratio, aes(x = log(tot_civilian), y = sexratio)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Civilian Targets)",
+       y = "Sex Ratio in 1976")
+ggsave("civ_sexratio76.jpeg", width = 7, height = 7)
 
 # 1989 
 
