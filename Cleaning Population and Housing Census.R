@@ -16,8 +16,7 @@ phc <- phc %>%
          female = ifelse(sex == 2, 1, 0),
          agri = ifelse(indgen == 10, 1, 0),
          age75 = 1975 - birthyr,
-         migration = ifelse(migrate5 > 19, 1, 0),
-         migration = ifelse(migrate5 == 0 | mig1_5_vn == 99, NA, migration),
+         migration = ifelse(migrate5 == 10 | migrate5 == 11 | migrate5 == 12, NA, migration),
          age = ifelse(age == 999, NA, age)) %>% 
   mutate(
     age_cohort = case_when(
