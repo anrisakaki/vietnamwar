@@ -25,6 +25,8 @@ prewar_ppn <- read.csv("prewar_ppn.csv")
 
 prewar_area <- prewar_ppn
 
+postwar_ppn <- read.csv("Male and Female Population 1976.csv")
+
 # Bombing data 
 
 bombs_district <- read_dta(file = "Corrigendum_Impact-bombing-Vietnam_Code-Data_2023-07-24/data/clean/district_bombing_corrected.dta")
@@ -64,6 +66,8 @@ popcenter <-
 provarea <- read.csv("province_area.csv")
 
 district <- read_dta(file = "Consistent 2019 to 1999 wards with 1999 districts.dta")
+
+vn_old <- read_sf("Chloropleth Maps/vnm_huyen.shp")
 
  # Consistent District Boundaries 
 
