@@ -23,6 +23,8 @@ agecohort_sum <- phc %>%
          group09 = case_when(year == 2009 & age_cohort %in% c("10-14", "15-19", "20-24", "25-29", "30-34") ~ "Born after war",
                              TRUE ~ "Born before war"))
 
+
+
 ## FLFP by age cohort 
 agecohort_flfp_sum <- phc %>% 
   filter(female == 1 & work == 1) %>% 
