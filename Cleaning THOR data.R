@@ -40,11 +40,9 @@ thor <- thor %>%
       TRUE ~ 0 
     ),    
     infrastructure = case_when(
-      TGTTYPE %in% c("BRIDGE", "FERRY", "FERRY CROSSING", "PIER",
-                     "TRAILS", "STORAGE AREA",
-                     "RUNWAY", "PORT FACILITY", "FACTORY INDUSTRIAL", "FACTORY,ANY", "ELEC. PWR. FAC.", "PORT FACILITY",
-                     "SHIPYARD", "MOUNTAIN PASS", "PUMPING STATION") ~ 1,
-      grepl("RAILROAD|BRIDGE|ROAD|SUPP|REFINERY|TOWER", TGTTYPE, ignore.case = TRUE) ~ 1,
+      TGTTYPE %in% c("BRIDGE", "FERRY CROSSING", "PIER", "PORT FACILITY", "FACTORY INDUSTRIAL", "FACTORY,ANY",
+                     "ELEC. PWR. FAC.", "PORT FACILITY", "SHIPYARD", "PUMPING STATION", "	THERMAL POWER PLANT") ~ 1,
+      grepl("RAILROAD|BRIDGE|ROAD|REFINERY|TOWER", TGTTYPE, ignore.case = TRUE) ~ 1,
       TRUE ~ 0
   ),
   WEIGHTDELIVERED = ifelse(is.na(WEAPONSLOADEDWEIGHT), NUMWEAPONSDELIVERED*WEAPONWEIGHT, WEAPONSLOADEDWEIGHT/10)) %>% 
