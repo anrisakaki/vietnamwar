@@ -30,23 +30,21 @@ thor <- thor %>%
   filter(WEAPON_CLASS != "SUPPORT",
          WEAPON_CLASS != "GUN",
          MFUNC_DESC_CLASS == "KINETIC") %>% 
-  # Removing rocket and missIle launchers to prevent double counting 
-  filter(!grepl("AGM|AIM|LAU|2.75", WEAPONTYPE),
-         !grepl("PAMPHLET", WEAPONTYPE_DESC)) %>% 
+  # Removing rocket and missileS launchers to prevent double counting 
+  # filter(!grepl("AGM|AIM|LAU|2.75", WEAPONTYPE),
+  #        !grepl("PAMPHLET", WEAPONTYPE_DESC)) %>% 
   mutate(
     civilian = case_when(
-      TGTTYPE %in% c("AGRICULTURAL AREA", "CIV POPULATN CENTR", "VILLAGE", "BUILDINGS", "HUTS") ~ 1,
+      TGTTYPE %in% c("AGRICULTURAL AREA", "CIV POPULATN CENTR", "VILLAGE", "HUTS", "ISLAND", "BUILDINGS") ~ 1,
       grepl("PERSONNEL", TGTTYPE, ignore.case = TRUE) ~ 1,
       TRUE ~ 0 
     ),    
-    industry = case_when(
-      TGTTYPE %in% c("CONSTRUCTION SITE", "FACTORY INDUSTRIAL", "FACTORY,ANY", "ELEC. PWR. FAC.") ~ 1,
-      TRUE ~ 0
-    ),
     infrastructure = case_when(
       TGTTYPE %in% c("BRIDGE", "FERRY", "FERRY CROSSING", "PIER",
-                     "TUNNEL", "TUNNELS") ~ 1,
-      grepl("RAILROAD|BRIDGE|ROAD", TGTTYPE, ignore.case = TRUE) ~ 1,
+                     "TRAILS", "STORAGE AREA",
+                     "RUNWAY", "PORT FACILITY", "FACTORY INDUSTRIAL", "FACTORY,ANY", "ELEC. PWR. FAC.", "PORT FACILITY",
+                     "SHIPYARD", "MOUNTAIN PASS", "PUMPING STATION") ~ 1,
+      grepl("RAILROAD|BRIDGE|ROAD|SUPP|REFINERY|TOWER", TGTTYPE, ignore.case = TRUE) ~ 1,
       TRUE ~ 0
   ),
   WEIGHTDELIVERED = ifelse(is.na(WEAPONSLOADEDWEIGHT), NUMWEAPONSDELIVERED*WEAPONWEIGHT, WEAPONSLOADEDWEIGHT/10)) %>% 
@@ -60,8 +58,8 @@ gdf <- st_as_sf(thor, coords = c("TGTLONDDD_DDD_WGS84", "TGTLATDD_DDD_WGS84"), c
 gdf$tgtlonddd_ddd_wgs84 <- st_coordinates(gdf)[, "X"]
 gdf$tgtlatdd_ddd_wgs84 <- st_coordinates(gdf)[, "Y"]
 
-civilian_targets <- gdf %>% filter(civilian == 1)
-infrastructure_targets <- gdf %>% filter(infrastructure == 1)
+civilian_targets <- gdf %>% filter(civilian == 1) %>% sf_to_df()
+infrastructure_targets <- gdf %>% filter(infrastructure == 1) %>% sf_to_df()
 
 # Spatial Join 
 
@@ -75,8 +73,8 @@ province_bmr_sum <- province_bmr %>%
   group_by(varname_1, name_1) %>% 
   summarise(tot_bmr = sum(numweaponsdelivered),
             tot_bmr_lb = sum(weightdelivered)) %>% 
-  ungroup()
-province_bmr_sum <- sf::st_drop_geometry(province_bmr_sum)
+  ungroup() %>% 
+  sf::st_drop_geometry()
 
 province_civilian_sum <- province_bmr %>% 
   ungroup() %>% 
@@ -85,8 +83,8 @@ province_civilian_sum <- province_bmr %>%
   summarise(tot_civilian = sum(numweaponsdelivered),
             tot_civilian_lb = sum(weightdelivered)) %>% 
   ungroup() %>% 
-  filter(!is.na(varname_1))
-province_civilian_sum <- sf::st_drop_geometry(province_civilian_sum)
+  filter(!is.na(varname_1)) %>% 
+  sf::st_drop_geometry()
 
 province_infra_sum <- province_bmr %>% 
   ungroup() %>% 
@@ -95,20 +93,10 @@ province_infra_sum <- province_bmr %>%
   summarise(tot_infrastructure = sum(numweaponsdelivered),
             tot_infrastructure_lb = sum(weightdelivered)) %>% 
   ungroup() %>% 
-  filter(!is.na(varname_1))
-province_infra_sum <- sf::st_drop_geometry(province_infra_sum)
+  filter(!is.na(varname_1)) %>% 
+  sf::st_drop_geometry()
 
-province_industry_sum <- province_bmr %>% 
-  ungroup() %>% 
-  filter(industry == 1) %>% 
-  group_by(varname_1) %>% 
-  summarise(tot_industry = sum(numweaponsdelivered),
-            tot_industry_lb = sum(weightdelivered)) %>% 
-  ungroup() %>% 
-  filter(!is.na(varname_1))
-province_industry_sum <- sf::st_drop_geometry(province_industry_sum)
-
-province_target_sum <- list(province_civilian_sum, province_infra_sum, province_industry_sum) %>% 
+province_target_sum <- list(province_civilian_sum, province_infra_sum) %>% 
   reduce(full_join, by = "varname_1") %>% 
   mutate_all(~replace_na(., 0))
 
@@ -148,3 +136,38 @@ distance_info <- sf::st_drop_geometry(distance_info)
 province_bmr_sum <- left_join(province_bmr_sum, distance_info, by = "varname_1")
 
 save(province_bmr_sum, file = "province_bmr_sum.Rda")
+
+# Bombing intensity based on old provincial boundaries 
+
+vn_old <- st_transform(vn_old, crs = 4326)
+
+thor_old <- st_join(gdf, vn_old)
+
+thor_old_sum <- thor_old %>% 
+  group_by(NAME) %>% 
+  summarise(tot_bmr = sum(NUMWEAPONSDELIVERED),
+            tot_bmr_lb = sum(WEIGHTDELIVERED)) %>% 
+  sf::st_drop_geometry() %>% 
+  filter(!is.na(NAME))
+
+infra_old <- thor_old %>% 
+  filter(infrastructure == 1) %>% 
+  group_by(NAME) %>% 
+  summarise(tot_infrastructure = sum(NUMWEAPONSDELIVERED),
+            tot_infra_lb = sum(WEIGHTDELIVERED)) %>% 
+  sf::st_drop_geometry() %>% 
+  filter(!is.na(NAME))
+
+civilian_old <- thor_old %>% 
+  filter(civilian == 1) %>% 
+  group_by(NAME) %>% 
+  summarise(tot_civilian = sum(NUMWEAPONSDELIVERED),
+            tot_civilian_lb = sum(WEIGHTDELIVERED)) %>% 
+  sf::st_drop_geometry() %>% 
+  filter(!is.na(NAME))
+
+thor_old_sum <- list(thor_old_sum, infra_old, civilian_old) %>% 
+  reduce(full_join, by = "NAME")
+
+oldprov_sexratio <- merge(postwar_ppn, thor_old_sum, by = "NAME") %>% 
+  mutate(sexratio = (M_1976/F_1976)*100)
