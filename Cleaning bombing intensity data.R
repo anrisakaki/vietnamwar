@@ -295,14 +295,12 @@ bombs_province <- bombs_province %>%
             tot_missing_reg = sum(missing_tot),
             tot_civilian_reg = sum(tot_civilian),
             tot_infrastructure_reg = sum(tot_infrastructure),
-            tot_industry_reg = sum(tot_industry),
             ppn64 = mean(tot_ppn64)) %>% 
   mutate(tot_bomb_ppn = tot_bomb_reg/ppn64,
          tot_casualties_ppn = tot_killed_reg/ppn64,
          infrastructure_ppn = tot_infrastructure_reg/ppn64,
-         industry_ppn = tot_industry_reg/ppn64,
          civilians_ppn= tot_civilian_reg/ppn64) %>% 
-  select(geo1_vn, tot_bomb_ppn, tot_casualties_ppn, infrastructure_ppn, industry_ppn, civilians_ppn)
+  select(geo1_vn, tot_bomb_ppn, tot_casualties_ppn, infrastructure_ppn, civilians_ppn)
 
 bombs_province89 <- left_join(province_bmr_sum, bombs_provcodes89, by = "varname_1") %>% 
   distinct() %>% 
@@ -314,12 +312,10 @@ bombs_province89 <- left_join(province_bmr_sum, bombs_provcodes89, by = "varname
             tot_missing = sum(missing_tot),
             tot_civilian = sum(tot_civilian),
             tot_infrastructure = sum(tot_infrastructure),
-            tot_industry = sum(tot_industry),
             dist_nearest_base = min(dist_nearest_base),
             dist_nearest_hochi = min(dist_nearest_hochi)) %>% 
   mutate(tot_casualties_per = tot_killed/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
-         industry_per = tot_industry/area_sum,
          civilians_per = tot_civilian/area_sum)
 
 bombs_province99 <- left_join(province_bmr_sum, bombs_provcodes99, by = "varname_1") %>% 
@@ -332,12 +328,10 @@ bombs_province99 <- left_join(province_bmr_sum, bombs_provcodes99, by = "varname
             tot_missing = sum(missing_tot),
             tot_civilian = sum(tot_civilian),
             tot_infrastructure = sum(tot_infrastructure),
-            tot_industry = sum(tot_industry),
             dist_nearest_base = min(dist_nearest_base),
             dist_nearest_hochi = min(dist_nearest_hochi)) %>% 
   mutate(tot_casualties_per = tot_killed/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
-         industry_per = tot_industry/area_sum,
          civilians_per = tot_civilian/area_sum)
 
 bombs_province09 <- left_join(province_bmr_sum, bombs_provcodes09, by = "varname_1") %>% 
@@ -350,12 +344,10 @@ bombs_province09 <- left_join(province_bmr_sum, bombs_provcodes09, by = "varname
             tot_missing = sum(missing_tot),
             tot_civilian = sum(tot_civilian),
             tot_infrastructure = sum(tot_infrastructure),
-            tot_industry = sum(tot_industry),
             dist_nearest_base = min(dist_nearest_base),
             dist_nearest_hochi = min(dist_nearest_hochi)) %>% 
   mutate(tot_casualties_per = tot_killed/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
-         industry_per = tot_industry/area_sum,
          civilians_per = tot_civilian/area_sum)
 
 bombs_province89 <- bombs_province89 %>% mutate(year = 1989)
