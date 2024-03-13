@@ -49,6 +49,20 @@ etable(list(
         weights = ~perwt,
         vcov = ~geo1_vn2009)), tex = T)
 
+etable(list(
+  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age | regnvn,
+        subset(phc89, birthyr > 1925 & birthyr < 1974 & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age | regnvn,
+        subset(phc99, birthyr > 1935 & birthyr < 1984 & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age | regnvn,
+        subset(phc09, birthyr > 1945 & birthyr < 1994 & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)), tex = T)
+
 
 # 1989
 
