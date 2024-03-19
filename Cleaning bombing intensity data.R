@@ -212,7 +212,8 @@ bombs_provcodes99 <- province_bmr_sum %>%
                               'Bac Lieu' = 821,
                               'Ca Mau' = 823,
                               'Dien Bien' = 301,
-                              .default = NA_real_)) 
+                              .default = NA_real_))
+  
 
 bombs_provcodes09 <- province_bmr_sum %>%
   select(varname_1) %>%
@@ -316,7 +317,8 @@ bombs_province89 <- left_join(province_bmr_sum, bombs_provcodes89, by = "varname
             dist_nearest_hochi = min(dist_nearest_hochi)) %>% 
   mutate(tot_casualties_per = tot_killed/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
-         civilians_per = tot_civilian/area_sum)
+         civilians_per = tot_civilian/area_sum,
+         south = ifelse(geo1_vn1989 > 26, 1, 0))
 
 bombs_province99 <- left_join(province_bmr_sum, bombs_provcodes99, by = "varname_1") %>% 
   distinct() %>% 
@@ -332,7 +334,8 @@ bombs_province99 <- left_join(province_bmr_sum, bombs_provcodes99, by = "varname
             dist_nearest_hochi = min(dist_nearest_hochi)) %>% 
   mutate(tot_casualties_per = tot_killed/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
-         civilians_per = tot_civilian/area_sum)
+         civilians_per = tot_civilian/area_sum,
+         south = ifelse(geo1_vn1999 > 408, 1, 0))
 
 bombs_province09 <- left_join(province_bmr_sum, bombs_provcodes09, by = "varname_1") %>% 
   distinct() %>% 
@@ -348,7 +351,8 @@ bombs_province09 <- left_join(province_bmr_sum, bombs_provcodes09, by = "varname
             dist_nearest_hochi = min(dist_nearest_hochi)) %>% 
   mutate(tot_casualties_per = tot_killed/area_sum,
          infrastructure_per = tot_infrastructure/area_sum,
-         civilians_per = tot_civilian/area_sum)
+         civilians_per = tot_civilian/area_sum,
+         south = ifelse(geo1_vn2009 > 44, 1, 0))
 
 bombs_province89 <- bombs_province89 %>% mutate(year = 1989)
 bombs_province99 <- bombs_province99 %>% mutate(year = 1999)
