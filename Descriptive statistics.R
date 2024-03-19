@@ -367,6 +367,7 @@ ggplot(dplyr::filter(sexratio_prov_89, south == 0), aes(x = age3064_widowed_f*10
         text = element_text(size=10)) + 
   labs(x = "Share of Widowed Women Aged 30-64 in 1989",
        y = "Ratio of Male to Female Workers Aged 30-64 in 1989 (North)")
+ggsave("widowed3064_workerratio3064_89_n.jpeg", width = 7, height = 7)
 
 ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = age3064_widowed_f*100, y = workratio3064*100)) +
   geom_point() +
@@ -383,6 +384,7 @@ ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = age3064_widowed_f*10
         text = element_text(size=10)) + 
   labs(x = "Share of Widowed Women Aged 30-64 in 1989",
        y = "Ratio of Male to Female Workers Aged 30-64 in 1989 (South)")
+ggsave("widowed3064_workerratio3064_89_s.jpeg", width = 7, height = 7)
 
 # Male to female ratio in each industry 
 
