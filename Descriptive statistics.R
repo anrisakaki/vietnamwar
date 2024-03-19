@@ -30,7 +30,7 @@ ggplot(province_bmr_sf) +
   ggtitle("")
 ggsave("province_casualties_sf.jpeg", width = 7, height = 7)
 
-# Overall BMR 
+# Overall BMR and casualties 
 
 ggplot(dplyr::filter(sexratio_prov_09, tot_casualties_per > 0), aes(x = log(tot_bomb), y = log(tot_killed))) +
   geom_point() +
@@ -49,26 +49,9 @@ ggplot(dplyr::filter(sexratio_prov_09, tot_casualties_per > 0), aes(x = log(tot_
        y = "log(Casualties)")
 ggsave("bombs_casualties.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(sexratio_prov_89, tot_casualties_per > 0), aes(x = log(tot_killed), y = sexratio*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Casualties)",
-       y = "Province-level Sex Ratio in 1989")
-ggsave("casualties_sexratio89.jpeg", width = 7, height = 7)
-
 # 1976
 
-ggplot(oldprov_sexratio, aes(x = log(tot_bmr), y = sexratio*100)) +
+ggplot(oldprov_sexratio, aes(x = log(tot_bmr), y = sexratio)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -85,60 +68,11 @@ ggplot(oldprov_sexratio, aes(x = log(tot_bmr), y = sexratio*100)) +
        y = "Sex Ratio in 1976")
 ggsave("bmr_sexratio76.jpeg", width = 7, height = 7)
 
-ggplot(oldprov_sexratio, aes(x = log(tot_infrastructure), y = sexratio)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Infrastructure Targets)",
-       y = "Sex Ratio in 1976")
-ggsave("infra_sexratio76.jpeg", width = 7, height = 7)
-
-ggplot(oldprov_sexratio, aes(x = log(tot_civilian), y = sexratio)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Civilian Targets)",
-       y = "Sex Ratio in 1976")
-ggsave("civ_sexratio76.jpeg", width = 7, height = 7)
-
 # 1989 
 
-ggplot(sexratio_prov_89, aes(x = log(tot_bomb), y = work_f*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Total Bombs, Missiles and Rockets)",
-       y = "Province-level FLFP in 1989")
-ggsave("bmr_work_f89.jpeg", width = 7, height = 7)
+## Sex ratio 
 
-ggplot(sexratio_prov_89, aes(x = log(tot_killed), y = work_f*100)) +
+ggplot(sexratio_prov_89, aes(x = log(tot_bomb), y = sexratio*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -151,9 +85,202 @@ ggplot(sexratio_prov_89, aes(x = log(tot_killed), y = work_f*100)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Casualties)",
-       y = "Province-level FLFP in 1989")
-ggsave("casualties_work_f89.jpeg", width = 7, height = 7)
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Sex Ratio in 1989")
+ggsave("bmr_sexratio89.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sexratio_prov_89, south == 0), aes(x = log(tot_bomb), y = sexratio*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Sex Ratio in 1989 (North)")
+
+ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = log(tot_bomb), y = sexratio*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Sex Ratio in 1989 (South)")
+
+# Sex ratio of age cohort 30-64 
+
+ggplot(sexratio_prov_89, aes(x = log(tot_bomb), y = sexratio3064*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "30-64 Age Cohort Sex Ratio in 1989")
+ggsave("bmr_sexratio3064_89.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sexratio_prov_89, south == 0), aes(x = log(tot_bomb), y = sexratio3064*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "30-64 Age Cohort Sex Ratio in 1989 (North)")
+ggsave("bmr_sexratio3064_89_n.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = log(tot_bomb), y = sexratio3064*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "30-64 Age Cohort Sex Ratio in 1989 (South)")
+ggsave("bmr_sexratio3064_89_s.jpeg", width = 7, height = 7)
+
+# Ratio of male to female workers  
+
+ggplot(dplyr::filter(sexratio_prov_89, south == 0), aes(x = log(tot_bomb), y = workratio*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Ratio of Male to Female Workers in 1989 (North)")
+ggsave("bmr_workerratio89_n.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = log(tot_bomb), y = workratio*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Ratio of Male to Female Workers in 1989 (South)")
+ggsave("bmr_workerratio89_s.jpeg", width = 7, height = 7)
+
+# Ratio of male to female workers aged 30-64 
+
+ggplot(sexratio_prov_89, aes(x = log(tot_bomb), y = workratio3064*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Ratio of Male to Female Workers Aged 30-64 in 1989")
+ggsave("bmr_workerratio_3064_89.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sexratio_prov_89, south == 0), aes(x = log(tot_bomb), y = workratio3064*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Ratio of Male to Female Workers Aged 30-64 in 1989 (North)")
+ggsave("bmr_workerratio_3064_89_n.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = log(tot_bomb), y = workratio3064*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Ratio of Male to Female Workers Aged 30-64 in 1989 (South)")
+ggsave("bmr_workerratio_3064_89_s.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = log(tot_bomb), y = workratio3064*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Ratio of Male to Female Workers Aged 30-64 in 1989 (South)")
+ggsave("bmr_workerratio_3064_89_s.jpeg", width = 7, height = 7)
+
+# Share of widows 
 
 ggplot(sexratio_prov_89, aes(x = log(tot_bomb), y = widowed_f*100)) +
   geom_point() +
@@ -168,13 +295,11 @@ ggplot(sexratio_prov_89, aes(x = log(tot_bomb), y = widowed_f*100)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Total Bombs, Missiles and Rockets)",
-       y = "Province-level share of widowed women in 1989")
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Share of Widowed Women in 1989")
 ggsave("bmr_widowed_f89.jpeg", width = 7, height = 7)
 
-## Disaggregated by target type 
-
-ggplot(sexratio_prov_89, aes(x = log(tot_infrastructure), y = widowed_f*100)) +
+ggplot(dplyr::filter(sexratio_prov_89, south == 0), aes(x = log(tot_bomb), y = widowed_f*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -187,11 +312,11 @@ ggplot(sexratio_prov_89, aes(x = log(tot_infrastructure), y = widowed_f*100)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Infrastructure Targets)",
-       y = "Province-level Share of Widowed Women in 1989")
-ggsave("infra_widow89.jpeg", width = 7, height = 7)
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Share of Widowed Women in 1989 (North)")
+ggsave("bmr_widowed_f89_n.jpeg", width = 7, height = 7)
 
-ggplot(sexratio_prov_89, aes(x = log(tot_civilian), y = widowed_f*100)) +
+ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = log(tot_bomb), y = widowed_f*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -204,11 +329,13 @@ ggplot(sexratio_prov_89, aes(x = log(tot_civilian), y = widowed_f*100)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Civilian Targets)",
-       y = "Province-level Share of Widowed Women in 1989")
-ggsave("civ_widow89.jpeg", width = 7, height = 7)
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Share of Widowed Women in 1989 (South)")
+ggsave("bmr_widowed_f89_s.jpeg", width = 7, height = 7)
 
-ggplot(sexratio_prov_89, aes(x = log(tot_infrastructure), y = work_f*100)) +
+# Widowhood vs work ratio 
+
+ggplot(sexratio_prov_89, aes(x = widowed_f*100, y = workratio*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -221,11 +348,11 @@ ggplot(sexratio_prov_89, aes(x = log(tot_infrastructure), y = work_f*100)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Infrastructure Targets)",
-       y = "Province-level FLFP in 1989 (%)")
-ggsave("infra_flfp89.jpeg", width = 7, height = 7)
+  labs(x = "Share of Widowed Women Agedin 1989",
+       y = "Ratio of Male to Female Workersin 1989")
+ggsave("widowed3064_workerratio3064_89.jpeg", width = 7, height = 7)
 
-ggplot(sexratio_prov_89, aes(x = log(tot_civilian), y = work_f*100)) +
+ggplot(dplyr::filter(sexratio_prov_89, south == 0), aes(x = age3064_widowed_f*100, y = workratio3064*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -238,12 +365,10 @@ ggplot(sexratio_prov_89, aes(x = log(tot_civilian), y = work_f*100)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Civilian Targets)",
-       y = "Province-level FLFP in 1989 (%)")
-ggsave("civ_flfp89.jpeg", width = 7, height = 7)
+  labs(x = "Share of Widowed Women Aged 30-64 in 1989",
+       y = "Ratio of Male to Female Workers Aged 30-64 in 1989 (North)")
 
-# 1999 
-ggplot(sexratio_prov_99, aes(x = log(tot_bomb), y = work_f*100)) +
+ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = age3064_widowed_f*100, y = workratio3064*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -256,16 +381,16 @@ ggplot(sexratio_prov_99, aes(x = log(tot_bomb), y = work_f*100)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Total Bombs, Missiles and Rockets)",
-       y = "Province-level FLFP in 1999")
-ggsave("bmr_work_f99.jpeg", width = 7, height = 7)
+  labs(x = "Share of Widowed Women Aged 30-64 in 1989",
+       y = "Ratio of Male to Female Workers Aged 30-64 in 1989 (South)")
 
-ggplot(sexratio_prov_99, aes(x = log(tot_killed), y = work_f*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
+# Male to female ratio in each industry 
+
+ggplot(dplyr::filter(indgen_sum, year == 1989 & indgen < 999), aes(x = (workerratio)*100, y = reorder(Industry, workerratio))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(label = round(workerratio*100, 2)), hjust = -0.2, size = 3) +
+  labs(x = "Ratio of Male to Female Workers in 1989",
+       y = "Industry") +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
@@ -273,18 +398,13 @@ ggplot(sexratio_prov_99, aes(x = log(tot_killed), y = work_f*100)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Casualties)",
-       y = "Province-level FLFP in 1999")
-ggsave("casualties_work_f99.jpeg", width = 7, height = 7)
+  scale_x_continuous(breaks = NULL) 
 
-## Disaggregated by target type 
-
-ggplot(sexratio_prov_99, aes(x = log(tot_infrastructure), y = sexratio*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
+ggplot(dplyr::filter(indgen_sum, year == 1999 & indgen < 999), aes(x = (workerratio)*100, y = reorder(Industry, workerratio))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(label = round(workerratio*100, 2)), hjust = -0.2, size = 3) +
+  labs(x = "Ratio of Male to Female Workers in 1999",
+       y = "Industry") +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
@@ -292,16 +412,13 @@ ggplot(sexratio_prov_99, aes(x = log(tot_infrastructure), y = sexratio*100)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Infrastructure Targets)",
-       y = "Province-level Sex Ratio in 1999")
-ggsave("infra_sexratio99.jpeg", width = 7, height = 7)
+  scale_x_continuous(breaks = NULL)
 
-ggplot(sexratio_prov_99, aes(x = log(tot_civilian), y = sexratio*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
+ggplot(dplyr::filter(indgen_sum, year == 2009 & indgen < 999), aes(x = (workerratio)*100, y = reorder(Industry, workerratio))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(label = round(workerratio*100, 2)), hjust = -0.2, size = 3) +
+  labs(x = "Ratio of Male to Female Workers in 1999",
+       y = "Industry") +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
@@ -309,114 +426,7 @@ ggplot(sexratio_prov_99, aes(x = log(tot_civilian), y = sexratio*100)) +
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(Civilian Targets)",
-       y = "Province-level Sex Ratio in 1999")
-ggsave("civ_sexratio89.jpeg", width = 7, height = 7)
-
-ggplot(sexratio_prov_99, aes(x = log(tot_infrastructure), y = work_f*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Infrastructure Targets)",
-       y = "Province-level FLFP in 1999 (%)")
-ggsave("infra_flfp99.jpeg", width = 7, height = 7)
-
-ggplot(sexratio_prov_99, aes(x = log(tot_civilian), y = work_f*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Civilian Targets)",
-       y = "Province-level FLFP in 1999 (%)")
-ggsave("civ_flfp99.jpeg", width = 7, height = 7)
-
-# 2009
-ggplot(sexratio_prov_09, aes(x = log(tot_bomb), y = work_f*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Total Bombs, Missiles and Rockets)",
-       y = "Province-level FLFP in 2009")
-ggsave("bmr_work_f09.jpeg", width = 7, height = 7)
-
-ggplot(sexratio_prov_09, aes(x = log(tot_killed), y = work_f*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Casualties)",
-       y = "Province-level FLFP in 2009")
-ggsave("casualties_work_f09.jpeg", width = 7, height = 7)
-
-## Disaggregated by target type 
-
-ggplot(sexratio_prov_09, aes(x = log(tot_infrastructure), y = work_f*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Infrastructure Targets)",
-       y = "Province-level FLFP in 2009 (%)")
-ggsave("infra_flfp09.jpeg", width = 7, height = 7)
-
-ggplot(sexratio_prov_09, aes(x = log(tot_civilian), y = work_f*100)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Civilian Targets)",
-       y = "Province-level FLFP in 2009 (%)")
-ggsave("civ_flfp09.jpeg", width = 7, height = 7)
+  scale_x_continuous(breaks = NULL)
 
 # Birth cohort and labour force participation rate by age cohort
 
