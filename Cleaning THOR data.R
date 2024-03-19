@@ -169,3 +169,5 @@ thor_old_sum <- list(thor_old_sum, infra_old, civilian_old) %>%
 
 oldprov_sexratio <- merge(postwar_ppn, thor_old_sum, by = "NAME") %>% 
   mutate(sexratio = (M_1976/F_1976)*100)
+
+save(oldprov_sexratio, file = "oldprov_sexratio.Rda")
