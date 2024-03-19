@@ -8,15 +8,15 @@ dict <- c("age_cohort" = "Age Cohort $\times$ log(Bombs/km^2)")
 setFixest_coefplot(dict = dict, grid = F, zero.par = list( type="dotted", lty=2), main = "")
 
 etable(list(
-  feols(work ~ as.factor(female)/log(tot_civilian) + yrschool + nchild + married + as.factor(minority) + age | regnvn,
+  feols(work ~ log(tot_bomb)/as.factor(south)/as.factor(female) + yrschool + nchild + married + as.factor(minority) + age | regnvn,
         subset(phc89, birthyr > 1925 & birthyr < 1974 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(work ~ as.factor(female)/log(tot_civilian) + yrschool + nchild + married + as.factor(minority) + age | regnvn,
+  feols(work ~ log(tot_bomb)/as.factor(south)/as.factor(female) + yrschool + nchild + married + as.factor(minority) + age | regnvn,
         subset(phc99, birthyr > 1935 & birthyr < 1984 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(work ~ as.factor(female)/log(tot_civilian) + yrschool + nchild + married + as.factor(minority) + age | regnvn,
+  feols(work ~ log(tot_bomb)/as.factor(south)/as.factor(female) + yrschool + nchild + married + as.factor(minority) + age | regnvn,
         subset(phc09, birthyr > 1945 & birthyr < 1994 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn2009)), tex = T)
