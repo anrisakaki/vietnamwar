@@ -151,6 +151,14 @@ occisco_sum <- merge(occ_m, occ_f, by = c("year", "occisco")) %>%
 
 # Calculating male the female ratio in each industry 
 
+female <- phc %>%
+  filter(labforce == 2) %>% 
+  group_by(year, female) %>% 
+  count(female, year, wt = perwt) %>% 
+  pivot_wider(names_from = female, values_from = n) %>% 
+  rename(total_m_workers = 2,
+         total_f_workers = 3)
+  
 ind_m <- phc %>% 
   filter(female == 0 & !is.na(indgen) & indgen > 0) %>% 
   select(year, indgen, perwt) %>% 
@@ -166,6 +174,47 @@ ind_f <- phc %>%
   rename(f_workers = n)
 
 indgen_sum <- merge(ind_m, ind_f, by = c("year", "indgen")) %>% 
+  mutate(workerratio = m_workers/f_workers,
+         Industry = case_when(indgen == 10 ~ 'Agriculture',
+                              indgen == 20 ~ 'Mining and extraction',
+                              indgen == 30 ~ 'Manufacturing',
+                              indgen == 40 ~ 'Electricity, gas, water and waste management',
+                              indgen == 50 ~ 'Construction',
+                              indgen == 60 ~ 'Wholesale and retail trade',
+                              indgen == 70 ~ 'Hotels and restaurants',
+                              indgen == 80 ~ 'Transportation',
+                              indgen == 90 ~ 'Financial services and insurance',
+                              indgen == 100 ~ 'Public administration and defense',
+                              indgen == 110 ~ 'Services',
+                              indgen == 111 ~ 'Business services and real estate',
+                              indgen == 112 ~ 'Education',
+                              indgen == 113 ~ 'Health and social work',
+                              indgen == 114 ~ 'Other services',
+                              indgen == 120 ~ 'Private household services',
+                              indgen == 130 ~ 'Other industry',
+                              TRUE ~ NA_character_))
+
+indgen_sum <- merge(indgen_sum, female, by = "year") %>% 
+  mutate(f_comp = round((f_workers/total_f_workers)*100, 2),
+         m_comp = round((m_workers/total_m_workers)*100, 2))
+
+## by province 
+
+ind_m_prov <- phc %>% 
+  filter(year == 1989, female == 0 & !is.na(indgen) & indgen > 0) %>% 
+  select(geo1_vn1989, indgen, perwt) %>% 
+  group_by(geo1_vn1989, indgen) %>% 
+  count(indgen, geo1_vn1989, wt = perwt) %>% 
+  rename(m_workers = n)
+
+ind_f_prov <- phc %>% 
+  filter(year == 1989, female == 1 & !is.na(indgen) & indgen > 0) %>% 
+  select(geo1_vn1989, indgen, perwt) %>% 
+  group_by(geo1_vn1989, indgen) %>% 
+  count(indgen, geo1_vn1989, wt = perwt) %>% 
+  rename(f_workers = n)
+
+indgen_prov_sum <- list(ind_m_prov, ind_f_prov, by = c("geo1_vn1989", "indgen")) %>% 
   mutate(workerratio = m_workers/f_workers) %>% 
   mutate(Industry = case_when(indgen == 10 ~ 'Agriculture',
                               indgen == 20 ~ 'Mining and extraction',
@@ -185,6 +234,8 @@ indgen_sum <- merge(ind_m, ind_f, by = c("year", "indgen")) %>%
                               indgen == 120 ~ 'Private household services',
                               indgen == 130 ~ 'Other industry',
                               TRUE ~ NA_character_))
+
+indgen_prov_sum <- left_join(indgen_prov_sum, bombs_province89, by = "geo1_vn1989")
 
 # Calculating the sex ratio and FLFP by age cohort in 1989, 1999 and 2009
 
