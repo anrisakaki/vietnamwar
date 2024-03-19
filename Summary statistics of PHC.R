@@ -118,7 +118,7 @@ save(sexratio_prov_89, file = "sexratio_prov_89.Rda")
 save(sexratio_prov_99, file = "sexratio_prov_99.Rda")
 save(sexratio_prov_09, file = "sexratio_prov_09.Rda")
 
-# Calculating male the female ratio in each industry 
+# Calculating male the female ratio in each occupation
 
 occ_m <- phc %>% 
   filter(female == 0 & !is.na(occisco)) %>% 
@@ -135,7 +135,21 @@ occ_f <- phc %>%
   rename(f_workers = n)
 
 occisco_sum <- merge(occ_m, occ_f, by = c("year", "occisco")) %>% 
-  mutate(workerratio = m_workers/f_workers)
+  mutate(workerratio = m_workers/f_workers,
+         Occupation = case_when(occisco == 1 ~ 'Legislators, senior officials & managers',
+                                occisco == 2 ~ 'Professionals',
+                                occisco == 3 ~ 'Technicians & associate professionals',
+                                occisco == 4 ~ 'Clerks',
+                                occisco == 5 ~ 'Service workers',
+                                occisco == 6 ~ 'Skilled agricultural & fishery workers',
+                                occisco == 7 ~ 'Crafts & related trades workers',
+                                occisco == 8 ~ 'Plant & machine operators',
+                                occisco == 9 ~ 'Elementary occupations',
+                                occisco == 10 ~ 'Armed forces',
+                                occisco == 11 ~ 'Other',
+                                TRUE ~ NA_character_))
+
+# Calculating male the female ratio in each industry 
 
 ind_m <- phc %>% 
   filter(female == 0 & !is.na(indgen) & indgen > 0) %>% 
