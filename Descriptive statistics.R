@@ -399,36 +399,26 @@ ggplot(dplyr::filter(indgen_sum, year == 1989 & indgen < 999), aes(x = (workerra
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         legend.title=element_blank(),
-        text = element_text(size=10)) + 
+        text = element_text(size=15)) + 
   scale_x_continuous(breaks = NULL) 
+ggsave("indgen_sum_89.jpeg", width = 12, height = 12)
 
-ggplot(dplyr::filter(indgen_sum, year == 1999 & indgen < 999), aes(x = (workerratio)*100, y = reorder(Industry, workerratio))) + 
+# Male to female ratio in each occupation 
+
+ggplot(dplyr::filter(occisco_sum, year == 1999 & occisco < 99), aes(x = (workerratio)*100, y = reorder(Occupation, workerratio))) + 
   geom_bar(stat = "identity", fill = "skyblue") +
   geom_text(aes(label = round(workerratio*100, 2)), hjust = -0.2, size = 3) +
   labs(x = "Ratio of Male to Female Workers in 1999",
-       y = "Industry") +
+       y = "Occupation") +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  scale_x_continuous(breaks = NULL)
-
-ggplot(dplyr::filter(indgen_sum, year == 2009 & indgen < 999), aes(x = (workerratio)*100, y = reorder(Industry, workerratio))) + 
-  geom_bar(stat = "identity", fill = "skyblue") +
-  geom_text(aes(label = round(workerratio*100, 2)), hjust = -0.2, size = 3) +
-  labs(x = "Ratio of Male to Female Workers in 1999",
-       y = "Industry") +
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  scale_x_continuous(breaks = NULL)
+        text = element_text(size=15)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("indgen_sum_89.jpeg", width = 12, height = 12)
 
 # Birth cohort and labour force participation rate by age cohort
 
