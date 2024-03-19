@@ -333,6 +333,56 @@ ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = log(tot_bomb), y = w
        y = "Share of Widowed Women in 1989 (South)")
 ggsave("bmr_widowed_f89_s.jpeg", width = 7, height = 7)
 
+# Bombs vs industry composition 
+
+ggplot(dplyr::filter(indgen_prov_sum, Industry == "Agriculture"), aes(x = log(tot_bomb), y = workerratio*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Ratio of Male to Female workers in Agriculture in 1989")
+
+ggplot(dplyr::filter(indgen_prov_sum, Industry == "Agriculture" & south == 0), aes(x = log(tot_bomb), y = workerratio*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Ratio of Male to Female workers in Agriculture in 1989 (North)")
+
+ggplot(dplyr::filter(indgen_prov_sum, Industry == "Agriculture" & south == 1), aes(x = log(tot_bomb), y = workerratio*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(Bombs, Missiles and Rockets)",
+       y = "Ratio of Male to Female workers in Agriculture in 1989 (South)")
+
 # Widowhood vs work ratio 
 
 ggplot(sexratio_prov_89, aes(x = widowed_f*100, y = workratio*100)) +
@@ -418,7 +468,7 @@ ggplot(dplyr::filter(occisco_sum, year == 1999 & occisco < 99), aes(x = (workerr
         legend.title=element_blank(),
         text = element_text(size=15)) + 
   scale_x_continuous(breaks = NULL) 
-ggsave("indgen_sum_89.jpeg", width = 12, height = 12)
+ggsave("occisco_sum_99.jpeg", width = 12, height = 12)
 
 # Birth cohort and labour force participation rate by age cohort
 
