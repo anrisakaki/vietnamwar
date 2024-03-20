@@ -41,7 +41,7 @@ save(phc, file = "phc.Rda")
 phc89 <- phc %>% 
   filter(year == 1989) %>% 
   select(year, serial, hhwt, geo1_vn, geo1_vn1989, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
-         birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5)
+         birthyr, minority, migration, literate, work, edattain, yrschool, labforce, occisco, indgen, agri, empsect, ind, geomig1_5)
 phc89 <- left_join(phc89, bombs_province89, by = c("year", "geo1_vn1989"))
 
 phc99 <- phc %>% 
@@ -49,13 +49,13 @@ phc99 <- phc %>%
   # Ha Tay merged with Hanoi 
   mutate(geo1_vn1999 = ifelse(geo1_vn1999 == 105, 101, geo1_vn1999)) %>% 
   select(year, serial, hhwt, geo1_vn, geo1_vn1999, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
-         birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5)
+         birthyr, minority, migration, literate, work, edattain, yrschool, labforce, occisco, indgen, agri, empsect, ind, geomig1_5)
 phc99 <- left_join(phc99, bombs_province99, by = c("year", "geo1_vn1999"))
 
 phc09 <- phc %>% 
   filter(year == 2009) %>% 
-  select(year, serial, hhwt, geo1_vn, geo1_vn2009, regnvn, pernum, perwt, nchild, age, age3464, age_cohort, age_cohort75, female, marst, married, widowed,
-         birthyr, minority, migration, literate, work, edattain, yrschool, occ, indgen, agri, empsect, ind, geomig1_5)
+  select(year, serial, hhwt, geo1_vn, geo1_vn2009, regnvn, pernum, perwt, nchild, age, age_cohort, age_cohort75, female, marst, married, widowed,
+         birthyr, minority, migration, literate, work, edattain, yrschool, labforce, occisco, indgen, agri, empsect, ind, geomig1_5)
 phc09 <- left_join(phc09, bombs_province09, by = c("year", "geo1_vn2009"))
 
 save(phc89, file = "phc89.Rda")
