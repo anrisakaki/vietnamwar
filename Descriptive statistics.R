@@ -333,9 +333,8 @@ ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = log(tot_bomb), y = w
        y = "Share of Widowed Women in 1989 (South)")
 ggsave("bmr_widowed_f89_s.jpeg", width = 7, height = 7)
 
-# Bombs vs industry composition 
-
-ggplot(dplyr::filter(indgen_prov_sum, Industry == "Agriculture"), aes(x = log(tot_bomb), y = workerratio*100)) +
+# Bombs vs industry male to female ratio 
+ggplot(dplyr::filter(indgen_prov_sum, Industry == "Manufacturing"), aes(x = log(tot_bomb), y = workerratio*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -349,9 +348,10 @@ ggplot(dplyr::filter(indgen_prov_sum, Industry == "Agriculture"), aes(x = log(to
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   labs(x = "log(Bombs, Missiles and Rockets)",
-       y = "Ratio of Male to Female workers in Agriculture in 1989")
+       y = "Ratio of Male to Female Workers \nin Manufacturing in 1989")
+ggsave("bmr_manu_89.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(indgen_prov_sum, Industry == "Agriculture" & south == 0), aes(x = log(tot_bomb), y = workerratio*100)) +
+ggplot(dplyr::filter(indgen_prov_sum, Industry == "Manufacturing" & south == 0), aes(x = log(tot_bomb), y = workerratio*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -365,9 +365,10 @@ ggplot(dplyr::filter(indgen_prov_sum, Industry == "Agriculture" & south == 0), a
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   labs(x = "log(Bombs, Missiles and Rockets)",
-       y = "Ratio of Male to Female workers in Agriculture in 1989 (North)")
+       y = "Ratio of Male to Female Workers \nin Manufacturing in 1989 (North)")
+ggsave("bmr_manu_89_n.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(indgen_prov_sum, Industry == "Agriculture" & south == 1), aes(x = log(tot_bomb), y = workerratio*100)) +
+ggplot(dplyr::filter(indgen_prov_sum, Industry == "Manufacturing" & south == 1), aes(x = log(tot_bomb), y = workerratio*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -381,7 +382,8 @@ ggplot(dplyr::filter(indgen_prov_sum, Industry == "Agriculture" & south == 1), a
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   labs(x = "log(Bombs, Missiles and Rockets)",
-       y = "Ratio of Male to Female workers in Agriculture in 1989 (South)")
+       y = "Ratio of Male to Female Workers \nin Manufacturing in 1989 (South)")
+ggsave("bmr_manu_89_s.jpeg", width = 7, height = 7)
 
 # Widowhood vs work ratio 
 
@@ -435,6 +437,37 @@ ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = age3064_widowed_f*10
   labs(x = "Share of Widowed Women Aged 30-64 in 1989",
        y = "Ratio of Male to Female Workers Aged 30-64 in 1989 (South)")
 ggsave("widowed3064_workerratio3064_89_s.jpeg", width = 7, height = 7)
+
+# Female and male labour force composition 
+ggplot(dplyr::filter(indgen_sum, year == 1989 & indgen < 999), aes(x = (f_comp), y = reorder(Industry, f_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(label = round(f_comp, 2)), hjust = -0.2, size = 3) +
+  labs(x = "Share of Female Labour Force in 1989 (%)",
+       y = "Industry") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=15)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("fcomp_89.jpeg", width = 12, height = 12)
+
+ggplot(dplyr::filter(indgen_sum, year == 1989 & indgen < 999), aes(x = (m_comp), y = reorder(Industry, m_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(label = round(m_comp, 2)), hjust = -0.2, size = 3) +
+  labs(x = "Share of Male Labour Force in 1989 (%)",
+       y = "Industry") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=15)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("mcomp_89.jpeg", width = 12, height = 12)
 
 # Male to female ratio in each industry 
 
