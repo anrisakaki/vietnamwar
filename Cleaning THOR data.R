@@ -45,6 +45,14 @@ thor <- thor %>%
       grepl("RAILROAD|BRIDGE|ROAD|REFINERY|TOWER", TGTTYPE, ignore.case = TRUE) ~ 1,
       TRUE ~ 0
   ),
+  agriculture = case_when(
+    TGTTYPE %in% c("AGRICULTURAL AREA") ~ 1,
+    TRUE ~ 0 
+  ),
+  industry = case_when(
+    TGTTYPE %in% c("CONSTRUCTION SITE", "FACTORY INDUSTRIAL", "FACTORY,ANY", "ELEC. PWR. FAC.") ~ 1,
+    TRUE ~ 0
+  ),
   WEIGHTDELIVERED = ifelse(is.na(WEAPONSLOADEDWEIGHT), NUMWEAPONSDELIVERED*WEAPONWEIGHT, WEAPONSLOADEDWEIGHT/10)) %>% 
   # Max ordnance weight of B52 was 70,000 lb 
   filter(WEIGHTDELIVERED <= 70000)
@@ -59,11 +67,35 @@ gdf$tgtlatdd_ddd_wgs84 <- st_coordinates(gdf)[, "Y"]
 civilian_targets <- gdf %>% filter(civilian == 1) %>% sf_to_df()
 infrastructure_targets <- gdf %>% filter(infrastructure == 1) %>% sf_to_df()
 
+south <- bombs_province_miguel %>% 
+  select(provincename, south_corrected) %>% 
+  mutate(varname_1 = recode(provincename,
+                            'Ba Ria' = 'Ba Ria - Vung Tau',
+                            'Da Nang (City)' = 'Da Nang',
+                            'Ha Noi (City)' = 'Ha Noi',
+                            'Hai Phong (City)' = 'Hai Phong',
+                            'Ho Chi Minh (City)' = 'Ho Chi Minh',
+                            'Thuathien-Hue' = 'Thua Thien Hue'))
+
 # Spatial Join 
 
 province_bmr <- st_join(gdf, vnmap1)
 
 colnames(province_bmr) <- tolower(colnames(province_bmr))
+
+province_names <- province_bmr %>% 
+  sf::st_drop_geometry() %>% 
+  select(varname_1) %>% 
+  distinct() %>% 
+  filter(!is.na(varname_1))
+
+south <- left_join(province_names, south, by = "varname_1") %>% 
+  mutate(south_corrected = ifelse(varname_1 == "Dak Nong", 1, south_corrected),
+         south_corrected = ifelse(varname_1 == "Hau Giang", 1, south_corrected),
+         south_corrected = ifelse(varname_1 == "Dien Bien", 0, south_corrected)) %>% 
+  rename(south = south_corrected)
+
+province_bmr <- left_join(province_bmr, south, by = "varname_1")
 
 province_bmr_sum <- province_bmr %>% 
   ungroup() %>% 
@@ -74,27 +106,27 @@ province_bmr_sum <- province_bmr %>%
   ungroup() %>% 
   sf::st_drop_geometry()
 
-province_civilian_sum <- province_bmr %>% 
+province_agri_sum <- province_bmr %>% 
   ungroup() %>% 
-  filter(civilian == 1) %>% 
+  filter(agriculture == 1) %>% 
   group_by(varname_1) %>%
-  summarise(tot_civilian = sum(numweaponsdelivered),
-            tot_civilian_lb = sum(weightdelivered)) %>% 
+  summarise(tot_agri = sum(numweaponsdelivered),
+            tot_agri_lb = sum(weightdelivered)) %>% 
   ungroup() %>% 
   filter(!is.na(varname_1)) %>% 
   sf::st_drop_geometry()
 
-province_infra_sum <- province_bmr %>% 
+province_industry_sum <- province_bmr %>% 
   ungroup() %>% 
-  filter(infrastructure == 1) %>% 
+  filter(industry == 1) %>% 
   group_by(varname_1) %>% 
-  summarise(tot_infrastructure = sum(numweaponsdelivered),
-            tot_infrastructure_lb = sum(weightdelivered)) %>% 
+  summarise(tot_industry = sum(numweaponsdelivered),
+            tot_industry_lb = sum(weightdelivered)) %>% 
   ungroup() %>% 
   filter(!is.na(varname_1)) %>% 
   sf::st_drop_geometry()
 
-province_target_sum <- list(province_civilian_sum, province_infra_sum) %>% 
+province_target_sum <- list(province_agri_sum, province_industry_sum) %>% 
   reduce(full_join, by = "varname_1") %>% 
   mutate_all(~replace_na(., 0))
 
@@ -134,6 +166,40 @@ distance_info <- sf::st_drop_geometry(distance_info)
 province_bmr_sum <- left_join(province_bmr_sum, distance_info, by = "varname_1")
 
 save(province_bmr_sum, file = "province_bmr_sum.Rda")
+
+# Target type by north/south 
+
+targets_s <- province_bmr %>% 
+  sf::st_drop_geometry() %>% 
+  filter(south == 1) %>% 
+  group_by(tgttype) %>% 
+  summarise(tot_s = sum(numweaponsdelivered)) %>% 
+  filter(!is.na(tgttype))
+
+targets_n <- province_bmr %>% 
+  sf::st_drop_geometry() %>% 
+  filter(south == 0) %>% 
+  group_by(tgttype) %>% 
+  summarise(tot_n = sum(numweaponsdelivered)) %>% 
+  filter(!is.na(tgttype))
+
+targets_ns <- full_join(targets_s, targets_n, by = "tgttype")
+
+agri_targets_ns <- province_bmr %>% 
+  filter(agriculture == 1) %>% 
+  group_by(south) %>% 
+  sf::st_drop_geometry() %>% 
+  summarise(tot_agri = sum(numweaponsdelivered),
+            tot_agri_lb = sum(weightdelivered)) %>% 
+  filter(!is.na(south))
+
+industry_targets_ns <- province_bmr %>% 
+  filter(industry == 1) %>% 
+  group_by(south) %>% 
+  sf::st_drop_geometry() %>% 
+  summarise(tot_industry = sum(numweaponsdelivered),
+            tot_industry_lb = sum(weightdelivered)) %>% 
+  filter(!is.na(south))
 
 # Bombing intensity based on old provincial boundaries 
 
