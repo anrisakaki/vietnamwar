@@ -10,6 +10,39 @@ for (i in phc) {
   load(i)
 }
 
+# Calculating sex ratio by age, and by north and south 
+
+bc_sexratio89 <- phc89 %>% 
+  filter(!is.na(age)) %>% 
+  group_by(age, female) %>% 
+  summarise(total = sum(perwt)) %>% 
+  pivot_wider(names_from = female, values_from = total) %>% 
+  rename(m_total = 2,
+         f_total = 3) %>% 
+  mutate(sex_ratio = m_total/f_total)
+
+bc_sexratio89_s <- phc89 %>% 
+  filter(!is.na(age) & geo1_vn1989 > 26) %>% 
+  group_by(age, female) %>% 
+  summarise(total = sum(perwt)) %>% 
+  pivot_wider(names_from = female, values_from = total) %>% 
+  rename(m_south = 2,
+         f_south = 3) %>% 
+  mutate(sex_ratio_south = m_south/f_south)
+
+bc_sexratio89_n <- phc89 %>% 
+  filter(!is.na(age) & geo1_vn1989 <= 26) %>% 
+  group_by(age, female) %>% 
+  summarise(total = sum(perwt)) %>% 
+  pivot_wider(names_from = female, values_from = total) %>% 
+  rename(m_north = 2,
+         f_north = 3) %>% 
+  mutate(sex_ratio_north = m_north/f_north)
+
+bc_sexratio89 <- list(bc_sexratio89, bc_sexratio89_n, bc_sexratio89_s) %>% 
+  reduce(full_join, by = "age") %>% 
+  select(age, sex_ratio, sex_ratio_north, sex_ratio_south)
+
 # Calculating the sex ratio and LFP of men and women by age cohort in 1989 
 prov_89_f <- phc89 %>% 
   filter(female == 1 & age > 15 & age < 65) %>% 
@@ -214,9 +247,9 @@ ind_f_prov <- phc %>%
   count(indgen, geo1_vn1989, wt = perwt) %>% 
   rename(f_workers = n)
 
-indgen_prov_sum <- list(ind_m_prov, ind_f_prov, by = c("geo1_vn1989", "indgen")) %>% 
-  mutate(workerratio = m_workers/f_workers) %>% 
-  mutate(Industry = case_when(indgen == 10 ~ 'Agriculture',
+indgen_prov_sum <- merge(ind_m_prov, ind_f_prov, by = c("geo1_vn1989", "indgen")) %>% 
+  mutate(workerratio = m_workers/f_workers,
+         Industry = case_when(indgen == 10 ~ 'Agriculture',
                               indgen == 20 ~ 'Mining and extraction',
                               indgen == 30 ~ 'Manufacturing',
                               indgen == 40 ~ 'Electricity, gas, water and waste management',
@@ -236,6 +269,48 @@ indgen_prov_sum <- list(ind_m_prov, ind_f_prov, by = c("geo1_vn1989", "indgen"))
                               TRUE ~ NA_character_))
 
 indgen_prov_sum <- left_join(indgen_prov_sum, bombs_province89, by = "geo1_vn1989")
+
+## By north/south 
+
+ind_ratio_n <- phc %>% 
+  filter(geo1_vn1989 <= 26 | geo1_vn1999 <= 408 | geo1_vn2009 <= 44) %>% 
+  group_by(year, female, indgen) %>% 
+  count(indgen, female, wt = perwt) %>% 
+  pivot_wider(names_from = female, values_from = n) %>% 
+  rename(north_m = 3,
+         north_f = 4) %>% 
+  mutate(workerratio_n = north_m/north_f) %>% 
+  filter(indgen > 0 & !is.na(indgen))
+
+ind_ratio_s <- phc %>% 
+  filter(geo1_vn1989 > 26 | geo1_vn1999 > 408 | geo1_vn2009 > 44) %>% 
+  group_by(year, female, indgen) %>% 
+  count(indgen, female, wt = perwt) %>% 
+  pivot_wider(names_from = female, values_from = n) %>% 
+  rename(south_m = 3,
+         south_f = 4) %>% 
+  mutate(workerratio_s = south_m/south_f) %>% 
+  filter(indgen > 0 & !is.na(indgen))
+
+ind_ratio_ns <- merge(ind_ratio_n, ind_ratio_s, by = c("year", "indgen")) %>% 
+  mutate(Industry = case_when(indgen == 10 ~ 'Agriculture',
+                              indgen == 20 ~ 'Mining and extraction',
+                              indgen == 30 ~ 'Manufacturing',
+                              indgen == 40 ~ 'Electricity, gas, water and waste management',
+                              indgen == 50 ~ 'Construction',
+                              indgen == 60 ~ 'Wholesale and retail trade',
+                              indgen == 70 ~ 'Hotels and restaurants',
+                              indgen == 80 ~ 'Transportation',
+                              indgen == 90 ~ 'Financial services and insurance',
+                              indgen == 100 ~ 'Public administration and defense',
+                              indgen == 110 ~ 'Services',
+                              indgen == 111 ~ 'Business services and real estate',
+                              indgen == 112 ~ 'Education',
+                              indgen == 113 ~ 'Health and social work',
+                              indgen == 114 ~ 'Other services',
+                              indgen == 120 ~ 'Private household services',
+                              indgen == 130 ~ 'Other industry',
+                              TRUE ~ NA_character_))
 
 # Calculating the sex ratio and FLFP by age cohort in 1989, 1999 and 2009
 
