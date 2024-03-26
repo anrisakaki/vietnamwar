@@ -70,6 +70,34 @@ ggsave("bmr_sexratio76.jpeg", width = 7, height = 7)
 
 # 1989 
 
+bc_sexratio89_long <- bc_sexratio89 %>%
+  pivot_longer(cols = c(sex_ratio_south, sex_ratio_north),
+               names_to = "Region", values_to = "SexRatio")
+
+ggplot(bc_sexratio89_long, aes(x = age, y = (SexRatio)*100, color = Region)) +
+  geom_line() +
+  geom_line(size = 1.1) +
+  geom_vline(xintercept = c(30, 64), linetype = "dashed") +  
+  geom_rect(
+    xmin = 30, xmax = 64, ymin = -Inf, ymax = Inf,  
+    fill = "gray", alpha = 0.01  
+  ) +
+  annotate(
+    "text", x = (47), y = 103,  # Add text label
+    label = "30-54", size = 3
+  ) +  
+  labs(x = "Age Cohort",
+       y = "Sex Ratio",
+       color = "Region") +
+  theme_minimal() +
+  theme(panel.background = element_rect(fill = "white", color = NA),  
+        plot.background = element_rect(fill = "white"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.title = element_blank()) +
+  scale_color_discrete(labels = c("South", "North"))
+ggsave("sexratio_birthcohort.jpeg", width = 17, height = 7)
+
 ## Sex ratio 
 
 ggplot(sexratio_prov_89, aes(x = log(tot_bomb), y = sexratio*100)) +
@@ -485,6 +513,10 @@ ggplot(dplyr::filter(indgen_sum, year == 1989 & indgen < 999), aes(x = (workerra
         text = element_text(size=15)) + 
   scale_x_continuous(breaks = NULL) 
 ggsave("indgen_sum_89.jpeg", width = 12, height = 12)
+
+## By north/south 
+
+
 
 # Male to female ratio in each occupation 
 
