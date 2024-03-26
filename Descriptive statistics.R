@@ -69,7 +69,6 @@ ggplot(oldprov_sexratio, aes(x = log(tot_bmr), y = sexratio)) +
 ggsave("bmr_sexratio76.jpeg", width = 7, height = 7)
 
 # 1989 
-
 bc_sexratio89_long <- bc_sexratio89 %>%
   pivot_longer(cols = c(sex_ratio_south, sex_ratio_north),
                names_to = "Region", values_to = "SexRatio")
@@ -95,7 +94,7 @@ ggplot(bc_sexratio89_long, aes(x = age, y = (SexRatio)*100, color = Region)) +
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.title = element_blank()) +
-  scale_color_discrete(labels = c("South", "North"))
+  scale_color_discrete(labels = c("North", "South"))
 ggsave("sexratio_birthcohort.jpeg", width = 17, height = 7)
 
 ## Sex ratio 
