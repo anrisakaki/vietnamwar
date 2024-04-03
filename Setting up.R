@@ -19,6 +19,32 @@ dhc_97 <- read_dta(file = "DHC/VNIR31FL.dta")
 
 phc <- read_dta(file = "ipumsi_00006.dta")
 
+# Enterprise Survey 
+
+ec <- list.files("Enterprise Census", pattern = "^dn.*\\.dta$", full.names = TRUE)
+
+ec_list <- lapply(ec, read_dta)
+
+dn00 <- ec_list[[1]]
+dn01 <- ec_list[[2]]
+dn02 <- ec_list[[3]]
+dn03 <- ec_list[[4]]
+dn04 <- ec_list[[5]]
+dn05 <- ec_list[[6]]
+dn06 <- ec_list[[7]]
+dn07 <- ec_list[[8]]
+dn08 <- ec_list[[9]]
+dn09 <- ec_list[[10]]
+dn10 <- ec_list[[11]]
+dn11 <- ec_list[[12]]
+dn12 <- ec_list[[13]]
+dn13 <- ec_list[[14]]
+dn14 <- ec_list[[15]]
+dn15 <- ec_list[[16]]
+dn16 <- ec_list[[17]]
+dn17 <- ec_list[[18]]
+dn18 <- ec_list[[19]]
+
 # Population 
 
 prewar_ppn <- read.csv("prewar_ppn.csv")
