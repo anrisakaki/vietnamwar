@@ -182,6 +182,74 @@ occisco_sum <- merge(occ_m, occ_f, by = c("year", "occisco")) %>%
                                 occisco == 11 ~ 'Other',
                                 TRUE ~ NA_character_))
 
+## By province 
+
+occisco_prov_m <- phc %>% 
+  filter(year == 1999 & female == 0 & !is.na(occisco)) %>% 
+  group_by(geo1_vn1999, occisco) %>% 
+  count(occisco, geo1_vn1999, wt = perwt) %>% 
+  rename(m_workers = n)
+
+occisco_prov_f <- phc %>% 
+  filter(year == 1999 & female == 1 & !is.na(occisco)) %>% 
+  group_by(geo1_vn1999, occisco) %>% 
+  count(occisco, geo1_vn1999, wt = perwt) %>% 
+  rename(f_workers = n)
+
+occisco_prov_sum <- merge(occisco_prov_m, occisco_prov_f, by = c("geo1_vn1999", "occisco")) %>% 
+  mutate(workerratio = m_workers/f_workers,
+         Occupation = case_when(occisco == 1 ~ 'Legislators, senior officials & managers',
+                                occisco == 2 ~ 'Professionals',
+                                occisco == 3 ~ 'Technicians & associate professionals',
+                                occisco == 4 ~ 'Clerks',
+                                occisco == 5 ~ 'Service workers',
+                                occisco == 6 ~ 'Skilled agricultural & fishery workers',
+                                occisco == 7 ~ 'Crafts & related trades workers',
+                                occisco == 8 ~ 'Plant & machine operators',
+                                occisco == 9 ~ 'Elementary occupations',
+                                occisco == 10 ~ 'Armed forces',
+                                occisco == 11 ~ 'Other',
+                                TRUE ~ NA_character_))
+occisco_prov_sum <- left_join(occisco_prov_sum, bombs_province99, by = "geo1_vn1999")
+
+## By north/south 
+
+occ_ratio_n <- phc %>% 
+  filter(geo1_vn1989 <= 26 | geo1_vn1999 <= 408 | geo1_vn2009 <= 44) %>% 
+  group_by(year, female, occisco) %>% 
+  count(occisco, female, wt = perwt) %>% 
+  pivot_wider(names_from = female, values_from = n) %>% 
+  rename(north_m = 3,
+         north_f = 4) %>% 
+  mutate(workerratio_n = north_m/north_f) %>% 
+  filter(!is.na(occisco))
+
+occ_ratio_s <- phc %>% 
+  filter(geo1_vn1989 > 26 | geo1_vn1999 > 408 | geo1_vn2009 > 44) %>% 
+  group_by(year, female, occisco) %>% 
+  count(occisco, female, wt = perwt) %>% 
+  pivot_wider(names_from = female, values_from = n) %>% 
+  rename(south_m = 3,
+         south_f = 4) %>% 
+  mutate(workerratio_s = south_m/south_f) %>% 
+  filter(!is.na(occisco))
+
+occisco_ns <- merge(occ_ratio_n, occ_ratio_s, by = c("year", "occisco")) %>% 
+  mutate(Occupation = case_when(occisco == 1 ~ 'Legislators, senior officials & managers',
+                                occisco == 2 ~ 'Professionals',
+                                occisco == 3 ~ 'Technicians & associate professionals',
+                                occisco == 4 ~ 'Clerks',
+                                occisco == 5 ~ 'Service workers',
+                                occisco == 6 ~ 'Skilled agricultural & fishery workers',
+                                occisco == 7 ~ 'Crafts & related trades workers',
+                                occisco == 8 ~ 'Plant & machine operators',
+                                occisco == 9 ~ 'Elementary occupations',
+                                occisco == 10 ~ 'Armed forces',
+                                occisco == 11 ~ 'Other',
+                                TRUE ~ NA_character_)) %>% 
+  filter(occisco < 98) %>% 
+  select(year, Occupation, workerratio_n, workerratio_s)
+
 # Calculating male the female ratio in each industry 
 
 female <- phc %>%
@@ -271,7 +339,7 @@ indgen_prov_sum <- merge(ind_m_prov, ind_f_prov, by = c("geo1_vn1989", "indgen")
 indgen_prov_sum <- left_join(indgen_prov_sum, bombs_province89, by = "geo1_vn1989")
 
 ## By north/south 
-
+ind_ratio_ns 
 ind_ratio_n <- phc %>% 
   filter(geo1_vn1989 <= 26 | geo1_vn1999 <= 408 | geo1_vn2009 <= 44) %>% 
   group_by(year, female, indgen) %>% 
@@ -310,7 +378,8 @@ ind_ratio_ns <- merge(ind_ratio_n, ind_ratio_s, by = c("year", "indgen")) %>%
                               indgen == 114 ~ 'Other services',
                               indgen == 120 ~ 'Private household services',
                               indgen == 130 ~ 'Other industry',
-                              TRUE ~ NA_character_))
+                              TRUE ~ NA_character_)) %>% 
+  select(year, Industry, workerratio_n, workerratio_s)
 
 # Calculating the sex ratio and FLFP by age cohort in 1989, 1999 and 2009
 
