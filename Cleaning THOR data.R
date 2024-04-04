@@ -30,9 +30,6 @@ thor <- thor %>%
   filter(WEAPON_CLASS != "SUPPORT",
          WEAPON_CLASS != "GUN",
          MFUNC_DESC_CLASS == "KINETIC") %>% 
-  # Removing rocket and missileS launchers to prevent double counting 
-  # filter(!grepl("AGM|AIM|LAU|2.75", WEAPONTYPE),
-  #        !grepl("PAMPHLET", WEAPONTYPE_DESC)) %>% 
   mutate(
     civilian = case_when(
       TGTTYPE %in% c("AGRICULTURAL AREA", "CIV POPULATN CENTR", "VILLAGE", "HUTS", "ISLAND", "BUILDINGS") ~ 1,
@@ -102,36 +99,15 @@ province_bmr_sum <- province_bmr %>%
   filter(!is.na(varname_1)) %>% 
   group_by(varname_1, name_1) %>% 
   summarise(tot_bmr = sum(numweaponsdelivered),
-            tot_bmr_lb = sum(weightdelivered)) %>% 
+            tot_bmr_lb = sum(weightdelivered),
+            tot_agri = sum(numweaponsdelivered[agriculture == 1]),
+            tot_agri_lb = sum(weightdelivered[agriculture == 1]),
+            tot_industry = sum(numweaponsdelivered[industry == 1]),
+            tot_industry_lb = sum(weightdelivered[industry == 1]),
+            ) %>% 
   ungroup() %>% 
-  sf::st_drop_geometry()
-
-province_agri_sum <- province_bmr %>% 
-  ungroup() %>% 
-  filter(agriculture == 1) %>% 
-  group_by(varname_1) %>%
-  summarise(tot_agri = sum(numweaponsdelivered),
-            tot_agri_lb = sum(weightdelivered)) %>% 
-  ungroup() %>% 
-  filter(!is.na(varname_1)) %>% 
-  sf::st_drop_geometry()
-
-province_industry_sum <- province_bmr %>% 
-  ungroup() %>% 
-  filter(industry == 1) %>% 
-  group_by(varname_1) %>% 
-  summarise(tot_industry = sum(numweaponsdelivered),
-            tot_industry_lb = sum(weightdelivered)) %>% 
-  ungroup() %>% 
-  filter(!is.na(varname_1)) %>% 
-  sf::st_drop_geometry()
-
-province_target_sum <- list(province_agri_sum, province_industry_sum) %>% 
-  reduce(full_join, by = "varname_1") %>% 
-  mutate_all(~replace_na(., 0))
-
-province_bmr_sum <- list(province_bmr_sum, province_target_sum, prov_casualties) %>% 
-  reduce(full_join, by = "varname_1")
+  sf::st_drop_geometry() %>% 
+  left_join(prov_casualties, by = "varname_1")
 
 provarea <- provarea %>% 
   rename(name_1 = Province) %>%
@@ -200,6 +176,19 @@ industry_targets_ns <- province_bmr %>%
   summarise(tot_industry = sum(numweaponsdelivered),
             tot_industry_lb = sum(weightdelivered)) %>% 
   filter(!is.na(south))
+
+# Bombing intensity by district 
+
+district_bmr <- st_join(gdf, vnmap2)
+
+district_bmr_sum <- district_bmr %>% 
+  group_by(NAME_1, VARNAME_2) %>% 
+  summarise(
+    tot_bmr = sum(NUMWEAPONSDELIVERED, na.rm = T),
+    civilian_bmr = sum(NUMWEAPONSDELIVERED[civilian == 1], na.rm = T),
+    agri_bmr = sum(NUMWEAPONSDELIVERED[agriculture == 1], na.rm = T),
+    industry_bmr = sum(NUMWEAPONSDELIVERED[industry == 1], na.rm = T)
+  )
 
 # Bombing intensity based on old provincial boundaries 
 
