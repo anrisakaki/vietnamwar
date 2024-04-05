@@ -1,4 +1,5 @@
 load("prov_casualties.Rda")
+load("dist_casualties.Rda")
 
 ######################
 # CLEANING THOR DATA #
@@ -60,9 +61,6 @@ gdf <- st_as_sf(thor, coords = c("TGTLONDDD_DDD_WGS84", "TGTLATDD_DDD_WGS84"), c
 # Extract lat and lon separately
 gdf$tgtlonddd_ddd_wgs84 <- st_coordinates(gdf)[, "X"]
 gdf$tgtlatdd_ddd_wgs84 <- st_coordinates(gdf)[, "Y"]
-
-civilian_targets <- gdf %>% filter(civilian == 1) %>% sf_to_df()
-infrastructure_targets <- gdf %>% filter(infrastructure == 1) %>% sf_to_df()
 
 south <- bombs_province_miguel %>% 
   select(provincename, south_corrected) %>% 
@@ -145,84 +143,59 @@ save(province_bmr_sum, file = "province_bmr_sum.Rda")
 
 # Target type by north/south 
 
-targets_s <- province_bmr %>% 
+targets_sum <- province_bmr %>% 
   sf::st_drop_geometry() %>% 
-  filter(south == 1) %>% 
   group_by(tgttype) %>% 
-  summarise(tot_s = sum(numweaponsdelivered)) %>% 
+  summarise(tot_s = sum(numweaponsdelivered[south == 1], na.rm = T),
+            tot_n = sum(numweaponsdelivered[south == 0], na.rm = T),
+            ) %>% 
   filter(!is.na(tgttype))
-
-targets_n <- province_bmr %>% 
-  sf::st_drop_geometry() %>% 
-  filter(south == 0) %>% 
-  group_by(tgttype) %>% 
-  summarise(tot_n = sum(numweaponsdelivered)) %>% 
-  filter(!is.na(tgttype))
-
-targets_ns <- full_join(targets_s, targets_n, by = "tgttype")
-
-agri_targets_ns <- province_bmr %>% 
-  filter(agriculture == 1) %>% 
-  group_by(south) %>% 
-  sf::st_drop_geometry() %>% 
-  summarise(tot_agri = sum(numweaponsdelivered),
-            tot_agri_lb = sum(weightdelivered)) %>% 
-  filter(!is.na(south))
-
-industry_targets_ns <- province_bmr %>% 
-  filter(industry == 1) %>% 
-  group_by(south) %>% 
-  sf::st_drop_geometry() %>% 
-  summarise(tot_industry = sum(numweaponsdelivered),
-            tot_industry_lb = sum(weightdelivered)) %>% 
-  filter(!is.na(south))
 
 # Bombing intensity by district 
+
+vnmap2 <- vnmap2 %>% 
+  mutate(distname2018 = paste(TYPE_2, NAME_2, sep = " ")) %>% 
+  mutate(distname2018 = case_when(
+    distname2018 == 'Thành phố Thành Phố Bắc Kạn' ~ 'Thành Phố Bắc Kạn',
+    distname2018 == 'Quận Quận 1' ~ 'Quận 1',
+    distname2018 == 'Quận Quận 10' ~ 'Quận 10',
+    distname2018 == 'Quận Quận 12' ~ 'Quận 12',
+    distname2018 == 'Quận Quận 11' ~ 'Quận 11',
+    distname2018 == 'Quận Quận 2' ~ 'Quận 2',
+    distname2018 == 'Quận Quận 3' ~ 'Quận 3',
+    distname2018 == 'Quận Quận 4' ~ 'Quận 4',
+    distname2018 == 'Quận Quận 5' ~ 'Quận 5',
+    distname2018 == 'Quận Quận 6' ~ 'Quận 6',
+    distname2018 == 'Quận Quận 7' ~ 'Quận 7',
+    distname2018 == 'Quận Quận 8' ~ 'Quận 8',
+    distname2018 == 'Quận Quận 9' ~ 'Quận 9',
+    TRUE ~ distname2018
+  ))
 
 district_bmr <- st_join(gdf, vnmap2)
 
 district_bmr_sum <- district_bmr %>% 
-  group_by(NAME_1, VARNAME_2) %>% 
+  group_by(NAME_1, distname2018) %>% 
   summarise(
     tot_bmr = sum(NUMWEAPONSDELIVERED, na.rm = T),
     civilian_bmr = sum(NUMWEAPONSDELIVERED[civilian == 1], na.rm = T),
     agri_bmr = sum(NUMWEAPONSDELIVERED[agriculture == 1], na.rm = T),
     industry_bmr = sum(NUMWEAPONSDELIVERED[industry == 1], na.rm = T)
-  )
-
-# Bombing intensity based on old provincial boundaries 
-
-vn_old <- st_transform(vn_old, crs = 4326)
-
-thor_old <- st_join(gdf, vn_old)
-
-thor_old_sum <- thor_old %>% 
-  group_by(NAME) %>% 
-  summarise(tot_bmr = sum(NUMWEAPONSDELIVERED),
-            tot_bmr_lb = sum(WEIGHTDELIVERED)) %>% 
+  ) %>% 
+  filter(!is.na(NAME_1)) %>% 
   sf::st_drop_geometry() %>% 
-  filter(!is.na(NAME))
+  rename(provname2018 = NAME_1) %>% 
+  mutate()
 
-infra_old <- thor_old %>% 
-  filter(infrastructure == 1) %>% 
-  group_by(NAME) %>% 
-  summarise(tot_infrastructure = sum(NUMWEAPONSDELIVERED),
-            tot_infra_lb = sum(WEIGHTDELIVERED)) %>% 
-  sf::st_drop_geometry() %>% 
-  filter(!is.na(NAME))
+district_bmr_sf <- district_bmr %>% 
+  group_by(NAME_1, NAME_2, VARNAME_2) %>% 
+  summarise(
+    tot_bmr = sum(NUMWEAPONSDELIVERED, na.rm = T),
+    civilian_bmr = sum(NUMWEAPONSDELIVERED[civilian == 1], na.rm = T),
+    agri_bmr = sum(NUMWEAPONSDELIVERED[agriculture == 1], na.rm = T),
+    industry_bmr = sum(NUMWEAPONSDELIVERED[industry == 1], na.rm = T)
+  ) %>% 
+  sf::st_drop_geometry()
 
-civilian_old <- thor_old %>% 
-  filter(civilian == 1) %>% 
-  group_by(NAME) %>% 
-  summarise(tot_civilian = sum(NUMWEAPONSDELIVERED),
-            tot_civilian_lb = sum(WEIGHTDELIVERED)) %>% 
-  sf::st_drop_geometry() %>% 
-  filter(!is.na(NAME))
-
-thor_old_sum <- list(thor_old_sum, infra_old, civilian_old) %>% 
-  reduce(full_join, by = "NAME")
-
-oldprov_sexratio <- merge(postwar_ppn, thor_old_sum, by = "NAME") %>% 
-  mutate(sexratio = (M_1976/F_1976)*100)
-
-save(oldprov_sexratio, file = "oldprov_sexratio.Rda")
+district_bmr_sf <- left_join(district_bmr_sf, vnmap2, by = c("NAME_1", "NAME_2", "VARNAME_2")) %>% 
+  st_as_sf()
