@@ -77,6 +77,24 @@ process_casualties_sf <- function(df){
     )
   
   df <- st_join(df, vnmap1)
+  df <- st_join(df, vnmap2) %>% 
+    mutate(distname2018 = paste(TYPE_2, NAME_2, sep = " ")) %>% 
+    mutate(distname2018 = case_when(
+      distname2018 == 'Thành phố Thành Phố Bắc Kạn' ~ 'Thành Phố Bắc Kạn',
+      distname2018 == 'Quận Quận 1' ~ 'Quận 1',
+      distname2018 == 'Quận Quận 10' ~ 'Quận 10',
+      distname2018 == 'Quận Quận 12' ~ 'Quận 12',
+      distname2018 == 'Quận Quận 11' ~ 'Quận 11',
+      distname2018 == 'Quận Quận 2' ~ 'Quận 2',
+      distname2018 == 'Quận Quận 3' ~ 'Quận 3',
+      distname2018 == 'Quận Quận 4' ~ 'Quận 4',
+      distname2018 == 'Quận Quận 5' ~ 'Quận 5',
+      distname2018 == 'Quận Quận 6' ~ 'Quận 6',
+      distname2018 == 'Quận Quận 7' ~ 'Quận 7',
+      distname2018 == 'Quận Quận 8' ~ 'Quận 8',
+      distname2018 == 'Quận Quận 9' ~ 'Quận 9',
+      TRUE ~ distname2018
+    ))
   
   return(df)
 }
@@ -87,9 +105,18 @@ casualties_sf <- do.call(rbind, casualties_sf[1:53])
 prov_codes_casualties <- casualties_sf %>%
   filter(!is.na(VARNAME_1)) %>% 
   select(MGRS, VARNAME_1) %>% 
-  distinct()
+  sf::st_drop_geometry()
+  
 
-combined_casualties <- left_join(combined_casualties, prov_codes_casualties, by = "MGRS")
+dist_codes_casualties <- casualties_sf %>%
+  filter(!is.na(VARNAME_1)) %>% 
+  select(MGRS, VARNAME_1, distname2018) %>% 
+  sf::st_drop_geometry()
+
+pd_codes_casualties <- full_join(prov_codes_casualties, dist_codes_casualties, by = c("MGRS", "VARNAME_1")) %>% 
+  distinct()
+  
+combined_casualties <- left_join(combined_casualties, pd_codes_casualties, by = "MGRS")
 
 # Can deduce Province by name of operation 
 operation_prov <- combined_casualties %>% 
@@ -97,7 +124,7 @@ operation_prov <- combined_casualties %>%
   filter(OPERATION.NAME != "",
          !is.na(VARNAME_1),
          OPERATION.NAME != "%NO NAME<") %>% 
-  sf::st_drop_geometry(operation_prov) %>% 
+  sf::st_drop_geometry() %>% 
   distinct() %>% 
   group_by(OPERATION.NAME) %>%
   filter(n() == 1,
@@ -105,8 +132,25 @@ operation_prov <- combined_casualties %>%
   ungroup() %>% 
   rename(prov = VARNAME_1)
 
-combined_casualties <- left_join(combined_casualties, operation_prov, by = "OPERATION.NAME") %>% 
-  mutate(prov = ifelse(is.na(prov), VARNAME_1, prov)) %>% 
+operation_dist <- combined_casualties %>% 
+  select(OPERATION.NAME, VARNAME_1, distname2018) %>% 
+  filter(OPERATION.NAME != "",
+         !is.na(VARNAME_1),
+         OPERATION.NAME != "%NO NAME<") %>% 
+  sf::st_drop_geometry() %>% 
+  distinct() %>% 
+  group_by(OPERATION.NAME) %>%
+  filter(n() == 1,
+         !grepl("INITIATED", OPERATION.NAME)) %>%
+  ungroup() %>% 
+  rename(prov = VARNAME_1,
+         dist = distname2018)
+
+operation_dp <- full_join(operation_prov, operation_dist, by = c("OPERATION.NAME", "prov"))
+
+combined_casualties <- left_join(combined_casualties, operation_dp, by = "OPERATION.NAME") %>% 
+  mutate(prov = ifelse(is.na(prov), VARNAME_1, prov),
+         dist = ifelse(is.na(dist), distname2018, dist)) %>% 
   mutate(
     prov = case_when(
       Meaning == 'An Giang' & is.na(prov) ~ 'An Giang',
@@ -173,7 +217,26 @@ prov_casualties <- combined_casualties %>%
             missing_tot = sum(NUMBER.CAPTURED.OR.MISSING)) %>% 
   rename(VARNAME_1 = prov)
 
+dist_casualties <- combined_casualties %>% 
+  mutate(
+    Viet = ifelse(LOSS.NATIONALITY == "Viet Cong", NUMBER.DESTROYED.OF.KILLED, 0),
+    LOSS.NATIONALITY = case_when(
+      LOSS.NATIONALITY == 'RVN' ~ 'A',
+      LOSS.NATIONALITY == 'Viet Cong' ~ 'V',
+      TRUE ~ LOSS.NATIONALITY
+    )
+  ) %>%
+  group_by(prov, dist) %>% 
+  summarise(viet_cong_deaths = sum(Viet),
+            killed_tot = sum(NUMBER.DESTROYED.OF.KILLED),
+            wounded_tot = sum(NUMBER.DAMAGED.OR.WOUNDED),
+            missing_tot = sum(NUMBER.CAPTURED.OR.MISSING)) %>% 
+  rename(VARNAME_1 = prov,
+         distname2018 = dist) %>% 
+  filter(!is.na(distname2018))
+
 colnames(prov_casualties) <- tolower(colnames(prov_casualties))
+colnames(dist_casualties) <- tolower(colnames(dist_casualties))
 
 prov_casualties_sexratio <- combined_casualties %>% 
   mutate(
@@ -232,3 +295,4 @@ prov_casualties_sexratio <- combined_casualties %>%
   filter(!is.na(Meaning))
 
 save(prov_casualties, file = "prov_casualties.Rda")
+save(dist_casualties, file = "dist_casualties.Rda")
