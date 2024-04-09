@@ -380,9 +380,13 @@ dn18_dist <- ec_list[[19]] %>%
   left_join(district_bmr_sum, by = c("provname2018", "distname2018")) %>% 
   mutate(year = 2018)
 
+south <- south %>% select(name_1, south) %>% rename(provname2018 = name_1)
+
 dn_dist <- bind_rows(dn00_dist, dn01_dist, dn02_dist, dn03_dist, dn04_dist, dn05_dist, dn06_dist,
                      dn07_dist, dn08_dist, dn09_dist, dn10_dist, dn11_dist, dn12_dist,
-                     dn13_dist, dn14_dist, dn15_dist, dn16_dist, dn17_dist, dn18_dist)
+                     dn13_dist, dn14_dist, dn15_dist, dn16_dist, dn17_dist, dn18_dist) %>% 
+  left_join(south, "provname2018")
+
 save(dn_dist, file = "dn_dist.Rda")
 
 # Province 
@@ -425,5 +429,76 @@ dn18_prov <- dn_prov_fn(dn18_dist) %>% mutate(year = 2018)
 
 dn_prov <- bind_rows(dn00_prov, dn01_prov, dn02_prov, dn03_prov, dn04_prov, dn05_prov, dn06_prov,
                      dn07_prov, dn08_prov, dn09_prov, dn10_prov, dn11_prov, dn12_prov,
-                     dn13_prov, dn14_prov, dn15_prov, dn16_prov, dn17_prov, dn18_prov)
+                     dn13_prov, dn14_prov, dn15_prov, dn16_prov, dn17_prov, dn18_prov) %>% 
+  left_join(south, by = "provname2018")
 save(dn_prov, file = "dn_prov.Rda")
+
+# By district and industry 
+
+dn00_dist_ind <- ec_list[[1]] %>% 
+  rename(prov2002 = tinh,
+         dist2002 = huyen,
+         xa02 = xa) %>% 
+  mutate(industry = case_when(
+    nganh_kd <= 200 ~ "Agriculture",
+    nganh_kd <= 500 ~ "Fishing",
+    nganh_kd <= 1429 ~ "Mining",
+    nganh_kd <= 3720 ~ "Manufacturing",
+    nganh_kd <= 4100 ~ "Electricity",
+    nganh_kd <= 4550 ~ "Construction",
+    nganh_kd <= 5260 ~ "Wholesale and retail",
+    nganh_kd <= 5220 ~ "Hospitality",
+    nganh_kd <= 6420 ~ "Transport",
+    nganh_kd <= 6720 ~ "Financial intermediation",
+    nganh_kd <= 7020 ~ "Scientific activities",
+    nganh_kd <= 7499 ~ "Real estate",
+    nganh_kd <= 7530 ~ "Public administration and defence",
+    nganh_kd <= 8090 ~ "Education",
+    nganh_kd <= 8532 ~ "Health and social work"
+  )) %>% 
+  left_join(district_codes, by = c("prov2002", "dist2002", "xa02")) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
+  summarise(nworkers = sum(ld611, na.rm = T),
+            fworkers = sum(ld612 , na.rm = T),
+            nworkers_eoy = sum(ld613, na.rm = T),
+            fworkers_eoy = sum(ld614, na.rm = T)) %>% 
+  filter(!is.na(prov2018),
+         !is.na(industry)) %>% 
+  mutate(workerratio = (nworkers-fworkers)/fworkers,
+         workerratio_eoy = (nworkers_eoy-fworkers_eoy)/fworkers_eoy) %>% 
+  left_join(district_bmr_sum, by = c("provname2018", "distname2018")) %>% 
+  mutate(year = 2000)
+
+dn01_dist_ind <- ec_list[[2]] %>% 
+  rename(prov2002 = tinh,
+         dist2002 = huyen,
+         xa02 = xa) %>% 
+  mutate(industry = case_when(
+    nganh_kd <= 200 ~ "Agriculture",
+    nganh_kd <= 500 ~ "Fishing",
+    nganh_kd <= 1429 ~ "Mining",
+    nganh_kd <= 3720 ~ "Manufacturing",
+    nganh_kd <= 4100 ~ "Electricity",
+    nganh_kd <= 4550 ~ "Construction",
+    nganh_kd <= 5260 ~ "Wholesale and retail",
+    nganh_kd <= 5220 ~ "Hospitality",
+    nganh_kd <= 6420 ~ "Transport",
+    nganh_kd <= 6720 ~ "Financial intermediation",
+    nganh_kd <= 7020 ~ "Scientific activities",
+    nganh_kd <= 7499 ~ "Real estate",
+    nganh_kd <= 7530 ~ "Public administration and defence",
+    nganh_kd <= 8090 ~ "Education",
+    nganh_kd <= 8532 ~ "Health and social work"
+  )) %>% 
+  left_join(district_codes, by = c("prov2002", "dist2002", "xa02")) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
+  summarise(nworkers = sum(ld11, na.rm = T),
+            fworkers = sum(ld12 , na.rm = T),
+            nworkers_eoy = sum(ld13, na.rm = T),
+            fworkers_eoy = sum(ld14, na.rm = T)) %>% 
+  filter(!is.na(prov2018),
+         !is.na(industry)) %>% 
+  mutate(workerratio = (nworkers-fworkers)/fworkers,
+         workerratio_eoy = (nworkers_eoy-fworkers_eoy)/fworkers_eoy) %>% 
+  left_join(district_bmr_sum, by = c("provname2018", "distname2018")) %>% 
+  mutate(year = 2001)
