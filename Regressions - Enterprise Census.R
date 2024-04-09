@@ -78,23 +78,6 @@ dn_dist_ols_coef_df <- do.call(rbind, dn_dist_ols_coef)
 dn_dist_ols_coef_df$year <- rep(seq(2000, 2018), each = nrow(dn_dist_ols_coef_df) / length(seq(2000, 2018)))
 dn_dist_ols_coef_df <- dn_dist_ols_coef_df %>% filter(term != "(Intercept)")
 
-ggplot(dn_dist_ols_coef_df, aes(x = factor(year), y = estimate, ymin = estimate - std.error, ymax = estimate + std.error)) +
-  geom_pointrange() +
-  geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
-  labs(x = "Year", y = "Estimate and 95% Interval") +
-  ggtitle("") +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-ggsave("dn_dist_ols.jpeg", width = 7, height = 7)
-
 ### inc. province FE 
 
 dn_dist_femodels <- (list(
@@ -159,23 +142,6 @@ dn_dist_femodels <- (list(
 dn_dist_fecoef <- lapply(dn_dist_femodels, tidy)
 dn_dist_fecoef_df <- do.call(rbind, dn_dist_fecoef)
 dn_dist_fecoef_df$year <- rep(seq(2000, 2018), each = nrow(dn_dist_fecoef_df) / length(seq(2000, 2018)))
-
-ggplot(dn_dist_fecoef_df, aes(x = factor(year), y = estimate, ymin = estimate - std.error, ymax = estimate + std.error)) +
-  geom_pointrange() +
-  geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
-  labs(x = "Year", y = "Estimate and 95% Interval") +
-  ggtitle("") +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-ggsave("dn_dist_fe.jpeg", width = 7, height = 7)
 
 # By north/south
 
@@ -309,23 +275,6 @@ dn_dist_ols_coef_s$group <- "South"
 dn_dist_ols_coef_ns <- rbind(dn_dist_ols_coef_n, dn_dist_ols_coef_s)
 dn_dist_ols_coef_ns <- dn_dist_ols_coef_ns %>% filter(term != "(Intercept)")
 
-ggplot(dn_dist_ols_coef_ns, aes(x = factor(year), y = estimate, ymin = estimate - std.error, ymax = estimate + std.error, color = group)) +
-  geom_pointrange() +
-  geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
-  labs(x = "Year", y = "Estimate and 95% Interval", color = "Region") +
-  ggtitle("") +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-ggsave("dn_dist_ols_coef_ns.jpeg", width = 7, height = 7)
-
 ## Inc. FE 
 
 dn_dist_femodels_s <- (list(
@@ -458,26 +407,9 @@ dn_dist_fecoef_df_s$group <- "South"
 dn_dist_fecoef_df_ns <- rbind(dn_dist_fecoef_df_n, dn_dist_fecoef_df_s)
 dn_dist_fecoef_df_ns <- dn_dist_fecoef_df_ns %>% filter(term != "(Intercept)")
 
-ggplot(dn_dist_fecoef_df_ns, aes(x = factor(year), y = estimate, ymin = estimate - std.error, ymax = estimate + std.error, color = group)) +
-  geom_pointrange() +
-  geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
-  labs(x = "Year", y = "Estimate and 95% Interval", color = "Region") +
-  ggtitle("") +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-ggsave("dn_dist_fecoef_ns.jpeg", width = 7, height = 7)
-
 # Province level 
 
-dn_prov_femodels <- (list(
+dn_prov_ols_models <- (list(
   feols(workerratio ~ log(tot_bmr),
         subset(dn_prov, year == 2000),
         vcov = ~prov2018),
@@ -536,29 +468,14 @@ dn_prov_femodels <- (list(
         subset(dn_prov, year == 2018),
         vcov = ~prov2018)))
 
-dn_prov_fecoef <- lapply(dn_prov_femodels, tidy)
-dn_prov_fecoef <- do.call(rbind, dn_prov_fecoef)
-dn_prov_fecoef$year <- rep(seq(2000, 2018), each = nrow(dn_prov_fecoef) / length(seq(2000, 2018)))
-
-ggplot(dplyr::filter(dn_prov_fecoef, term == "log(tot_bmr)"), aes(x = factor(year), y = estimate, ymin = estimate - std.error, ymax = estimate + std.error)) +
-  geom_pointrange() +
-  geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
-  labs(x = "Year", y = "Estimate and 95% Interval") +
-  ggtitle("") +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+dn_prov_ols_coef <- lapply(dn_prov_ols_models, tidy)
+dn_prov_ols_coef <- do.call(rbind, dn_prov_ols_coef)
+dn_prov_ols_coef$year <- rep(seq(2000, 2018), each = nrow(dn_prov_ols_coef) / length(seq(2000, 2018)))
+dn_prov_ols_coef <- dn_prov_ols_coef %>% filter(term != "(Intercept)")
 
 ## South 
 
-dn_prov_femodels_s <- (list(
+dn_prov_ols_s <- (list(
   feols(workerratio ~ log(tot_bmr),
         subset(dn_prov, year == 2000 & south == 1),
         vcov = ~prov2018),
@@ -617,29 +534,7 @@ dn_prov_femodels_s <- (list(
         subset(dn_prov, year == 2018 & south == 1),
         vcov = ~prov2018)))
 
-dn_prov_fecoef_s <- lapply(dn_prov_femodels_s, tidy)
-dn_prov_fecoef_s <- do.call(rbind, dn_prov_fecoef_s)
-dn_prov_fecoef_s$year <- rep(seq(2000, 2018), each = nrow(dn_prov_fecoef_s) / length(seq(2000, 2018)))
-
-ggplot(dplyr::filter(dn_prov_fecoef_s, term == "log(tot_bmr)"), aes(x = factor(year), y = estimate, ymin = estimate - std.error, ymax = estimate + std.error)) +
-  geom_pointrange() +
-  geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
-  labs(x = "Year", y = "Estimate and 95% Interval") +
-  ggtitle("") +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
-## North 
-
-dn_prov_femodels_n <- (list(
+dn_prov_ols_n <- (list(
   feols(workerratio ~ log(tot_bmr),
         subset(dn_prov, year == 2000 & south == 0),
         vcov = ~prov2018),
@@ -698,22 +593,15 @@ dn_prov_femodels_n <- (list(
         subset(dn_prov, year == 2018 & south == 0),
         vcov = ~prov2018)))
 
-dn_prov_fecoef_n <- lapply(dn_prov_femodels_n, tidy)
-dn_prov_fecoef_n <- do.call(rbind, dn_prov_fecoef_n)
-dn_prov_fecoef_n$year <- rep(seq(2000, 2018), each = nrow(dn_prov_fecoef_n) / length(seq(2000, 2018)))
+dn_prov_ols_coef_s <- lapply(dn_prov_ols_s, tidy)
+dn_prov_ols_coef_s <- do.call(rbind, dn_prov_ols_coef_s)
+dn_prov_ols_coef_s$year <- rep(seq(2000, 2018), each = nrow(dn_prov_ols_coef_s) / length(seq(2000, 2018)))
 
-ggplot(dplyr::filter(dn_prov_fecoef_n, term == "log(tot_bmr)"), aes(x = factor(year), y = estimate, ymin = estimate - std.error, ymax = estimate + std.error)) +
-  geom_pointrange() +
-  geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
-  labs(x = "Year", y = "Estimate and 95% Interval") +
-  ggtitle("") +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+dn_prov_ols_coef_n <- lapply(dn_prov_ols_n, tidy)
+dn_prov_ols_coef_n <- do.call(rbind, dn_prov_ols_coef_n)
+dn_prov_ols_coef_n$year <- rep(seq(2000, 2018), each = nrow(dn_prov_ols_coef_n) / length(seq(2000, 2018)))
+
+dn_prov_ols_coef_n$group <- "North"
+dn_prov_ols_coef_s$group <- "South"
+dn_prov_ols_coef_ns <- rbind(dn_prov_ols_coef_n, dn_prov_ols_coef_s)
+dn_prov_ols_coef_ns <- dn_prov_ols_coef_ns %>% filter(term != "(Intercept)")
