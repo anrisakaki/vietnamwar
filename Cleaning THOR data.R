@@ -80,7 +80,7 @@ colnames(province_bmr) <- tolower(colnames(province_bmr))
 
 province_names <- province_bmr %>% 
   sf::st_drop_geometry() %>% 
-  select(varname_1) %>% 
+  select(name_1, varname_1) %>% 
   distinct() %>% 
   filter(!is.na(varname_1))
 
@@ -90,7 +90,7 @@ south <- left_join(province_names, south, by = "varname_1") %>%
          south_corrected = ifelse(varname_1 == "Dien Bien", 0, south_corrected)) %>% 
   rename(south = south_corrected)
 
-province_bmr <- left_join(province_bmr, south, by = "varname_1")
+province_bmr <- left_join(province_bmr, south, by = c("name_1", "varname_1"))
 
 province_bmr_sum <- province_bmr %>% 
   ungroup() %>% 
@@ -119,8 +119,7 @@ province_bmr_sum <- list(province_bmr_sum, provarea) %>%
 
 vnmap1 <- vnmap1 %>% rename(name_1 = NAME_1)
 
-province_bmr_sf <- left_join(province_bmr_sum, vnmap1, by = "name_1")
-province_bmr_sf <- province_bmr_sf %>% st_as_sf()
+province_bmr_sf <- left_join(province_bmr_sum, vnmap1, by = "name_1") %>% st_as_sf()
 
 bases <- st_transform(bases, crs = 4326)
 hcmtrail <- st_transform(hcmtrail, crs = 4326)
@@ -137,7 +136,8 @@ distance_info <- province_bmr_sf %>%
   select(varname_1, dist_nearest_base, dist_nearest_hochi)
 distance_info <- sf::st_drop_geometry(distance_info)
 
-province_bmr_sum <- left_join(province_bmr_sum, distance_info, by = "varname_1")
+province_bmr_sum <- left_join(province_bmr_sum, distance_info, by = "varname_1") %>% 
+  left_join(south, c("varname_1", "name_1"))
 
 save(province_bmr_sum, file = "province_bmr_sum.Rda")
 
@@ -149,7 +149,8 @@ targets_sum <- province_bmr %>%
   summarise(tot_s = sum(numweaponsdelivered[south == 1], na.rm = T),
             tot_n = sum(numweaponsdelivered[south == 0], na.rm = T),
             ) %>% 
-  filter(!is.na(tgttype))
+  filter(!is.na(tgttype)) %>% 
+  filter(!grepl("UNKNOWN", tgttype, ignore.case = TRUE))
 
 # Bombing intensity by district 
 
@@ -173,29 +174,40 @@ vnmap2 <- vnmap2 %>%
   ))
 
 district_bmr <- st_join(gdf, vnmap2)
-
-district_bmr_sum <- district_bmr %>% 
-  group_by(NAME_1, distname2018) %>% 
-  summarise(
-    tot_bmr = sum(NUMWEAPONSDELIVERED, na.rm = T),
-    civilian_bmr = sum(NUMWEAPONSDELIVERED[civilian == 1], na.rm = T),
-    agri_bmr = sum(NUMWEAPONSDELIVERED[agriculture == 1], na.rm = T),
-    industry_bmr = sum(NUMWEAPONSDELIVERED[industry == 1], na.rm = T)
-  ) %>% 
-  filter(!is.na(NAME_1)) %>% 
-  sf::st_drop_geometry() %>% 
-  rename(provname2018 = NAME_1) %>% 
-  mutate()
+district_bmr <- st_join(district_bmr, vnmap1)
 
 district_bmr_sf <- district_bmr %>% 
-  group_by(NAME_1, NAME_2, VARNAME_2) %>% 
+  group_by(NAME_1, VARNAME_1, VARNAME_2, distname2018) %>% 
   summarise(
     tot_bmr = sum(NUMWEAPONSDELIVERED, na.rm = T),
+    tot_bmr_lb = sum(WEIGHTDELIVERED, na.rm = T),
     civilian_bmr = sum(NUMWEAPONSDELIVERED[civilian == 1], na.rm = T),
+    civilian_bmr_lb = sum(WEIGHTDELIVERED[civilian == 1], na.rm = T),
     agri_bmr = sum(NUMWEAPONSDELIVERED[agriculture == 1], na.rm = T),
-    industry_bmr = sum(NUMWEAPONSDELIVERED[industry == 1], na.rm = T)
+    agri_bmr_lb = sum(WEIGHTDELIVERED[agriculture == 1], na.rm = T),
+    industry_bmr = sum(NUMWEAPONSDELIVERED[industry == 1], na.rm = T),
+    industry_bmr_lb = sum(WEIGHTDELIVERED[industry == 1], na.rm = T),
   ) %>% 
   sf::st_drop_geometry()
 
-district_bmr_sf <- left_join(district_bmr_sf, vnmap2, by = c("NAME_1", "NAME_2", "VARNAME_2")) %>% 
+district_bmr_sf <- left_join(district_bmr_sf, vnmap2, by = c("NAME_1", "VARNAME_2", "distname2018")) %>% 
   st_as_sf()
+
+nearest_base_dist <- st_nearest_feature(district_bmr_sf, bases)
+district_bmr_sf$nearest_base <-
+  as.numeric(st_distance(district_bmr_sf, bases[nearest_base_dist, ], by_element = TRUE)) / 1000
+
+nearest_trail_dist <- st_nearest_feature(district_bmr_sf, hcmtrail)
+district_bmr_sf$dist_nearest_hochi <-
+  as.numeric(st_distance(district_bmr_sf, hcmtrail[nearest_trail_dist, ], by_element = TRUE)) / 1000
+
+district_bmr_sum <- district_bmr_sf %>% 
+  sf::st_drop_geometry() %>% 
+  select(NAME_1, VARNAME_1, VARNAME_2, distname2018, tot_bmr, tot_bmr_lb, civilian_bmr, civilian_bmr_lb,
+         agri_bmr, agri_bmr_lb, industry_bmr, industry_bmr_lb, nearest_base, dist_nearest_hochi) %>% 
+  rename_all(tolower) %>% 
+  left_join(dist_casualties, by = c("varname_1", "distname2018")) %>% 
+  rename(provname2018 = name_1) %>% 
+  filter(!is.na(provname2018))
+
+save(district_bmr_sum, file = "district_bmr_sum.Rda")
