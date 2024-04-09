@@ -9,8 +9,13 @@ library(sjPlot)
 library(sfheaders)
 library(mgrs)
 library(mapview)
+library(broom)
 
 rm(list=ls())
+
+# VHLSS 
+
+
 
 # DHC 
 dhc_97 <- read_dta(file = "DHC/VNIR31FL.dta")
