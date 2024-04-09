@@ -433,29 +433,58 @@ dn_prov <- bind_rows(dn00_prov, dn01_prov, dn02_prov, dn03_prov, dn04_prov, dn05
   left_join(south, by = "provname2018")
 save(dn_prov, file = "dn_prov.Rda")
 
-# By district and industry 
+# By district and industry
 
-dn00_dist_ind <- ec_list[[1]] %>% 
+vsic93_mapper <- function(i) {
+  i %>%
+    mutate(industry = case_when(
+      nganh_kd <= 200 ~ "Agriculture",
+      nganh_kd <= 500 ~ "Fishing",
+      nganh_kd <= 1429 ~ "Mining",
+      nganh_kd <= 3720 ~ "Manufacturing",
+      nganh_kd <= 4100 ~ "Electricity",
+      nganh_kd <= 4550 ~ "Construction",
+      nganh_kd <= 5260 ~ "Wholesale and retail",
+      nganh_kd <= 5220 ~ "Hospitality",
+      nganh_kd <= 6420 ~ "Transport",
+      nganh_kd <= 6720 ~ "Financial intermediation",
+      nganh_kd <= 7020 ~ "Scientific activities",
+      nganh_kd <= 7499 ~ "Real estate",
+      nganh_kd <= 7530 ~ "Public administration and defence",
+      nganh_kd <= 8090 ~ "Education",
+      nganh_kd <= 8532 ~ "Health and social work"
+    ))
+}
+
+vsic07_mapper <- function(i) {
+  i %>%
+    mutate(industry = case_when(
+      nganh_kd <= 311 ~ "Agriculture",
+      nganh_kd <= 323 ~ "Fishing",
+      nganh_kd <= 990 ~ "Mining",
+      nganh_kd <= 3900 ~ "Manufacturing",
+      nganh_kd <= 4390 ~ "Construction",
+      nganh_kd <= 4799 ~ "Wholesale and retail",
+      nganh_kd <= 5320 ~ "Transport",
+      nganh_kd <= 5630 ~ "Hospitality",
+      nganh_kd <= 6329 ~ "Telecomunication",
+      nganh_kd <= 6630 ~ "Financial services",
+      nganh_kd <= 6820 ~ "Real estate",
+      nganh_kd <= 7500 ~ "Professional activities, science and technology",
+      nganh_kd <= 8299 ~ "Administration and support service",
+      nganh_kd <= 8560 ~ "Education",
+      nganh_kd <= 8610 ~ "Health and social work",
+      nganh_kd <= 9329 ~ "Art and entertainment"
+    ))
+}
+
+ec_list_2 <- map(ec_list[1:8], ~vsic93_mapper(.))
+ec_list_3 <- map(ec_list[9:18], ~vsic07_mapper(.))
+
+dn00_dist_ind <- ec_list_2[[1]] %>% 
   rename(prov2002 = tinh,
          dist2002 = huyen,
          xa02 = xa) %>% 
-  mutate(industry = case_when(
-    nganh_kd <= 200 ~ "Agriculture",
-    nganh_kd <= 500 ~ "Fishing",
-    nganh_kd <= 1429 ~ "Mining",
-    nganh_kd <= 3720 ~ "Manufacturing",
-    nganh_kd <= 4100 ~ "Electricity",
-    nganh_kd <= 4550 ~ "Construction",
-    nganh_kd <= 5260 ~ "Wholesale and retail",
-    nganh_kd <= 5220 ~ "Hospitality",
-    nganh_kd <= 6420 ~ "Transport",
-    nganh_kd <= 6720 ~ "Financial intermediation",
-    nganh_kd <= 7020 ~ "Scientific activities",
-    nganh_kd <= 7499 ~ "Real estate",
-    nganh_kd <= 7530 ~ "Public administration and defence",
-    nganh_kd <= 8090 ~ "Education",
-    nganh_kd <= 8532 ~ "Health and social work"
-  )) %>% 
   left_join(district_codes, by = c("prov2002", "dist2002", "xa02")) %>% 
   group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld611, na.rm = T),
@@ -469,27 +498,10 @@ dn00_dist_ind <- ec_list[[1]] %>%
   left_join(district_bmr_sum, by = c("provname2018", "distname2018")) %>% 
   mutate(year = 2000)
 
-dn01_dist_ind <- ec_list[[2]] %>% 
+dn01_dist_ind <- ec_list_2[[2]] %>% 
   rename(prov2002 = tinh,
          dist2002 = huyen,
          xa02 = xa) %>% 
-  mutate(industry = case_when(
-    nganh_kd <= 200 ~ "Agriculture",
-    nganh_kd <= 500 ~ "Fishing",
-    nganh_kd <= 1429 ~ "Mining",
-    nganh_kd <= 3720 ~ "Manufacturing",
-    nganh_kd <= 4100 ~ "Electricity",
-    nganh_kd <= 4550 ~ "Construction",
-    nganh_kd <= 5260 ~ "Wholesale and retail",
-    nganh_kd <= 5220 ~ "Hospitality",
-    nganh_kd <= 6420 ~ "Transport",
-    nganh_kd <= 6720 ~ "Financial intermediation",
-    nganh_kd <= 7020 ~ "Scientific activities",
-    nganh_kd <= 7499 ~ "Real estate",
-    nganh_kd <= 7530 ~ "Public administration and defence",
-    nganh_kd <= 8090 ~ "Education",
-    nganh_kd <= 8532 ~ "Health and social work"
-  )) %>% 
   left_join(district_codes, by = c("prov2002", "dist2002", "xa02")) %>% 
   group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
@@ -502,3 +514,114 @@ dn01_dist_ind <- ec_list[[2]] %>%
          workerratio_eoy = (nworkers_eoy-fworkers_eoy)/fworkers_eoy) %>% 
   left_join(district_bmr_sum, by = c("provname2018", "distname2018")) %>% 
   mutate(year = 2001)
+
+dn02_dist_ind <- ec_list_2[[3]] %>% 
+  rename(prov2002 = tinh,
+         dist2002 = huyen,
+         xa02 = xa) %>% 
+  left_join(district_codes, by = c("prov2002", "dist2002", "xa02")) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
+  summarise(nworkers = sum(ld11, na.rm = T),
+            fworkers = sum(ld12 , na.rm = T),
+            nworkers_eoy = sum(ld13, na.rm = T),
+            fworkers_eoy = sum(ld14, na.rm = T)) %>% 
+  filter(!is.na(prov2018),
+         !is.na(industry)) %>% 
+  mutate(workerratio = (nworkers-fworkers)/fworkers,
+         workerratio_eoy = (nworkers_eoy-fworkers_eoy)/fworkers_eoy) %>% 
+  left_join(district_bmr_sum, by = c("provname2018", "distname2018")) %>% 
+  mutate(year = 2002)
+
+dn03_dist_ind <- ec_list_2[[4]] %>% 
+  rename(prov2003 = tinh,
+         dist2003 = huyen,
+         xa03 = xa) %>% 
+  left_join(district_codes, by = c("prov2003", "dist2003", "xa03")) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
+  summarise(nworkers = sum(ld11, na.rm = T),
+            fworkers = sum(ld12, na.rm = T),
+            nworkers_eoy = sum(ld13, na.rm = T),
+            fworkers_eoy = sum(ld14, na.rm = T)) %>% 
+  mutate(workerratio = (nworkers-fworkers)/fworkers,
+         workerratio_eoy = (nworkers_eoy-fworkers_eoy)/fworkers_eoy) %>% 
+  filter(!is.na(prov2018)) %>% 
+  left_join(district_bmr_sum, by = c("provname2018", "distname2018")) %>% 
+  mutate(year = 2003)
+
+dn04_dist_ind <- ec_list_2[[5]] %>% 
+  rename(prov2005 = tinh,
+         dist2005 = huyen,
+         ward2005 = xa) %>% 
+  mutate(across(c(prov2005, dist2005, ward2005), as.double)) %>% 
+  left_join(district_codes, by = c("prov2005", "dist2005", "ward2005")) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  summarise(nworkers = sum(ld11, na.rm = T),
+            fworkers = sum(ld12, na.rm = T),
+            nworkers_eoy = sum(ld13, na.rm = T),
+            fworkers_eoy = sum(ld14, na.rm = T)) %>% 
+  mutate(workerratio = (nworkers-fworkers)/fworkers,
+         workerratio_eoy = (nworkers_eoy-fworkers_eoy)/fworkers_eoy) %>% 
+  filter(!is.na(prov2018)) %>% 
+  left_join(district_bmr_sum, by = c("provname2018", "distname2018")) %>% 
+  mutate(year = 2004)
+
+dn05_dist_ind <- ec_list_2[[6]] %>% 
+  rename(prov2005 = tinh,
+         dist2005 = huyen,
+         ward2005 = xa) %>% 
+  mutate(across(c(prov2005, dist2005, ward2005), as.double)) %>% 
+  left_join(district_codes, by = c("prov2005", "dist2005", "ward2005")) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  summarise(nworkers = sum(ld11, na.rm = T),
+            fworkers = sum(ld12, na.rm = T),
+            nworkers_eoy = sum(ld13, na.rm = T),
+            fworkers_eoy = sum(ld14, na.rm = T)) %>% 
+  mutate(workerratio = (nworkers-fworkers)/fworkers,
+         workerratio_eoy = (nworkers_eoy-fworkers_eoy)/fworkers_eoy) %>% 
+  filter(!is.na(prov2018)) %>% 
+  left_join(district_bmr_sum, by = c("provname2018", "distname2018")) %>% 
+  mutate(year = 2005)
+
+dn06_dist_ind <- ec_list_2[[7]] %>% 
+  rename(prov2006 = tinh,
+         dist2006 = huyen,
+         ward2006 = xa) %>% 
+  mutate(across(c(prov2006, dist2006, ward2006), as.double),
+         ward2006 = ifelse(dist2006 == 755, 75500, ward2006)) %>% 
+  left_join(district_codes, by = c("prov2006", "dist2006", "ward2006")) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  summarise(nworkers = sum(ld11, na.rm = T),
+            fworkers = sum(ld12, na.rm = T),
+            nworkers_eoy = sum(ld13, na.rm = T),
+            fworkers_eoy = sum(ld14, na.rm = T)) %>% 
+  mutate(workerratio = (nworkers-fworkers)/fworkers,
+         workerratio_eoy = (nworkers_eoy-fworkers_eoy)/fworkers_eoy) %>% 
+  filter(!is.na(prov2018)) %>% 
+  left_join(district_bmr_sum, by = c("provname2018", "distname2018")) %>% 
+  mutate(year = 2006)
+
+districts00 <- ec_list[[1]] %>% select(tinh, huyen, xa, ma_thue) %>% rename(tinh01 = tinh, huyen01 = huyen, xa01 = xa)
+districts18 <- ec_list[[19]] %>% select(tinh, huyen, xa, ma_thue)
+
+test <- left_join(districts00, districts18, by = "ma_thue") %>% 
+  select(tinh01, huyen01, tinh, huyen) %>% 
+  group_by(tinh01, huyen01) %>% 
+  mutate(geoid00 = cur_group_id()) %>% 
+  group_by(tinh, huyen) %>% 
+  mutate(geoid18 = cur_group_id())
+
+n_sum <- test %>%   
+  group_by(tinh01, huyen01, geoid00, tinh, huyen, geoid18) %>%
+  filter(!is.na(tinh)) %>% 
+  summarize(count = n())
+
+filtered_n_sum <- n_sum %>%
+  group_by(tinh01, huyen01, geoid00) %>%
+  slice_max(order_by = count)
+  
+  
+  filter(!is.na(tinh)) %>% 
+  group_by(tinh01, huyen01, xa01) %>% 
+  mutate(geoid00 = cur_group_id()) %>% 
+  group_by(tinh, huyen, xa) %>% 
+  mutate(geoid18 = cur_group_id())
