@@ -10,6 +10,7 @@ library(sfheaders)
 library(mgrs)
 library(mapview)
 library(broom)
+library(patchwork)
 
 rm(list=ls())
 
