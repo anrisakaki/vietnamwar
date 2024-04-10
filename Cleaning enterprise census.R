@@ -437,45 +437,55 @@ save(dn_prov, file = "dn_prov.Rda")
 
 vsic93_mapper <- function(i) {
   i %>%
-    mutate(industry = case_when(
-      nganh_kd <= 200 ~ "Agriculture",
-      nganh_kd <= 500 ~ "Fishing",
-      nganh_kd <= 1429 ~ "Mining",
-      nganh_kd <= 3720 ~ "Manufacturing",
-      nganh_kd <= 4100 ~ "Electricity",
-      nganh_kd <= 4550 ~ "Construction",
-      nganh_kd <= 5260 ~ "Wholesale and retail",
-      nganh_kd <= 5220 ~ "Hospitality",
-      nganh_kd <= 6420 ~ "Transport",
-      nganh_kd <= 6720 ~ "Financial intermediation",
-      nganh_kd <= 7020 ~ "Scientific activities",
-      nganh_kd <= 7499 ~ "Real estate",
-      nganh_kd <= 7530 ~ "Public administration and defence",
-      nganh_kd <= 8090 ~ "Education",
-      nganh_kd <= 8532 ~ "Health and social work"
-    ))
+    mutate(
+      nganh_kd = substr(nganh_kd, 1, 4),
+      industry = case_when(
+        nganh_kd <= 200 ~ "Agriculture",
+        nganh_kd <= 1429 ~ "Mining",
+        nganh_kd <= 3720 ~ "Manufacturing",
+        nganh_kd <= 4100 ~ "Electricity",
+        nganh_kd <= 4550 ~ "Construction",
+        nganh_kd <= 5260 ~ "Wholesale and retail",
+        nganh_kd <= 5220 ~ "Hospitality",
+        nganh_kd <= 6420 ~ "Transport",
+        nganh_kd <= 6720 ~ "Financial intermediation",
+        nganh_kd <= 7020 ~ "Scientific activities",
+        nganh_kd <= 7499 ~ "Real estate",
+        nganh_kd <= 7530 ~ "Public administration and defence",
+        nganh_kd <= 8090 ~ "Education",
+        nganh_kd <= 8532 ~ "Health and social work",
+        TRUE ~ "Other" # Catch-all for other cases not covered by previous conditions
+      ))
 }
 
 vsic07_mapper <- function(i) {
+  
+  i$nganh_kd <- as.numeric(i$nganh_kd)
+  
   i %>%
-    mutate(industry = case_when(
-      nganh_kd <= 311 ~ "Agriculture",
-      nganh_kd <= 323 ~ "Fishing",
-      nganh_kd <= 990 ~ "Mining",
-      nganh_kd <= 3900 ~ "Manufacturing",
-      nganh_kd <= 4390 ~ "Construction",
-      nganh_kd <= 4799 ~ "Wholesale and retail",
-      nganh_kd <= 5320 ~ "Transport",
-      nganh_kd <= 5630 ~ "Hospitality",
-      nganh_kd <= 6329 ~ "Telecomunication",
-      nganh_kd <= 6630 ~ "Financial services",
-      nganh_kd <= 6820 ~ "Real estate",
-      nganh_kd <= 7500 ~ "Professional activities, science and technology",
-      nganh_kd <= 8299 ~ "Administration and support service",
-      nganh_kd <= 8560 ~ "Education",
-      nganh_kd <= 8610 ~ "Health and social work",
-      nganh_kd <= 9329 ~ "Art and entertainment"
-    ))
+    mutate(
+      nganh_kd = ifelse(nganh_kd < 10000, nganh_kd/10, nganh_kd),
+      nganh_kd = as.numeric(substr(nganh_kd, 1, 4)),
+      industry = case_when(
+        nganh_kd <= 311 ~ "Agriculture",
+        nganh_kd <= 323 ~ "Fishing",
+        nganh_kd <= 990 ~ "Mining",
+        nganh_kd <= 3900 ~ "Manufacturing",
+        nganh_kd <= 4390 ~ "Construction",
+        nganh_kd <= 4799 ~ "Wholesale and retail",
+        nganh_kd <= 5320 ~ "Transport",
+        nganh_kd <= 5630 ~ "Hospitality",
+        nganh_kd <= 6329 ~ "Telecomunication",
+        nganh_kd <= 6630 ~ "Financial services",
+        nganh_kd <= 6820 ~ "Real estate",
+        nganh_kd <= 7500 ~ "Professional activities, science and technology",
+        nganh_kd <= 8299 ~ "Administration and support service",
+        nganh_kd <= 8560 ~ "Education",
+        nganh_kd <= 8610 ~ "Health and social work",
+        nganh_kd <= 9329 ~ "Art and entertainment",
+        TRUE ~ "Other" 
+      )
+    )
 }
 
 ec_list_2 <- map(ec_list[1:8], ~vsic93_mapper(.))
@@ -554,7 +564,7 @@ dn04_dist_ind <- ec_list_2[[5]] %>%
          ward2005 = xa) %>% 
   mutate(across(c(prov2005, dist2005, ward2005), as.double)) %>% 
   left_join(district_codes, by = c("prov2005", "dist2005", "ward2005")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -571,7 +581,7 @@ dn05_dist_ind <- ec_list_2[[6]] %>%
          ward2005 = xa) %>% 
   mutate(across(c(prov2005, dist2005, ward2005), as.double)) %>% 
   left_join(district_codes, by = c("prov2005", "dist2005", "ward2005")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -589,7 +599,7 @@ dn06_dist_ind <- ec_list_2[[7]] %>%
   mutate(across(c(prov2006, dist2006, ward2006), as.double),
          ward2006 = ifelse(dist2006 == 755, 75500, ward2006)) %>% 
   left_join(district_codes, by = c("prov2006", "dist2006", "ward2006")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -606,7 +616,7 @@ dn07_dist_ind <- ec_list_2[[8]] %>%
          ward2007 = xa) %>% 
   mutate(across(c(prov2007, dist2007, ward2007), as.double)) %>% 
   left_join(district_codes, by = c("prov2007", "dist2007", "ward2007")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -623,7 +633,7 @@ dn08_dist_ind <- ec_list_3[[1]] %>%
          ward2008 = xa) %>% 
   mutate(across(c(prov2008, dist2008, ward2008), as.double)) %>% 
   left_join(district_codes, by = c("prov2008", "dist2008", "ward2008")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -640,7 +650,7 @@ dn09_dist_ind <- ec_list_3[[2]] %>%
          ward2009 = xa) %>% 
   mutate(across(c(prov2009, dist2009, ward2009), as.double)) %>% 
   left_join(district_codes, by = c("prov2009", "dist2009", "ward2009")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -657,7 +667,7 @@ dn10_dist_ind <- ec_list_3[[3]] %>%
          ward2010 = xa) %>% 
   mutate(across(c(prov2010, dist2010, ward2010), as.double)) %>% 
   left_join(district_codes, by = c("prov2010", "dist2010", "ward2010")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -678,7 +688,7 @@ dn11_dist_ind <- ec_list_3[[4]] %>%
          ward2011 = xa) %>% 
   mutate(across(c(prov2011, dist2011, ward2011), as.double)) %>% 
   left_join(district_codes, by = c("prov2011", "dist2011", "ward2011")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -699,7 +709,7 @@ dn12_dist_ind <- ec_list_3[[5]] %>%
          ward2012 = xa) %>% 
   mutate(across(c(prov2012, dist2012, ward2012), as.double)) %>% 
   left_join(district_codes, by = c("prov2012", "dist2012", "ward2012")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -720,7 +730,7 @@ dn13_dist_ind <- ec_list_3[[6]] %>%
          ward2013 = xa) %>% 
   mutate(across(c(prov2013, dist2013, ward2013), as.double)) %>% 
   left_join(district_codes, by = c("prov2013", "dist2013", "ward2013")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -741,7 +751,7 @@ dn14_dist_ind <- ec_list_3[[5]] %>%
          ward2014 = xa) %>% 
   mutate(across(c(prov2014, dist2014, ward2014), as.double)) %>% 
   left_join(district_codes, by = c("prov2014", "dist2014", "ward2014")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -762,7 +772,7 @@ dn15_dist_ind <- ec_list_3[[6]] %>%
          ward2015 = xa) %>% 
   mutate(across(c(prov2015, dist2015, ward2015), as.double)) %>% 
   left_join(district_codes, by = c("prov2015", "dist2015", "ward2015")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -783,7 +793,7 @@ dn15_dist_ind <- ec_list_3[[6]] %>%
          ward2015 = xa) %>% 
   mutate(across(c(prov2015, dist2015, ward2015), as.double)) %>% 
   left_join(district_codes, by = c("prov2015", "dist2015", "ward2015")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -804,7 +814,7 @@ dn16_dist_ind <- ec_list_3[[7]] %>%
          ward2016 = xa) %>% 
   mutate(across(c(prov2016, dist2016, ward2016), as.double)) %>% 
   left_join(district_codes, by = c("prov2016", "dist2016", "ward2016")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -825,7 +835,7 @@ dn17_dist_ind <- ec_list_3[[8]] %>%
          ward2017 = xa) %>% 
   mutate(across(c(prov2017, dist2017, ward2017), as.double)) %>% 
   left_join(district_codes, by = c("prov2017", "dist2017", "ward2017")) %>% 
-  group_by(prov2018, dist2018, provname2018, distname2018) %>% 
+  group_by(prov2018, dist2018, provname2018, distname2018, industry) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
             nworkers_eoy = sum(ld13, na.rm = T),
@@ -856,3 +866,9 @@ dn18_dist_ind <- ec_list_3[[9]] %>%
   filter(!is.na(prov2018)) %>% 
   left_join(district_bmr_sum, by = c("provname2018", "distname2018")) %>% 
   mutate(year = 2018)
+
+dn_dist_ind <- bind_rows(dn00_dist_ind, dn01_dist_ind, dn02_dist_ind, dn03_dist_ind, dn04_dist_ind,
+                         dn05_dist_ind, dn06_dist_ind, dn07_dist_ind, dn08_dist_ind, dn09_dist_ind,
+                         dn10_dist_ind, dn11_dist_ind, dn12_dist_ind, dn13_dist_ind, dn14_dist_ind,
+                         dn15_dist_ind, dn16_dist_ind, dn17_dist_ind, dn18_dist_ind) %>% 
+  left_join(south, "provname2018")
