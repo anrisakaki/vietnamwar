@@ -15,8 +15,26 @@ library(patchwork)
 rm(list=ls())
 
 # VHLSS 
+inc_02 <- read_dta(file = "Full VHLSS/VHLSS 2002 N= 45,000/hhinc02.dta")
+m1_02 <- read_dta(file = "Full VHLSS/VHLSS 2002 N= 45,000/muc1.dta") #DF containing age and sex
+m2_02 <- read_dta (file = "Full VHLSS/VHLSS 2002 N= 45,000/muc2.dta") #DF containing educational attainment 
+m3_02 <- read_dta (file = "Full VHLSS/VHLSS 2002 N= 45,000/muc3.dta") #DF containing work 
+m5a_02 <- read_dta (file = "Full VHLSS/VHLSS 2002 N= 45,000/muc5a.dta") #DF containing work
 
+inc_04 <- read_dta(file = "Full VHLSS/2004/hhinc04.dta")
+ho1_04 <- read_dta(file = "Full VHLSS/2004/ho1.dta")
+ho2_04 <- read_dta(file = "Full VHLSS/2004/ho2.dta")
+m123a_04 <- read_dta(file = "Full VHLSS/2004/m1_2_3a.dta") #DF containing age, sex, and educational attainment 
+m4a_04 <- read_dta(file = "Full VHLSS/2004/m4a.dta") #DF containing work 
+m10a_04 <- read_dta(file = "Full VHLSS/2004/m10a_e3.dta")
 
+ttchung_06 <- read_dta(file = "Full VHLSS/2006/ttchung.dta")
+inc_06 <- read_dta(file = "Full VHLSS/2006/hhinc06.dta")
+m1a_06 <- read_dta(file = "Full VHLSS/2006/muc1a.dta") #DF containing age and sex 
+m2a_06 <- read_dta(file = "Full VHLSS/2006/muc2a.dta") #DF containing educational attainment 
+m4a_06 <- read_dta(file = "Full VHLSS/2006/muc4a.dta") #DF containing employment & housework 
+
+busid <- read_dta(file = "Full VHLSS/Business ids.dta")
 
 # DHC 
 dhc_97 <- read_dta(file = "DHC/VNIR31FL.dta")
@@ -86,6 +104,10 @@ yl_anthro <- read_dta("YL/stata/stata13/vietnam_r5/vnyc_anthro_anon/vn_r5_ychh_y
 
 # Map 
 
+geoid_folder <- "C:/Users/Anri Sakakibara/OneDrive/PhD Political Economy/Vietnam War/geoid"
+geoid_files <- list.files(path = geoid_folder, pattern = "geo(.*)csv$")
+geoid_list <- lapply(geoid_files, function(file) read.csv(file.path(geoid_folder, file)))
+
 vnmap0 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_0.shp")
 vnmap1 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_1.shp")
 vnmap2 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_2.shp")
@@ -95,12 +117,14 @@ bases <- st_read("3-replication package/3-replication package/rawdata/shapefiles
 popcenter <-
   st_read("3-replication package/3-replication package/rawdata/shapefiles/ne_10m_populated_places.shp")
 
+vnmap2_09 <- read_sf("Chloropleth Maps/VNShapefile/geo2_vn2009/geo2_vn2009.shp")
+
 provarea <- read.csv("province_area.csv")
 
 district <- read_dta(file = "Consistent 2019 to 1999 wards with 1999 districts.dta")
 
 vn_old <- read_sf("Chloropleth Maps/vnm_huyen.shp")
 
- # Consistent District Boundaries 
+# Consistent District Boundaries 
 
 mccaig_boundaries <- read_dta("Consistent 2019 to 1999 wards with 1999 districts.dta")
