@@ -1,86 +1,112 @@
-#######################
-# cleaning VHLSS data #
-#######################
+ivid02 <- c("tinh","xa", "hoso", "matv", "tinh02", "huyen02", "xa02", "diaban02", "hoso02", "matv02", "qui", "phieu")
+ivid04 <- c("tinh", "huyen", "diaban", "xa", "hoso", "matv", "ky")
 
-m1_06 <- m1_06 %>% 
-  rename(birth_year = m1ac4b,
-         hk = m1ac8) %>% 
-  mutate(female = ifelse(m1ac2 == 2, 1, 0),
-         child = ifelse(m1ac3 == 3, 1, 0),
-         parent = ifelse(m1ac3 == 1| m1ac3 == 2, 1, 0)) %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, birth_year, female, parent, child, hk)
+hhid02 <- c("tinh02", "huyen02", "xa02", "diaban02", "hoso02", "qui", "phieu")
+hhid04 <- c("tinh", "huyen", "xa", "hoso", "diaban", "ky")
 
-m2a_06 <- m2a_06 %>%
-  rename(educ = m2ac1) %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, educ)
+def02 <- inc_02 %>% select(tinh02, huyen02, xa02, diaban02, hoso02, qui, hhsize, urban, rcpi, mcpi, wt75)
+def04 <- inc_04 %>% select(tinh, huyen, xa, hoso, urban, rcpi, mcpi, wt45)
 
-m3_06 <- m3_06 %>% 
-  rename(wage_work = m3c1a,
-         agri_hh = m3c1b, 
-         nonagri_hh = m3c1c, 
-         work = m3c2,
-         work_for = m3c8) %>% 
-  mutate(wage_work = ifelse(wage_work == 1, 1, 0),
-         agri_hh = ifelse(agri_hh == 1, 1, 0),
-         nonagri_hh = ifelse(nonagri_hh == 1, 1, 0),
-         work = ifelse(work == 1, 1, 0)) %>% 
-  select(tinh02, huyen02, xa02, hoso02, matv02, wage_work, nonagri_hh, agri_hh, work, work_for) %>% 
-  rename_with(~ str_replace(.x, "02", ""), everything())
+########
+# 2002 # 
+########
 
-m4a_06 <- m4a_06 %>% 
-  rename(work = m4ac2) %>%
-  mutate(income = m4ac11 +m4ac12f) %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, work, income)
+vhlss02 <- list(m1_02, m2_02, m3_02) %>%
+  map(~mutate(.x, matv02 = as.numeric(str_sub(as.character(matv02), -2)))) %>%
+  reduce(full_join, by = ivid02) %>% 
+  left_join(m5a_02, by = ivid02)
 
-m4ho_06 <- m4ho_06 %>% 
-  rename(ethnicity = ch_dantoc) %>%
-  select(tinh, xa, hoso, ethnicity) %>%
-  mutate(
-    tinh = as.numeric(substr(xa, 1, 3)),
-    huyen = as.numeric(substr(xa, 4, 5)),
-    xa = as.numeric(substr(xa, 6, 7)),
-    hoso = as.numeric(substr(hoso, nchar(hoso) - 1, nchar(hoso)))
-  ) %>% 
-  select(tinh, huyen, xa, hoso, ethnicity)
+vhlss02 <- vhlss02 %>% 
+  mutate(female = ifelse(m1c2 == 2, 1, 0),
+         married = ifelse(m1c6 == 2, 1, 0),
+         hhhead = ifelse(m1c3 == 1, 1, 0),
+         fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
+         wagework = ifelse(m3c1a == 1, 1, 0),
+         work = ifelse(m3c2 == 1, 1, 0),
+         selfemp = ifelse(m3c8 == 0, 1, 0),
+         selfagri = ifelse(m3c1b == 1, 1, 0),
+         inc = m5ac6 + m5ac7e) %>% 
+  rename(age = m1c5,
+         educ = m2c1,
+         hours = m3c3,
+         days = m3c10,
+         industry = m3c7) %>% 
+  group_by(tinh02, huyen02, xa02, diaban02, hoso02, qui, phieu) %>% 
+  mutate(hhid = cur_group_id()) %>% 
+  select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, qui, phieu, hhhead, fhead, female, age, educ, 
+         work, wagework, selfemp, selfagri, industry, inc, hours, days, hhid) %>% 
+  left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui"))
 
-weights_06 <- weights_vhlss %>%
-  select(tinh, huyen, xa, wt45) %>% 
-  rename("hhwt" = wt45) %>% 
+########
+# 2004 # 
+########
+
+fself_emp <- list(m123a_04, m4a_04) %>% 
+  reduce(full_join, by = ivid04) %>% 
+  filter(m4ac1c == 1 & m1ac2 == 2) %>% 
+  mutate(hhid04=tinh*10^9+huyen*10^7+xa*10^5+diaban*100+hoso) %>% 
+  select(tinh, huyen, xa, diaban, hoso, hhid04, matv)
+
+bus04 <- busid %>% 
+  filter(!is.na(hhid04)) %>%
+  select(hhid04, busi_num04, manager) %>% 
+  rename(matv = manager) %>% 
   distinct()
 
-vhlss06 <- list(m1_06, m2a_06, m4a_06) %>% 
-  reduce(full_join, by = c("tinh", "huyen", "xa", "diaban", "hoso", "matv")) %>% 
-  group_by(tinh, huyen, xa, diaban, hoso) %>% 
-  mutate(hhid = cur_group_id()) %>% 
-  group_by(tinh, huyen, xa, diaban, hoso, matv) %>%  
-  mutate(ivid = cur_group_id()) %>% 
-  mutate(age = 2006 - birth_year)
+# List of women being managers of their business 
+f_bus <- merge(fself_emp, bus04, by = c("hhid04", "matv")) %>% 
+  select(-hhid04) %>% 
+  mutate(f_manager = 1) %>% 
+  rename(m10ama = busi_num04)
 
-vhlss06 <- merge(vhlss06, m4ho_06, by = c("tinh", "huyen", "xa", "hoso"))
+hhbus04 <- m10a_04 %>% 
+  filter() %>% 
+  mutate(hh_lab = ifelse(m10c12 == 1, 1, 0),
+         hh_lab = ifelse(is.na(hh_lab), 0, hh_lab)) %>% 
+  mutate_all(~ifelse(. == -1, NA, .)) %>% 
+  rename(bus_start = m10c7,
+         num_lab = m10c6) %>% 
+  select(tinh, huyen, xa, diaban, hoso, m10ama, ky, bus_start, hh_lab, num_lab) %>% 
+  full_join(ho1_04, by = c("tinh", "huyen", "xa", "diaban", "hoso", "ky")) %>% 
+  rename(hhsize = tsnguoi, 
+         inc_hh = tthu_4,
+         agri_rev = m4b1t,
+         agri_inc = m4b1tn,
+         nonfarm_rev = tthu_11,
+         nonfarm_exp = m4cc) %>% 
+  left_join(f_bus, by = c("tinh", "huyen", "xa", "diaban", "hoso", "m10ama")) %>% 
+  select(tinh, huyen, xa, diaban, hoso, ky, hhsize, bus_start, hh_lab, inc_hh, agri_rev, 
+         agri_inc, nonfarm_rev, nonfarm_exp, f_manager) %>%
+  distinct() 
 
-# Adding weights 
+vhlss04 <- list(m123a_04, m4a_04) %>% 
+  reduce(full_join, by = ivid04)
 
-vhlss06 <- left_join(vhlss06, weights_06, by = c("tinh", "huyen", "xa"))
+vhlss04 <- vhlss04 %>% 
+  mutate(female = ifelse(m1ac2 == 2, 1, 0),
+         married = ifelse(m1ac6 == 2, 1, 0),
+         hhhead = ifelse(m1ac3 == 1, 1, 0),
+         fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
+         wagework = ifelse(m4ac1a == 1, 1, 0),
+         work = ifelse(m4ac2 == 1, 1, 0),
+         selfemp = ifelse(m4ac1c == 1, 1, 0),
+         selfagri = ifelse(m4ac1b == 1, 1, 0),
+         formal = ifelse(m4ac10b == 1, 1, 0)) %>% 
+  rename(age = m1ac5,
+         educ = m2c1,
+         industry = m4ac5,
+         days = m4ac7,
+         hours = m4ac8,
+         inc = m4ac11) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, ky, hhhead, fhead, female, age, educ, 
+         work, formal, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
 
-# Matching with Miguel bombing data 
-provcode <-mccaig_boundaries %>% 
-  select(prov2002, provname2002) %>% 
-  distinct() %>% filter(!is.na(prov2002)) %>% 
-  rename(province = prov2002)
+  left_join(def04, by = c("tinh", "huyen", "xa", "hoso")) %>% 
+  group_by(tinh, huyen, xa, hoso, ky) %>% 
+  mutate(hhid = cur_group_id())  
 
-bombs_province <- left_join(bombs_province, provcode, by = "province")
+########
+# 2006 # 
+########
 
-bombs_prov <- bombs_province %>%
-  select(province, provname2002, tot_bmr, tot_bmr_per, area_251_500m, area_501_1000m, area_over_1000m, log_popdensity6061, south) %>% 
-  rename(tot_bmr_prov = tot_bmr,
-         tinh = province,
-         tot_bmr_per_prov = tot_bmr_per)
-
-vhlss06_bombs <- list(vhlss06, bombs_prov) %>% 
-  reduce(merge, by = "tinh") %>% 
-  mutate(war_time = ifelse(birth_year > 1965 & birth_year < 1976, 1, 0),
-         exposed = ifelse(birth_year < 1959, 1, 0),
-         work = ifelse(work == 1, 1, 0))  
-
-hhinc06_bombs <- list(hhinc06, bombs_prov) %>% 
-  reduce(merge, by = "tinh")
+hhbus_06 <- 
