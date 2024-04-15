@@ -1,11 +1,13 @@
 ivid02 <- c("tinh","xa", "hoso", "matv", "tinh02", "huyen02", "xa02", "diaban02", "hoso02", "matv02", "qui", "phieu")
 ivid04 <- c("tinh", "huyen", "diaban", "xa", "hoso", "matv", "ky")
+ivid06 <- c("tinh", "huyen", "diaban", "xa", "hoso", "matv")
 
 hhid02 <- c("tinh02", "huyen02", "xa02", "diaban02", "hoso02", "qui", "phieu")
 hhid04 <- c("tinh", "huyen", "xa", "hoso", "diaban", "ky")
 
 def02 <- inc_02 %>% select(tinh02, huyen02, xa02, diaban02, hoso02, qui, hhsize, urban, rcpi, mcpi, wt75)
 def04 <- inc_04 %>% select(tinh, huyen, xa, hoso, urban, rcpi, mcpi, wt45)
+def06 <- inc_04 %>% select(tinh, huyen, xa, hoso, urban, rcpi, mcpi, wt45)
 
 ########
 # 2002 # 
@@ -55,9 +57,14 @@ bus04 <- busid %>%
 
 # List of women being managers of their business 
 f_bus <- merge(fself_emp, bus04, by = c("hhid04", "matv")) %>% 
-  select(-hhid04) %>% 
+  select(-c(hhid04, matv)) %>% 
   mutate(f_manager = 1) %>% 
-  rename(m10ama = busi_num04)
+  rename(m10ama = busi_num04) %>% 
+  distinct()
+
+fbus <- merge(fself_emp, bus04, by = c("hhid04", "matv")) %>% 
+  select(-c(hhid04, busi_num04)) %>% 
+  mutate(f_manager = 1)
 
 hhbus04 <- m10a_04 %>% 
   filter() %>% 
@@ -67,22 +74,22 @@ hhbus04 <- m10a_04 %>%
   rename(bus_start = m10c7,
          num_lab = m10c6) %>% 
   select(tinh, huyen, xa, diaban, hoso, m10ama, ky, bus_start, hh_lab, num_lab) %>% 
+  left_join(f_bus, by = c("tinh", "huyen", "xa", "diaban", "hoso", "m10ama")) %>% 
   full_join(ho1_04, by = c("tinh", "huyen", "xa", "diaban", "hoso", "ky")) %>% 
+  left_join(def04, by = c("tinh", "huyen", "xa", "hoso")) %>% 
   rename(hhsize = tsnguoi, 
          inc_hh = tthu_4,
-         agri_rev = m4b1t,
-         agri_inc = m4b1tn,
-         nonfarm_rev = tthu_11,
-         nonfarm_exp = m4cc) %>% 
-  left_join(f_bus, by = c("tinh", "huyen", "xa", "diaban", "hoso", "m10ama")) %>% 
+         agri_rev = m4b1t/rcpi/mcpi,
+         agri_inc = m4b1tn/rcpi/mcpi,
+         nonfarm_rev = tthu_11/rcpi/mcpi,
+         nonfarm_exp = m4cc/rcpi/mcpi) %>% 
+  mutate(f_manager = ifelse(is.na(f_manager) & nonfarm_rev > 0, 0, f_manager)) %>%   
   select(tinh, huyen, xa, diaban, hoso, ky, hhsize, bus_start, hh_lab, inc_hh, agri_rev, 
-         agri_inc, nonfarm_rev, nonfarm_exp, f_manager) %>%
+         agri_inc, nonfarm_rev, nonfarm_exp, f_manager, urban, wt45) %>%
   distinct() 
 
 vhlss04 <- list(m123a_04, m4a_04) %>% 
-  reduce(full_join, by = ivid04)
-
-vhlss04 <- vhlss04 %>% 
+  reduce(full_join, by = ivid04) %>% 
   mutate(female = ifelse(m1ac2 == 2, 1, 0),
          married = ifelse(m1ac6 == 2, 1, 0),
          hhhead = ifelse(m1ac3 == 1, 1, 0),
@@ -100,13 +107,31 @@ vhlss04 <- vhlss04 %>%
          inc = m4ac11) %>% 
   select(tinh, huyen, xa, diaban, hoso, matv, ky, hhhead, fhead, female, age, educ, 
          work, formal, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
-
   left_join(def04, by = c("tinh", "huyen", "xa", "hoso")) %>% 
+  distinct() %>% 
   group_by(tinh, huyen, xa, hoso, ky) %>% 
   mutate(hhid = cur_group_id())  
 
 ########
 # 2006 # 
 ########
+
+vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>% 
+  map(~mutate(.x, diaban = as.numeric(diaban))) %>%
+  reduce(full_join, by = ivid06) %>% 
+  mutate(female = ifelse(m1ac2 == 2, 1, 0),
+         married = ifelse(m1ac6 == 2, 1, 0),
+         hhhead = ifelse(m1ac3 == 1, 1, 0),
+         fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
+         wagework = ifelse(m4ac1a == 1, 1, 0),
+         work = ifelse(m4ac2 == 1, 1, 0),
+         selfemp = ifelse(m4ac1c == 1, 1, 0),
+         selfagri = ifelse(m4ac1b == 1, 1, 0)) %>% 
+  rename(age = m1ac5,
+         educ = m2ac1,
+         industry = m4ac5,
+         days = m4ac7,
+         hours = m4ac8,
+         inc = m4ac11)
 
 hhbus_06 <- 
