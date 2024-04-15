@@ -36,7 +36,7 @@ ggsave("dn_prov_sexratio_18.jpeg", width = 7, height = 7)
 
 # District 
 
-ggplot(dplyr::filter(dn_dist, year == 2009), aes(x = log(tot_bmr), y = log(workerratio*100))) +
+ggplot(dplyr::filter(dn_dist, year == 2018 & south == 1), aes(x = log(tot_bmr), y = log(workerratio*100))) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -50,7 +50,7 @@ ggplot(dplyr::filter(dn_dist, year == 2009), aes(x = log(tot_bmr), y = log(worke
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   labs(x = "log(Bombs, Missiles and Rockets)",
-       y = "log(Ratio of Male to Female Workers) in 2009")
+       y = "Ratio of Male to Female Workers in 2018")
 ggsave("dn_dist_sexratio_09.jpeg", width = 7, height = 7)
 
 ## South 
