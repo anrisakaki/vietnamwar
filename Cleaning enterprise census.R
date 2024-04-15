@@ -872,3 +872,47 @@ dn_dist_ind <- bind_rows(dn00_dist_ind, dn01_dist_ind, dn02_dist_ind, dn03_dist_
                          dn10_dist_ind, dn11_dist_ind, dn12_dist_ind, dn13_dist_ind, dn14_dist_ind,
                          dn15_dist_ind, dn16_dist_ind, dn17_dist_ind, dn18_dist_ind) %>% 
   left_join(south, "provname2018")
+
+# By province 
+
+dn_prov_ind_fn <- function(i) {
+  i %>%
+    group_by(prov2018, provname2018, industry) %>%
+    summarise(
+      nworkers = sum(nworkers, na.rm = TRUE),
+      fworkers = sum(fworkers, na.rm = TRUE),
+      nworkers_eoy = sum(nworkers_eoy, na.rm = TRUE),
+      fworkers_eoy = sum(fworkers_eoy, na.rm = TRUE),
+      tot_bmr = sum(tot_bmr, na.rm = TRUE)
+    ) %>%
+    mutate(
+      workerratio = (nworkers - fworkers) / fworkers,
+      workerratio_eoy = (nworkers_eoy - fworkers_eoy) / fworkers_eoy
+    )
+}
+  
+
+dn00_prov_ind <- dn_prov_ind_fn(dn00_dist_ind) %>% mutate(year = 2000)
+dn01_prov_ind <- dn_prov_ind_fn(dn01_dist_ind) %>% mutate(year = 2001)
+dn02_prov_ind <- dn_prov_ind_fn(dn02_dist_ind) %>% mutate(year = 2002)
+dn03_prov_ind <- dn_prov_ind_fn(dn03_dist_ind) %>% mutate(year = 2003)
+dn04_prov_ind <- dn_prov_ind_fn(dn04_dist_ind) %>% mutate(year = 2004)
+dn05_prov_ind <- dn_prov_ind_fn(dn05_dist_ind) %>% mutate(year = 2005)
+dn06_prov_ind <- dn_prov_ind_fn(dn06_dist_ind) %>% mutate(year = 2006)
+dn07_prov_ind <- dn_prov_ind_fn(dn07_dist_ind) %>% mutate(year = 2007)
+dn08_prov_ind <- dn_prov_ind_fn(dn08_dist_ind) %>% mutate(year = 2008)
+dn09_prov_ind <- dn_prov_ind_fn(dn09_dist_ind) %>% mutate(year = 2009)
+dn10_prov_ind <- dn_prov_ind_fn(dn10_dist_ind) %>% mutate(year = 2010)
+dn11_prov_ind <- dn_prov_ind_fn(dn11_dist_ind) %>% mutate(year = 2011)
+dn12_prov_ind <- dn_prov_ind_fn(dn12_dist_ind) %>% mutate(year = 2012)
+dn13_prov_ind <- dn_prov_ind_fn(dn13_dist_ind) %>% mutate(year = 2013)
+dn14_prov_ind <- dn_prov_ind_fn(dn14_dist_ind) %>% mutate(year = 2014)
+dn15_prov_ind <- dn_prov_ind_fn(dn15_dist_ind) %>% mutate(year = 2015)
+dn16_prov_ind <- dn_prov_ind_fn(dn16_dist_ind) %>% mutate(year = 2016)
+dn17_prov_ind <- dn_prov_ind_fn(dn17_dist_ind) %>% mutate(year = 2017)
+dn18_prov_ind <- dn_prov_ind_fn(dn18_dist_ind) %>% mutate(year = 2018)
+
+dn_prov_ind <- bind_rows(dn00_prov_ind, dn01_prov_ind, dn02_prov_ind, dn03_prov_ind, dn04_prov_ind, dn05_prov_ind, dn06_prov_ind,
+                     dn07_prov_ind, dn08_prov_ind, dn09_prov_ind, dn10_prov_ind, dn11_prov_ind, dn12_prov_ind,
+                     dn13_prov_ind, dn14_prov_ind, dn15_prov_ind, dn16_prov_ind, dn17_prov_ind, dn18_prov_ind) %>% 
+  left_join(south, by = "provname2018")
