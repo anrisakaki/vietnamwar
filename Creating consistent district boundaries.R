@@ -1,3 +1,7 @@
+district <- bombs_district %>% 
+  select(districtname, provincename, province, district) %>% 
+  mutate(ward02 = as.numeric(str_sub(district, -2)))
+
 geoid <- geoid_list %>% 
   reduce(full_join, by = c("provname", "distname", "wardname")) %>% 
   select(provname, distname, wardname, everything()) %>% 
