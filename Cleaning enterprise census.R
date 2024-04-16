@@ -69,10 +69,6 @@ dn02_dist <- ec_list[[3]] %>%
   mutate(year = 2002)
 
 dn03_dist <- ec_list[[4]] %>% 
-  rename(prov2003 = tinh,
-         dist2003 = huyen,
-         xa03 = xa) %>% 
-  left_join(district_codes, by = c("prov2003", "dist2003", "xa03")) %>% 
   group_by(prov2018, dist2018, provname2018, distname2018) %>% 
   summarise(nworkers = sum(ld11, na.rm = T),
             fworkers = sum(ld12, na.rm = T),
