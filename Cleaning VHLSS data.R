@@ -115,7 +115,11 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
   mutate(inc = inc/mcpi/rcpi) %>% 
   distinct() %>% 
   group_by(tinh, huyen, xa, hoso, ky) %>% 
-  mutate(hhid = cur_group_id())  
+  mutate(hhid = cur_group_id()) %>% 
+  rename(prov04 = tinh,
+         dist04 = huyen) %>% 
+  left_join(geoid_district[[3]], by = c("prov04", "dist04")) %>% 
+  left_join(district_bmr_sum, by = c("provname", "distname"))
 
 ########
 # 2006 # 
