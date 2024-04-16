@@ -143,3 +143,27 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
   distinct() %>% 
   group_by(tinh, huyen, xa, hoso) %>% 
   mutate(hhid = cur_group_id())  
+
+fself_emp06 <- vhlss06 %>% 
+  filter(female == 1 & selfemp == 1) %>% 
+  select(all_of(ivid06)) %>% 
+  mutate(hhid06 = tinh*10^9 + huyen*10^7 + xa*10^5 + diaban*10^2 + hoso)
+
+bus06 <- busid %>% 
+  filter(!is.na(hhid06)) %>%
+  select(hhid06, busi_num06, manager) %>% 
+  rename(matv = manager) %>% 
+  distinct()
+
+# List of businesses with female managers 
+f_bus06 <- merge(fself_emp06, bus06, by = c("hhid06", "matv")) %>% 
+  select(-c(hhid06, matv)) %>% 
+  mutate(f_manager = 1) %>% 
+  rename(m10ama = busi_num06) %>% 
+  distinct()
+
+# List of female managers 
+fbus06 <- merge(fself_emp06, bus06, by = c("hhid06", "matv")) %>% 
+  select(-c(hhid06, busi_num06)) %>% 
+  mutate(f_manager = 1) %>% 
+  distinct()
