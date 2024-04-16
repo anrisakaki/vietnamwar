@@ -38,7 +38,10 @@ vhlss02 <- vhlss02 %>%
   mutate(hhid = cur_group_id()) %>% 
   select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, qui, phieu, hhhead, fhead, female, age, educ, 
          work, wagework, selfemp, selfagri, industry, inc, hours, days, hhid) %>% 
-  left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui"))
+  left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui")) %>% 
+  rename(prov02 = tinh02,
+         dist02 = huyen02) %>% 
+  left_join(geoid_district[[3]], by = c("prov02", "huyen02"))
 
 ########
 # 2004 # 
