@@ -121,8 +121,6 @@ vnmap2_09 <- read_sf("Chloropleth Maps/VNShapefile/geo2_vn2009/geo2_vn2009.shp")
 
 provarea <- read.csv("province_area.csv")
 
-district <- read_dta(file = "Consistent 2019 to 1999 wards with 1999 districts.dta")
-
 vn_old <- read_sf("Chloropleth Maps/vnm_huyen.shp")
 
 # Consistent District Boundaries 
