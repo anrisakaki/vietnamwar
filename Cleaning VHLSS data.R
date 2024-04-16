@@ -4,6 +4,7 @@ ivid06 <- c("tinh", "huyen", "diaban", "xa", "hoso", "matv")
 
 hhid02 <- c("tinh02", "huyen02", "xa02", "diaban02", "hoso02", "qui", "phieu")
 hhid04 <- c("tinh", "huyen", "xa", "hoso", "diaban", "ky")
+hhid06 <- c("tinh", "huyen", "xa", "hoso")
 
 def02 <- inc_02 %>% select(tinh02, huyen02, xa02, diaban02, hoso02, qui, hhsize, urban, rcpi, mcpi, wt75)
 def04 <- inc_04 %>% select(tinh, huyen, xa, hoso, urban, rcpi, mcpi, wt45)
@@ -108,6 +109,7 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
   select(tinh, huyen, xa, diaban, hoso, matv, ky, hhhead, fhead, female, age, educ, 
          work, formal, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
   left_join(def04, by = c("tinh", "huyen", "xa", "hoso")) %>% 
+  mutate(inc = inc/mcpi/rcpi) %>% 
   distinct() %>% 
   group_by(tinh, huyen, xa, hoso, ky) %>% 
   mutate(hhid = cur_group_id())  
@@ -126,12 +128,18 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
          wagework = ifelse(m4ac1a == 1, 1, 0),
          work = ifelse(m4ac2 == 1, 1, 0),
          selfemp = ifelse(m4ac1c == 1, 1, 0),
-         selfagri = ifelse(m4ac1b == 1, 1, 0)) %>% 
+         selfagri = ifelse(m4ac1b == 1, 1, 0),
+         formal = ifelse(m4ac10b == 1, 1, 0)) %>% 
   rename(age = m1ac5,
          educ = m2ac1,
          industry = m4ac5,
          days = m4ac7,
          hours = m4ac8,
-         inc = m4ac11)
-
-hhbus_06 <- 
+         inc = m4ac11) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, hhhead, fhead, female, age, educ, 
+         work, formal, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
+  left_join(def06, by = hhid06) %>% 
+  mutate(inc = inc/mcpi/rcpi) %>% 
+  distinct() %>% 
+  group_by(tinh, huyen, xa, hoso) %>% 
+  mutate(hhid = cur_group_id())  
