@@ -10,6 +10,172 @@ for (i in bmr) {
   load(i)
 }
 
+#############
+# Firm level#
+#############
+
+# OLS
+
+dn_ols <- (list(
+  feols(share_f ~ log(tot_bmr),
+        dn04,
+        vcov = ~dist04),
+  feols(share_f ~ log(tot_bmr),
+        dn05,
+        vcov = ~dist05),
+  feols(share_f ~ log(tot_bmr),
+        dn06,
+        vcov = ~dist06),
+  feols(share_f ~ log(tot_bmr),
+        dn07,
+        vcov = ~dist07),
+  feols(share_f ~ log(tot_bmr),
+        dn08,
+        vcov = ~dist08),
+  feols(share_f ~ log(tot_bmr),
+        dn09,
+        vcov = ~dist09),
+  feols(share_f ~ log(tot_bmr),
+        dn10,
+        vcov = ~dist10),
+  feols(share_f ~ log(tot_bmr),
+        dn11,
+        vcov = ~dist11),
+  feols(share_f ~ log(tot_bmr),
+        dn12,
+        vcov = ~dist12),
+  feols(share_f ~ log(tot_bmr),
+        dn13,
+        vcov = ~dist13),
+  feols(share_f ~ log(tot_bmr),
+        dn14,
+        vcov = ~dist14),
+  feols(share_f ~ log(tot_bmr),
+        dn15,
+        vcov = ~dist15),
+  feols(share_f ~ log(tot_bmr),
+        dn16,
+        vcov = ~dist16),
+  feols(share_f ~ log(tot_bmr),
+        dn17,
+        vcov = ~dist17),
+  feols(share_f ~ log(tot_bmr),
+        dn18,
+        vcov = ~dist18)))
+
+dn_ols_coef <- lapply(dn_ols, tidy)
+dn_ols_coef <- do.call(rbind, dn_ols_coef)
+dn_ols_coef$year <- rep(seq(2004, 2018), each = nrow(dn_ols_coef) / length(seq(2004, 2018)))
+dn_ols_coef <- dn_ols_coef %>% filter(term != "(Intercept)")
+
+# Industry Fixed effects 
+
+dn_indfe <- (list(
+  feols(share_f ~ log(tot_bmr) | nganh_kd,
+        dn04,
+        vcov = ~dist04),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn05,
+        vcov = ~dist05),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn06,
+        vcov = ~dist06),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn07,
+        vcov = ~dist07),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn08,
+        vcov = ~dist08),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn09,
+        vcov = ~dist09),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn10,
+        vcov = ~dist10),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn11,
+        vcov = ~dist11),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn12,
+        vcov = ~dist12),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn13,
+        vcov = ~dist13),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn14,
+        vcov = ~dist14),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn15,
+        vcov = ~dist15),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn16,
+        vcov = ~dist16),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn17,
+        vcov = ~dist17),
+  feols(share_f ~ log(tot_bmr)| nganh_kd,
+        dn18,
+        vcov = ~dist18)))
+
+dn_indfe_coef <- lapply(dn_indfe, tidy)
+dn_indfe_coef <- do.call(rbind, dn_indfe_coef)
+dn_indfe_coef$year <- rep(seq(2004, 2018), each = nrow(dn_indfe_coef) / length(seq(2004, 2018)))
+dn_indfe_coef <- dn_indfe_coef %>% filter(term != "(Intercept)")
+
+# Province and industry FE 
+
+dn_provindfe <- (list(
+  feols(share_f ~ log(tot_bmr) | nganh_kd + prov04,
+        dn04,
+        vcov = ~dist04),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov05,
+        dn05,
+        vcov = ~dist05),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov06,
+        dn06,
+        vcov = ~dist06),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov07,
+        dn07,
+        vcov = ~dist07),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov08,
+        dn08,
+        vcov = ~dist08),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov09,
+        dn09,
+        vcov = ~dist09),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov10,
+        dn10,
+        vcov = ~dist10),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov11,
+        dn11,
+        vcov = ~dist11),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov12,
+        dn12,
+        vcov = ~dist12),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov13,
+        dn13,
+        vcov = ~dist13),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov14,
+        dn14,
+        vcov = ~dist14),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov15,
+        dn15,
+        vcov = ~dist15),
+  feols(share_f ~ log(tot_bmr)| nganh_kd  + prov16,
+        dn16,
+        vcov = ~dist16),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov17,
+        dn17,
+        vcov = ~dist17),
+  feols(share_f ~ log(tot_bmr)| nganh_kd + prov18,
+        dn18,
+        vcov = ~dist18)))
+
+dn_provindfe_coef <- lapply(dn_provindfe, tidy)
+dn_provindfe_coef <- do.call(rbind, dn_provindfe_coef)
+dn_provindfe_coef$year <- rep(seq(2004, 2018), each = nrow(dn_provindfe_coef) / length(seq(2004, 2018)))
+dn_provindfe_coef <- dn_provindfe_coef %>% filter(term != "(Intercept)")
+
 #################
 # District level#
 #################
