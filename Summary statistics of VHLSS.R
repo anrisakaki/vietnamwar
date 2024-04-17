@@ -6,7 +6,7 @@
 
 dist02_vhlss <- vhlss02 %>% 
   filter(!is.na(female), age > 15 & age < 65) %>% 
-  group_by(tinh02, huyen02) %>% 
+  group_by(tinh) %>% 
   summarise(
     m_total = sum(wt75 * (female == 0), na.rm = T),
     f_total = sum(wt75 * (female == 1), na.rm = T),
