@@ -343,7 +343,8 @@ dn_prov_fn <- function(i) {
     mutate(
       workerratio = (nworkers - fworkers) / fworkers,
       workerratio_eoy = (nworkers_eoy - fworkers_eoy) / fworkers_eoy
-    )
+    ) %>% 
+    left_join(province_bmr_sum)
 }
 
 dn04_prov <- dn_prov_fn(dn04_dist) %>% mutate(year = 2004)
