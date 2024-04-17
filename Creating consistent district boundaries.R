@@ -1,6 +1,7 @@
 district <- bombs_district %>% 
   select(districtname, provincename, province, district) %>% 
-  mutate(ward02 = as.numeric(str_sub(district, -2)))
+  mutate(huyen = as.numeric(str_sub(district, -2))) %>% 
+  rename(tinh = provincename)
 
 geoid_district <- lapply(geoid_list, function(i) {
   i %>%
