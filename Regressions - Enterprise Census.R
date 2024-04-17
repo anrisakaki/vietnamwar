@@ -68,6 +68,58 @@ dn_ols_coef <- do.call(rbind, dn_ols_coef)
 dn_ols_coef$year <- rep(seq(2004, 2018), each = nrow(dn_ols_coef) / length(seq(2004, 2018)))
 dn_ols_coef <- dn_ols_coef %>% filter(term != "(Intercept)")
 
+dn_ols_prov <- (list(
+  feols(share_f ~ log(tot_bmr_prov),
+        dn04,
+        vcov = ~prov04),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn05,
+        vcov = ~prov05),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn06,
+        vcov = ~prov06),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn07,
+        vcov = ~prov07),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn08,
+        vcov = ~prov08),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn09,
+        vcov = ~prov09),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn10,
+        vcov = ~prov10),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn11,
+        vcov = ~prov11),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn12,
+        vcov = ~prov12),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn13,
+        vcov = ~prov13),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn14,
+        vcov = ~prov14),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn15,
+        vcov = ~prov15),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn16,
+        vcov = ~prov16),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn17,
+        vcov = ~prov17),
+  feols(share_f ~ log(tot_bmr_prov),
+        dn18,
+        vcov = ~prov18)))
+
+dn_ols_coef_prov<- lapply(dn_ols_prov, tidy)
+dn_ols_coef_prov <- do.call(rbind, dn_ols_coef_prov)
+dn_ols_coef_prov$year <- rep(seq(2004, 2018), each = nrow(dn_ols_coef_prov) / length(seq(2004, 2018)))
+dn_ols_coef_prov <- dn_ols_coef_prov %>% filter(term != "(Intercept)")
+
 ## By south 
 
 dn_ols_n <- (list(
@@ -176,6 +228,112 @@ dn_ols_coef_s$group <- "South"
 dn_ols_coef_ns <- rbind(dn_ols_coef_n, dn_ols_coef_s)
 dn_ols_coef_ns <- dn_ols_coef_ns %>% filter(term != "(Intercept)")
 
+dn_ols_prov_n <- (list(
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn04, south == 0),
+        vcov = ~prov04),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn05, south == 0),
+        vcov = ~prov05),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn06, south == 0),
+        vcov = ~prov06),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn07, south == 0),
+        vcov = ~prov07),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn08, south == 0),
+        vcov = ~prov08),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn09, south == 0),
+        vcov = ~prov09),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn10, south == 0),
+        vcov = ~prov10),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn11, south == 0),
+        vcov = ~prov11),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn12, south == 0),
+        vcov = ~prov12),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn13, south == 0),
+        vcov = ~prov13),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn14, south == 0),
+        vcov = ~prov14),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn15, south == 0),
+        vcov = ~prov15),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn16, south == 0),
+        vcov = ~prov16),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn17, south == 0),
+        vcov = ~prov17),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn18, south == 0),
+        vcov = ~prov18)))
+
+dn_ols_prov_s <- (list(
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn04, south == 1),
+        vcov = ~prov04),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn05, south == 1),
+        vcov = ~prov05),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn06, south == 1),
+        vcov = ~prov06),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn07, south == 1),
+        vcov = ~prov07),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn08, south == 1),
+        vcov = ~prov08),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn09, south == 1),
+        vcov = ~prov09),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn10, south == 1),
+        vcov = ~prov10),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn11, south == 1),
+        vcov = ~prov11),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn12, south == 1),
+        vcov = ~prov12),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn13, south == 1),
+        vcov = ~prov13),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn14, south == 1),
+        vcov = ~prov14),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn15, south == 1),
+        vcov = ~prov15),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn16, south == 1),
+        vcov = ~prov16),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn17, south == 1),
+        vcov = ~prov17),
+  feols(share_f ~ log(tot_bmr_prov),
+        subset(dn18, south == 1),
+        vcov = ~prov18)))
+
+dn_ols_prov_coef_n <- lapply(dn_ols_prov_n, tidy)
+dn_ols_prov_coef_s <- lapply(dn_ols_prov_s, tidy)
+dn_ols_prov_coef_n <- do.call(rbind, dn_ols_prov_coef_n)
+dn_ols_prov_coef_s <- do.call(rbind, dn_ols_prov_coef_s)
+dn_ols_prov_coef_n$year <- rep(seq(2004, 2018), each = nrow(dn_ols_prov_coef_n) / length(seq(2004, 2018)))
+dn_ols_prov_coef_s$year <- rep(seq(2004, 2018), each = nrow(dn_ols_prov_coef_s) / length(seq(2004, 2018)))
+
+dn_ols_prov_coef_n$group <- "North"
+dn_ols_prov_coef_s$group <- "South"
+dn_ols_prov_coef_ns <- rbind(dn_ols_prov_coef_n, dn_ols_prov_coef_s)
+dn_ols_prov_coef_ns <- dn_ols_prov_coef_ns %>% filter(term != "(Intercept)")
+
 # Industry Fixed effects 
 
 dn_indfe <- (list(
@@ -229,6 +387,58 @@ dn_indfe_coef <- lapply(dn_indfe, tidy)
 dn_indfe_coef <- do.call(rbind, dn_indfe_coef)
 dn_indfe_coef$year <- rep(seq(2004, 2018), each = nrow(dn_indfe_coef) / length(seq(2004, 2018)))
 dn_indfe_coef <- dn_indfe_coef %>% filter(term != "(Intercept)")
+
+dn_indfe_prov <- (list(
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        dn04,
+        vcov = ~prov04),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn05,
+        vcov = ~prov05),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn06,
+        vcov = ~prov06),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn07,
+        vcov = ~prov07),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn08,
+        vcov = ~prov08),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn09,
+        vcov = ~prov09),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn10,
+        vcov = ~prov10),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn11,
+        vcov = ~prov11),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn12,
+        vcov = ~prov12),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn13,
+        vcov = ~prov13),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn14,
+        vcov = ~prov14),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn15,
+        vcov = ~prov15),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn16,
+        vcov = ~prov16),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn17,
+        vcov = ~prov17),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        dn18,
+        vcov = ~prov18)))
+
+dn_indfe_prov_coef <- lapply(dn_indfe_prov, tidy)
+dn_indfe_prov_coef <- do.call(rbind, dn_indfe_prov_coef)
+dn_indfe_prov_coef$year <- rep(seq(2004, 2018), each = nrow(dn_indfe_prov_coef) / length(seq(2004, 2018)))
+dn_indfe_prov_coef <- dn_indfe_prov_coef %>% filter(term != "(Intercept)")
 
 ## By north/south 
 
@@ -337,6 +547,112 @@ dn_indfe_coef_n$group <- "North"
 dn_indfe_coef_s$group <- "South"
 dn_indfe_coef_ns <- rbind(dn_indfe_coef_n, dn_indfe_coef_s)
 dn_indfe_coef_ns <- dn_indfe_coef_ns %>% filter(term != "(Intercept)")
+
+dn_indfe_prov_n <- (list(
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn04, south == 0),
+        vcov = ~prov04),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn05, south == 0),
+        vcov = ~prov05),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn06, south == 0),
+        vcov = ~prov06),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn07, south == 0),
+        vcov = ~prov07),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn08, south == 0),
+        vcov = ~prov08),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn09, south == 0),
+        vcov = ~prov09),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn10, south == 0),
+        vcov = ~prov10),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn11, south == 0),
+        vcov = ~prov11),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn12, south == 0),
+        vcov = ~prov12),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn13, south == 0),
+        vcov = ~prov13),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn14, south == 0),
+        vcov = ~prov14),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn15, south == 0),
+        vcov = ~prov15),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn16, south == 0),
+        vcov = ~prov16),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn17, south == 0),
+        vcov = ~prov17),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn18, south == 0),
+        vcov = ~prov18)))
+
+dn_indfe_prov_s <- (list(
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn04, south == 1),
+        vcov = ~prov04),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn05, south == 1),
+        vcov = ~prov05),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn06, south == 1),
+        vcov = ~prov06),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn07, south == 1),
+        vcov = ~prov07),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn08, south == 1),
+        vcov = ~prov08),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn09, south == 1),
+        vcov = ~prov09),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn10, south == 1),
+        vcov = ~prov10),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn11, south == 1),
+        vcov = ~prov11),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn12, south == 1),
+        vcov = ~prov12),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn13, south == 1),
+        vcov = ~prov13),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn14, south == 1),
+        vcov = ~prov14),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn15, south == 1),
+        vcov = ~prov15),
+  feols(share_f ~ log(tot_bmr_prov) | nganh_kd,
+        subset(dn16, south == 1),
+        vcov = ~prov16),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        subset(dn17, south == 1),
+        vcov = ~prov17),
+  feols(share_f ~ log(tot_bmr_prov)| nganh_kd,
+        subset(dn18, south == 1) ,
+        vcov = ~prov18)))
+
+dn_indfe_prov_coef_n <- lapply(dn_indfe_prov_n, tidy)
+dn_indfe_prov_coef_s <- lapply(dn_indfe_prov_s, tidy)
+dn_indfe_prov_coef_n <- do.call(rbind, dn_indfe_prov_coef_n)
+dn_indfe_prov_coef_s <- do.call(rbind, dn_indfe_prov_coef_s)
+dn_indfe_prov_coef_n$year <- rep(seq(2004, 2018), each = nrow(dn_indfe_prov_coef_n) / length(seq(2004, 2018)))
+dn_indfe_prov_coef_s$year <- rep(seq(2004, 2018), each = nrow(dn_indfe_prov_coef_s) / length(seq(2004, 2018)))
+
+dn_indfe_prov_coef_n$group <- "North"
+dn_indfe_prov_coef_s$group <- "South"
+dn_indfe_prov_coef_ns <- rbind(dn_indfe_prov_coef_n, dn_indfe_prov_coef_s)
+dn_indfe_prov_coef_ns <- dn_indfe_prov_coef_ns %>% filter(term != "(Intercept)")
 
 # Province and industry FE 
 
