@@ -28,7 +28,8 @@ vhlss02 <- vhlss02 %>%
          work = ifelse(m3c2 == 1, 1, 0),
          selfemp = ifelse(m3c8 == 0, 1, 0),
          selfagri = ifelse(m3c1b == 1, 1, 0),
-         inc = m5ac6 + m5ac7e) %>% 
+         inc = m5ac6 + m5ac7e,
+         wartime = ifelse(m1c5 > 42 & m1c5 < 62, 1, 0)) %>% 
   rename(age = m1c5,
          educ = m2c1,
          hours = m3c3,
@@ -36,12 +37,13 @@ vhlss02 <- vhlss02 %>%
          industry = m3c7) %>% 
   group_by(tinh02, huyen02, xa02, diaban02, hoso02, qui, phieu) %>% 
   mutate(hhid = cur_group_id()) %>% 
-  select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, qui, phieu, hhhead, fhead, female, age, educ, 
+  select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, qui, phieu, hhhead, fhead, female, age, wartime, educ, 
          work, wagework, selfemp, selfagri, industry, inc, hours, days, hhid) %>% 
   left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui")) %>% 
-  rename(prov02 = tinh02,
-         dist02 = huyen02) %>% 
-  left_join(geoid_district[[3]], by = c("prov02", "huyen02"))
+  rename(tinh = tinh02,
+         huyen = huyen02) %>% 
+  left_join(district0203, by = c("tinh", "huyen")) %>% 
+  left_join(prov0203, by = "tinh")
 
 ########
 # 2004 # 
@@ -102,24 +104,23 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
          work = ifelse(m4ac2 == 1, 1, 0),
          selfemp = ifelse(m4ac1c == 1, 1, 0),
          selfagri = ifelse(m4ac1b == 1, 1, 0),
-         formal = ifelse(m4ac10b == 1, 1, 0)) %>% 
+         formal = ifelse(m4ac10b == 1, 1, 0),
+         wartime = ifelse(m1ac5 > 44 & m1ac5 < 64, 1, 0)) %>% 
   rename(age = m1ac5,
          educ = m2c1,
          industry = m4ac5,
          days = m4ac7,
          hours = m4ac8,
          inc = m4ac11) %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, ky, hhhead, fhead, female, age, educ, 
+  select(tinh, huyen, xa, diaban, hoso, matv, ky, hhhead, fhead, female, age, wartime, educ, 
          work, formal, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
   left_join(def04, by = c("tinh", "huyen", "xa", "hoso")) %>% 
   mutate(inc = inc/mcpi/rcpi) %>% 
   distinct() %>% 
   group_by(tinh, huyen, xa, hoso, ky) %>% 
   mutate(hhid = cur_group_id()) %>% 
-  rename(prov04 = tinh,
-         dist04 = huyen) %>% 
-  left_join(geoid_district[[3]], by = c("prov04", "dist04")) %>% 
-  left_join(district_bmr_sum, by = c("provname", "distname"))
+  left_join(district0203, by = c("tinh", "huyen")) %>% 
+  left_join(prov0203, by = "tinh")
 
 ########
 # 2006 # 
@@ -136,20 +137,23 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
          work = ifelse(m4ac2 == 1, 1, 0),
          selfemp = ifelse(m4ac1c == 1, 1, 0),
          selfagri = ifelse(m4ac1b == 1, 1, 0),
-         formal = ifelse(m4ac10b == 1, 1, 0)) %>% 
+         formal = ifelse(m4ac10b == 1, 1, 0),
+         wartime = ifelse(m1ac5 > 44 & m1ac5 < 64, 1, 0)) %>% 
   rename(age = m1ac5,
          educ = m2ac1,
          industry = m4ac5,
          days = m4ac7,
          hours = m4ac8,
          inc = m4ac11) %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, hhhead, fhead, female, age, educ, 
+  select(tinh, huyen, xa, diaban, hoso, matv, hhhead, fhead, female, age, wartime, educ, 
          work, formal, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
   left_join(def06, by = hhid06) %>% 
   mutate(inc = inc/mcpi/rcpi) %>% 
   distinct() %>% 
   group_by(tinh, huyen, xa, hoso) %>% 
-  mutate(hhid = cur_group_id())  
+  mutate(hhid = cur_group_id())  %>% 
+  left_join(district0203, by = c("tinh", "huyen")) %>% 
+  left_join(prov0203, by = "tinh")  
 
 fself_emp06 <- vhlss06 %>% 
   filter(female == 1 & selfemp == 1) %>% 
