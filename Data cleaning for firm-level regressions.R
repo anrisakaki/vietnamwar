@@ -1,4 +1,11 @@
 load("district_bmr_sum.Rda")
+load("province_bmr_sum.Rda")
+
+province_bmr_sum <- province_bmr_sum %>% 
+  rename(provname = name_1) %>% 
+  select(-c(varname_1, provincename)) %>% 
+  rename_with(~paste0(., "_prov"), -matches("provname|south")) %>% 
+  select(provname, everything())
 
 district_bmr_sum <- district_bmr_sum %>% 
   rename(distname = distname2018,
@@ -19,8 +26,8 @@ dn04 <- ec_list[[5]] %>%
   select(prov04, dist04, nganh_kd, share_f, workerratio, workerratio_eoy) %>% 
   left_join(geoid_district[[3]], by = c("prov04", "dist04")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
+  left_join(province_bmr_sum, by = "provname") %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
   mutate(year = 2004,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov04, dist04) %>% 
@@ -42,7 +49,7 @@ dn05 <- ec_list[[6]] %>%
   left_join(geoid_district[[4]], by = c("prov05", "dist05")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>%   
   mutate(year = 2005,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov05, dist05) %>% 
@@ -63,7 +70,7 @@ dn06 <- ec_list[[7]] %>%
   left_join(geoid_district[[5]], by = c("prov06", "dist06")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>%   
   mutate(year = 2006,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov06, dist06) %>% 
@@ -84,7 +91,7 @@ dn07 <- ec_list[[8]] %>%
   left_join(geoid_district[[6]], by = c("prov07", "dist07")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>%   
   mutate(year = 2007,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov07, dist07) %>% 
@@ -105,7 +112,7 @@ dn08 <- ec_list[[9]] %>%
   left_join(geoid_district[[7]], by = c("prov08", "dist08")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2008,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov08, dist08) %>% 
@@ -126,7 +133,7 @@ dn09 <- ec_list[[10]] %>%
   left_join(geoid_district[[8]], by = c("prov09", "dist09")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2009,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov09, dist09) %>% 
@@ -147,7 +154,7 @@ dn10 <- ec_list[[11]] %>%
   left_join(geoid_district[[9]], by = c("prov10", "dist10")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2010,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov10, dist10) %>% 
@@ -172,7 +179,7 @@ dn11 <- ec_list[[12]] %>%
   left_join(geoid_district[[10]], by = c("prov11", "dist11")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2011,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov11, dist11) %>% 
@@ -197,7 +204,7 @@ dn12 <- ec_list[[13]] %>%
   left_join(geoid_district[[11]], by = c("prov12", "dist12")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2012,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov12, dist12) %>% 
@@ -222,7 +229,7 @@ dn13 <- ec_list[[14]] %>%
   left_join(geoid_district[[12]], by = c("prov13", "dist13")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2013,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov13, dist13) %>% 
@@ -247,7 +254,7 @@ dn14 <- ec_list[[15]] %>%
   left_join(geoid_district[[13]], by = c("prov14", "dist14")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2014,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov14, dist14) %>% 
@@ -272,7 +279,7 @@ dn15 <- ec_list[[16]] %>%
   left_join(geoid_district[[14]], by = c("prov15", "dist15")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2015,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov15, dist15) %>% 
@@ -299,7 +306,7 @@ dn16 <- ec_list[[17]] %>%
   left_join(geoid_district[[15]], by = c("prov16", "dist16")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2016,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov16, dist16) %>% 
@@ -324,7 +331,7 @@ dn17 <- ec_list[[18]] %>%
   left_join(geoid_district[[16]], by = c("prov17", "dist17")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2017,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov17, dist17) %>% 
@@ -349,7 +356,7 @@ dn18 <- ec_list[[19]] %>%
   left_join(geoid_district[[17]], by = c("prov18", "dist18")) %>% 
   mutate(provname = str_replace(provname, "(Tỉnh|Thành phố) ", "")) %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
-  left_join(south, by = "provname") %>% 
+  left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2018,
          tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
   group_by(prov18, dist18) %>% 
