@@ -11,7 +11,9 @@ library(mgrs)
 library(mapview)
 library(broom)
 library(patchwork)
-
+library(stars)
+library(raster)
+library(terra)
 rm(list=ls())
 
 # VHLSS 
@@ -103,7 +105,6 @@ zones <- read.csv("AAD/Zone Codes.csv")
 yl_anthro <- read_dta("YL/stata/stata13/vietnam_r5/vnyc_anthro_anon/vn_r5_ychh_youngerchildanthroandppvt.dta")
 
 # Map 
-
 geoid_folder <- "C:/Users/Anri Sakakibara/OneDrive/PhD Political Economy/Vietnam War/geoid"
 geoid_files <- list.files(path = geoid_folder, pattern = "geo(.*)csv$")
 geoid_list <- lapply(geoid_files, function(file) read.csv(file.path(geoid_folder, file)))
@@ -122,6 +123,8 @@ vnmap2_09 <- read_sf("Chloropleth Maps/VNShapefile/geo2_vn2009/geo2_vn2009.shp")
 provarea <- read.csv("province_area.csv")
 
 vn_old <- read_sf("Chloropleth Maps/vnm_huyen.shp")
+
+test <- read_sf("dia-gioi-hanh-chinh/Ranh_GioiVN2000.shp")
 
 # Consistent District Boundaries 
 
