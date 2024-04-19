@@ -1,21 +1,34 @@
 ######################################
-# VHLSS REGRESSIONS - DISTRICT LEVEL #
+# VHLSS REGRESSIONS - PROVINCE LEVEL #
 ######################################
 
 etable(list(
-  feols(work ~ as.factor(wartime)/as.factor(female)/log(tot_bmr_prov),
-        vhlss02,
-        weights = ~wt75,
+  feols(workerratio ~ log(tot_bmr_prov),
+        prov02_vhlss,
         vcov = ~tinh),
-  feols(work ~ as.factor(wartime)/as.factor(female)/log(tot_bmr_prov),
-        vhlss04,
-        weights = ~wt45,
+  feols(workerratio ~ log(tot_bmr_prov),
+        prov04_vhlss,
         vcov = ~tinh),
-  feols(work ~ as.factor(wartime)/as.factor(female)/log(tot_bmr_prov),
-        vhlss06,
-        weights = ~wt45,
+  feols(workerratio ~ log(tot_bmr_prov),
+        prov06_vhlss,
         vcov = ~tinh)  
 ))
+
+etable(list(
+  feols(selfemp_workerratio ~ log(tot_bmr_prov),
+        prov02_vhlss,
+        vcov = ~tinh),
+  feols(selfemp_workerratio ~ log(tot_bmr_prov),
+        prov04_vhlss,
+        vcov = ~tinh),
+  feols(selfemp_workerratio ~ log(tot_bmr_prov),
+        prov06_vhlss,
+        vcov = ~tinh)  
+))
+
+########################################
+# VHLSS REGRESSIONS - INDIVIDUAL LEVEL #
+########################################
 
 etable(list(
   feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
@@ -34,15 +47,15 @@ etable(list(
 
 etable(list(
   feols(selfemp ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss02, age > 15 & age < 65),
+        subset(vhlss02, age > 15 & age < 65 & work == 1),
         weights = ~wt75,
         vcov = ~tinh+huyen),
   feols(selfemp ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss04, age > 15 & age < 65),
+        subset(vhlss04, age > 15 & age < 65 & work == 1),
         weights = ~wt45,
         vcov = ~tinh+huyen),
   feols(selfemp ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss06, age > 15 & age < 65),
+        subset(vhlss06, age > 15 & age < 65 & work == 1),
         weights = ~wt45,
         vcov = ~tinh+huyen)  
 ))
