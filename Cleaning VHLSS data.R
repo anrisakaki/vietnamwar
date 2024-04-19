@@ -10,6 +10,25 @@ def02 <- inc_02 %>% select(tinh02, huyen02, xa02, diaban02, hoso02, qui, hhsize,
 def04 <- inc_04 %>% select(tinh, huyen, xa, hoso, urban, rcpi, mcpi, wt45)
 def06 <- inc_04 %>% select(tinh, huyen, xa, hoso, urban, rcpi, mcpi, wt45)
 
+geoid_district <- lapply(geoid_list, function(i) {
+  i %>%
+    select(provname, distname, contains("prov"), contains("dist")) %>%
+    distinct()
+})
+
+district0203 <- bombs_district %>% 
+  select(districtname, provincename, province, district, tot_bmr, south_corrected) %>% 
+  mutate(huyen = as.numeric(str_sub(district, -2))) %>% 
+  rename(tinh = province) %>% 
+  select(-district) %>% 
+  filter(!is.na(tinh))
+
+prov0203 <- bombs_province_miguel %>% 
+  select(province, tot_bmr) %>% 
+  rename(tinh = province,
+         tot_bmr_prov = tot_bmr) %>% 
+  filter(!is.na(tinh))
+
 ########
 # 2002 # 
 ########
@@ -17,9 +36,7 @@ def06 <- inc_04 %>% select(tinh, huyen, xa, hoso, urban, rcpi, mcpi, wt45)
 vhlss02 <- list(m1_02, m2_02, m3_02) %>%
   map(~mutate(.x, matv02 = as.numeric(str_sub(as.character(matv02), -2)))) %>%
   reduce(full_join, by = ivid02) %>% 
-  left_join(m5a_02, by = ivid02)
-
-vhlss02 <- vhlss02 %>% 
+  left_join(m5a_02, by = ivid02) %>% 
   mutate(female = ifelse(m1c2 == 2, 1, 0),
          married = ifelse(m1c6 == 2, 1, 0),
          hhhead = ifelse(m1c3 == 1, 1, 0),
@@ -28,8 +45,11 @@ vhlss02 <- vhlss02 %>%
          work = ifelse(m3c2 == 1, 1, 0),
          selfemp = ifelse(m3c8 == 0, 1, 0),
          selfagri = ifelse(m3c1b == 1, 1, 0),
+         selfagri = ifelse(selfagri == 0 & work == 0, NA, selfagri),
+         nonagri = ifelse(m3c1c == 1, 1, 0),
          inc = m5ac6 + m5ac7e,
-         wartime = ifelse(m1c5 > 42 & m1c5 < 62, 1, 0)) %>% 
+         wartime = ifelse(m1c5 > 42 & m1c5 < 62, 1, 0),
+         work = ifelse(work == 0 & m1c5 < 15 | work == 0 & m1c5 > 64, NA, work)) %>% 
   rename(age = m1c5,
          educ = m2c1,
          hours = m3c3,
@@ -96,6 +116,7 @@ hhbus04 <- m10a_04 %>%
 
 vhlss04 <- list(m123a_04, m4a_04) %>% 
   reduce(full_join, by = ivid04) %>% 
+  left_join(fbus, by = c("tinh", "huyen", "xa", "diaban", "hoso", "matv"))  %>% 
   mutate(female = ifelse(m1ac2 == 2, 1, 0),
          married = ifelse(m1ac6 == 2, 1, 0),
          hhhead = ifelse(m1ac3 == 1, 1, 0),
@@ -105,15 +126,17 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
          selfemp = ifelse(m4ac1c == 1, 1, 0),
          selfagri = ifelse(m4ac1b == 1, 1, 0),
          formal = ifelse(m4ac10b == 1, 1, 0),
-         wartime = ifelse(m1ac5 > 44 & m1ac5 < 64, 1, 0)) %>% 
+         wartime = ifelse(m1ac5 > 44 & m1ac5 < 64, 1, 0),
+         f_manager = ifelse(is.na(f_manager) & selfemp == 1, 0, f_manager),
+         work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work)) %>% 
   rename(age = m1ac5,
          educ = m2c1,
          industry = m4ac5,
          days = m4ac7,
          hours = m4ac8,
          inc = m4ac11) %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, ky, hhhead, fhead, female, age, wartime, educ, 
-         work, formal, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, ky, hhhead, fhead, female, age, married, wartime, educ, 
+         work, formal, wagework, selfemp, selfagri, f_manager, industry, inc, hours, days) %>% 
   left_join(def04, by = c("tinh", "huyen", "xa", "hoso")) %>% 
   mutate(inc = inc/mcpi/rcpi) %>% 
   distinct() %>% 
@@ -138,7 +161,8 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
          selfemp = ifelse(m4ac1c == 1, 1, 0),
          selfagri = ifelse(m4ac1b == 1, 1, 0),
          formal = ifelse(m4ac10b == 1, 1, 0),
-         wartime = ifelse(m1ac5 > 44 & m1ac5 < 64, 1, 0)) %>% 
+         wartime = ifelse(m1ac5 > 44 & m1ac5 < 64, 1, 0),
+         work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work)) %>% 
   rename(age = m1ac5,
          educ = m2ac1,
          industry = m4ac5,
@@ -178,3 +202,7 @@ fbus06 <- merge(fself_emp06, bus06, by = c("hhid06", "matv")) %>%
   select(-c(hhid06, busi_num06)) %>% 
   mutate(f_manager = 1) %>% 
   distinct()
+
+vhlss06 <- vhlss06 %>% 
+  left_join(fbus06, by = ivid06) %>% 
+  mutate(f_manager = ifelse(is.na(f_manager) & selfemp == 1, 0, f_manager))
