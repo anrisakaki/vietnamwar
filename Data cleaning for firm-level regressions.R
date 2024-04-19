@@ -29,7 +29,8 @@ dn04 <- ec_list[[5]] %>%
   left_join(province_bmr_sum, by = "provname") %>%   
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   mutate(year = 2004,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov04 > 43, 1, 0)) %>% 
   group_by(prov04, dist04) %>% 
   mutate(distid = cur_group_id())
 
@@ -51,7 +52,8 @@ dn05 <- ec_list[[6]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>%   
   mutate(year = 2005,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov05 > 43, 1, 0)) %>% 
   group_by(prov05, dist05) %>% 
   mutate(distid = cur_group_id())
 
@@ -72,7 +74,8 @@ dn06 <- ec_list[[7]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>%   
   mutate(year = 2006,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov06 > 43, 1, 0)) %>% 
   group_by(prov06, dist06) %>% 
   mutate(distid = cur_group_id())
 
@@ -93,7 +96,8 @@ dn07 <- ec_list[[8]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>%   
   mutate(year = 2007,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov07 > 43, 1, 0)) %>% 
   group_by(prov07, dist07) %>% 
   mutate(distid = cur_group_id())
 
@@ -114,7 +118,8 @@ dn08 <- ec_list[[9]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2008,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov08 > 43, 1, 0)) %>% 
   group_by(prov08, dist08) %>% 
   mutate(distid = cur_group_id())
 
@@ -135,7 +140,8 @@ dn09 <- ec_list[[10]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2009,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov09 > 43, 1, 0)) %>% 
   group_by(prov09, dist09) %>% 
   mutate(distid = cur_group_id())
 
@@ -156,7 +162,8 @@ dn10 <- ec_list[[11]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2010,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov10 > 43, 1, 0)) %>% 
   group_by(prov10, dist10) %>% 
   mutate(distid = cur_group_id())
 
@@ -181,7 +188,8 @@ dn11 <- ec_list[[12]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2011,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov11 > 43, 1, 0)) %>% 
   group_by(prov11, dist11) %>% 
   mutate(distid = cur_group_id())
 
@@ -206,7 +214,8 @@ dn12 <- ec_list[[13]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2012,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov12 > 43, 1, 0)) %>% 
   group_by(prov12, dist12) %>% 
   mutate(distid = cur_group_id())
 
@@ -231,7 +240,8 @@ dn13 <- ec_list[[14]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2013,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov13 > 43, 1, 0)) %>% 
   group_by(prov13, dist13) %>% 
   mutate(distid = cur_group_id())
 
@@ -256,7 +266,8 @@ dn14 <- ec_list[[15]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2014,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov14 > 43, 1, 0)) %>% 
   group_by(prov14, dist14) %>% 
   mutate(distid = cur_group_id())
 
@@ -281,7 +292,8 @@ dn15 <- ec_list[[16]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2015,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov15 > 43, 1, 0)) %>% 
   group_by(prov15, dist15) %>% 
   mutate(distid = cur_group_id())
 
@@ -308,7 +320,8 @@ dn16 <- ec_list[[17]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2016,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov16 > 43, 1, 0)) %>% 
   group_by(prov16, dist16) %>% 
   mutate(distid = cur_group_id())
 
@@ -333,7 +346,8 @@ dn17 <- ec_list[[18]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2017,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov17 > 43, 1, 0)) %>% 
   group_by(prov17, dist17) %>% 
   mutate(distid = cur_group_id())
 
@@ -358,6 +372,7 @@ dn18 <- ec_list[[19]] %>%
   left_join(district_bmr_sum, by = c("provname", "distname")) %>% 
   left_join(province_bmr_sum, by = "provname") %>% 
   mutate(year = 2018,
-         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr)) %>% 
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         south = ifelse(prov18 > 43, 1, 0 )) %>% 
   group_by(prov18, dist18) %>% 
   mutate(distid = cur_group_id())
