@@ -16,18 +16,146 @@ geoid_district <- lapply(geoid_list, function(i) {
     distinct()
 })
 
-district0203 <- bombs_district %>% 
-  select(districtname, provincename, province, district, tot_bmr, south_corrected) %>% 
-  mutate(huyen = as.numeric(str_sub(district, -2))) %>% 
-  rename(tinh = province) %>% 
-  select(-district) %>% 
-  filter(!is.na(tinh))
+province_bmr_sum02 <- province_bmr_sum %>% 
+  mutate(tinh02 = recode(provname,
+                         'An Giang' = 805,
+                         'Bà Rịa - Vũng Tàu' = 717,
+                         'Bắc Giang' = 221,
+                         'Bắc Kạn' = 207,
+                         'Bạc Liêu' = 821,
+                         'Bắc Ninh' = 106,
+                         'Bến Tre' = 811,
+                         'Bình Định' = 507,
+                         'Bình Dương' = 711,
+                         'Bình Phước' = 707,
+                         'Bình Thuận' = 715,
+                         'Cà Mau' = 823,
+                         'Cần Thơ' = 815,
+                         'Hậu Giang' = 815,
+                         'Cao Bằng' = 203,
+                         'Đà Nẵng' = 501,
+                         'Đắk Lắk' = 605,
+                         'Đắk Nông' = 605,
+                         'Điện Biên' = 301,
+                         'Lai Châu' = 301,
+                         'Đồng Nai' = 713,
+                         'Đồng Tháp' = 803,
+                         'Gia Lai' = 603,
+                         'Hà Giang' = 201,
+                         'Hà Nam' = 111,
+                         'Hà Nội' = 101,
+                         'Hà Tĩnh' = 405,
+                         'Hải Dương' = 107,
+                         'Hải Phòng' = 103,
+                         'Hồ Chí Minh' = 701,
+                         'Hoà Bình' = 305,
+                         'Hưng Yên' = 109,
+                         'Khánh Hòa' = 511,
+                         'Kiên Giang' = 813,
+                         'Kon Tum' = 601,
+                         'Lâm Đồng' = 607,
+                         'Lạng Sơn' = 209,
+                         'Lào Cai' = 205,
+                         'Long An' = 801,
+                         'Nam Định' = 113,
+                         'Nghệ An' = 403,
+                         'Ninh Bình' = 117,
+                         'Ninh Thuận' = 705,
+                         'Phú Thọ' = 217,
+                         'Phú Yên' = 509,
+                         'Quảng Bình' = 407,
+                         'Quảng Nam' = 503,
+                         'Quảng Ngãi' = 505,
+                         'Quảng Ninh' = 225,
+                         'Quảng Trị' = 409,
+                         'Sóc Trăng' = 819,
+                         'Sơn La' = 303,
+                         'Tây Ninh' = 709,
+                         'Thái Bình' = 115,
+                         'Thái Nguyên' = 215,
+                         'Thanh Hóa' = 401,
+                         'Thừa Thiên Huế' = 411,
+                         'Tiền Giang' = 807,
+                         'Trà Vinh' = 817,
+                         'Tuyên Quang' = 211,
+                         'Vĩnh Long' = 809,
+                         'Vĩnh Phúc' = 104,
+                         'Yên Bái' = 213,
+                          .default = NA_real_)) %>% 
+  ungroup() %>% 
+  group_by(tinh02) %>% 
+  summarise(tot_bmr_prov = sum(tot_bmr_prov),
+            tot_bmr_lb_prov = sum(tot_bmr_lb_prov),
+            killed_tot_prov = sum(killed_tot_prov, na.rm = T),
+            dist_nearest_base_prov = min(dist_nearest_base_prov),
+            dist_nearest_hochi_prov = min(dist_nearest_hochi_prov))
 
-prov0203 <- bombs_province_miguel %>% 
-  select(province, tot_bmr) %>% 
-  rename(tinh = province,
-         tot_bmr_prov = tot_bmr) %>% 
-  filter(!is.na(tinh))
+province_bmr_sum <- province_bmr_sum %>% 
+  mutate(tinh = recode(provname,
+                         'An Giang' = 805,
+                         'Bà Rịa - Vũng Tàu' = 717,
+                         'Bắc Giang' = 221,
+                         'Bắc Kạn' = 207,
+                         'Bạc Liêu' = 821,
+                         'Bắc Ninh' = 106,
+                         'Bến Tre' = 811,
+                         'Bình Định' = 507,
+                         'Bình Dương' = 711,
+                         'Bình Phước' = 707,
+                         'Bình Thuận' = 715,
+                         'Cà Mau' = 823,
+                         'Cần Thơ' = 815,
+                         'Hậu Giang' = 816,
+                         'Cao Bằng' = 203,
+                         'Đà Nẵng' = 501,
+                         'Đắk Lắk' = 605,
+                         'Đắk Nông' = 606,
+                         'Điện Biên' = 302,
+                         'Lai Châu' = 301,
+                         'Đồng Nai' = 713,
+                         'Đồng Tháp' = 803,
+                         'Gia Lai' = 603,
+                         'Hà Giang' = 201,
+                         'Hà Nam' = 111,
+                         'Hà Nội' = 101,
+                         'Hà Tĩnh' = 405,
+                         'Hải Dương' = 107,
+                         'Hải Phòng' = 103,
+                         'Hồ Chí Minh' = 701,
+                         'Hoà Bình' = 305,
+                         'Hưng Yên' = 109,
+                         'Khánh Hòa' = 511,
+                         'Kiên Giang' = 813,
+                         'Kon Tum' = 601,
+                         'Lâm Đồng' = 607,
+                         'Lạng Sơn' = 209,
+                         'Lào Cai' = 205,
+                         'Long An' = 801,
+                         'Nam Định' = 113,
+                         'Nghệ An' = 403,
+                         'Ninh Bình' = 117,
+                         'Ninh Thuận' = 705,
+                         'Phú Thọ' = 217,
+                         'Phú Yên' = 509,
+                         'Quảng Bình' = 407,
+                         'Quảng Nam' = 503,
+                         'Quảng Ngãi' = 505,
+                         'Quảng Ninh' = 225,
+                         'Quảng Trị' = 409,
+                         'Sóc Trăng' = 819,
+                         'Sơn La' = 303,
+                         'Tây Ninh' = 709,
+                         'Thái Bình' = 115,
+                         'Thái Nguyên' = 215,
+                         'Thanh Hóa' = 401,
+                         'Thừa Thiên Huế' = 411,
+                         'Tiền Giang' = 807,
+                         'Trà Vinh' = 817,
+                         'Tuyên Quang' = 211,
+                         'Vĩnh Long' = 809,
+                         'Vĩnh Phúc' = 104,
+                         'Yên Bái' = 213,
+                         .default = NA_real_))
 
 ########
 # 2002 # 
@@ -49,7 +177,8 @@ vhlss02 <- list(m1_02, m2_02, m3_02) %>%
          nonagri = ifelse(m3c1c == 1, 1, 0),
          inc = m5ac6 + m5ac7e,
          wartime = ifelse(m1c5 > 42 & m1c5 < 62, 1, 0),
-         work = ifelse(work == 0 & m1c5 < 15 | work == 0 & m1c5 > 64, NA, work)) %>% 
+         work = ifelse(work == 0 & m1c5 < 15 | work == 0 & m1c5 > 64, NA, work),
+         tinh02 = ifelse(tinh02 == 105, 101, tinh02)) %>% 
   rename(age = m1c5,
          educ = m2c1,
          hours = m3c3,
@@ -60,10 +189,7 @@ vhlss02 <- list(m1_02, m2_02, m3_02) %>%
   select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, qui, phieu, hhhead, fhead, female, age, wartime, educ, 
          work, wagework, selfemp, selfagri, industry, inc, hours, days, hhid) %>% 
   left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui")) %>% 
-  rename(tinh = tinh02,
-         huyen = huyen02) %>% 
-  left_join(district0203, by = c("tinh", "huyen")) %>% 
-  left_join(prov0203, by = "tinh")
+  left_join(province_bmr_sum02, by = "tinh02")
 
 ########
 # 2004 # 
@@ -128,7 +254,8 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
          formal = ifelse(m4ac10b == 1, 1, 0),
          wartime = ifelse(m1ac5 > 44 & m1ac5 < 64, 1, 0),
          f_manager = ifelse(is.na(f_manager) & selfemp == 1, 0, f_manager),
-         work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work)) %>% 
+         work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
+         tinh = ifelse(tinh == 105, 101, tinh)) %>% 
   rename(age = m1ac5,
          educ = m2c1,
          industry = m4ac5,
@@ -142,8 +269,7 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
   distinct() %>% 
   group_by(tinh, huyen, xa, hoso, ky) %>% 
   mutate(hhid = cur_group_id()) %>% 
-  left_join(district0203, by = c("tinh", "huyen")) %>% 
-  left_join(prov0203, by = "tinh")
+  left_join(province_bmr_sum, by = "tinh")
 
 ########
 # 2006 # 
@@ -162,7 +288,8 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
          selfagri = ifelse(m4ac1b == 1, 1, 0),
          formal = ifelse(m4ac10b == 1, 1, 0),
          wartime = ifelse(m1ac5 > 44 & m1ac5 < 64, 1, 0),
-         work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work)) %>% 
+         work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
+         tinh = ifelse(tinh == 105, 101, tinh)) %>% 
   rename(age = m1ac5,
          educ = m2ac1,
          industry = m4ac5,
@@ -176,8 +303,7 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
   distinct() %>% 
   group_by(tinh, huyen, xa, hoso) %>% 
   mutate(hhid = cur_group_id())  %>% 
-  left_join(district0203, by = c("tinh", "huyen")) %>% 
-  left_join(prov0203, by = "tinh")  
+  left_join(province_bmr_sum, by = "tinh")
 
 fself_emp06 <- vhlss06 %>% 
   filter(female == 1 & selfemp == 1) %>% 
