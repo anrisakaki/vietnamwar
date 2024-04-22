@@ -5,12 +5,36 @@
 etable(list(
   feols(workerratio ~ log(tot_bmr_prov),
         prov02_vhlss,
-        vcov = ~tinh),
+        vcov = ~tinh02),
   feols(workerratio ~ log(tot_bmr_prov),
         prov04_vhlss,
         vcov = ~tinh),
   feols(workerratio ~ log(tot_bmr_prov),
         prov06_vhlss,
+        vcov = ~tinh)  
+))
+
+etable(list(
+  feols(workerratio ~ log(tot_bmr_prov),
+        subset(prov02_vhlss, south == 1),
+        vcov = ~tinh02),
+  feols(workerratio ~ log(tot_bmr_prov),
+        subset(prov04_vhlss, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov),
+        subset(prov06_vhlss, south == 1),
+        vcov = ~tinh)  
+))
+
+etable(list(
+  feols(workerratio ~ log(tot_bmr_prov),
+        subset(prov02_vhlss, south == 0),
+        vcov = ~tinh02),
+  feols(workerratio ~ log(tot_bmr_prov),
+        subset(prov04_vhlss, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov),
+        subset(prov06_vhlss, south == 0),
         vcov = ~tinh)  
 ))
 
