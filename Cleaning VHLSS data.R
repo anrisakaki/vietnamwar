@@ -5,10 +5,13 @@ ivid06 <- c("tinh", "huyen", "diaban", "xa", "hoso", "matv")
 hhid02 <- c("tinh02", "huyen02", "xa02", "diaban02", "hoso02", "qui", "phieu")
 hhid04 <- c("tinh", "huyen", "xa", "hoso", "diaban", "ky")
 hhid06 <- c("tinh", "huyen", "xa", "hoso")
+hhid10 <- c("tinh", "huyen", "xa", "diaban", "hoso")
 
 def02 <- inc_02 %>% select(tinh02, huyen02, xa02, diaban02, hoso02, qui, hhsize, urban, rcpi, mcpi, wt75)
 def04 <- inc_04 %>% select(tinh, huyen, xa, hoso, urban, rcpi, mcpi, wt45)
 def06 <- inc_04 %>% select(tinh, huyen, xa, hoso, urban, rcpi, mcpi, wt45)
+
+wt10 <- wt10 %>% select(-quyen) %>% rename(urban = ttnt)
 
 geoid_district <- lapply(geoid_list, function(i) {
   i %>%
@@ -156,6 +159,73 @@ province_bmr_sum <- province_bmr_sum %>%
                          'Vĩnh Phúc' = 104,
                          'Yên Bái' = 213,
                          .default = NA_real_))
+
+province_bmr_sum2 <- province_bmr_sum %>% 
+  mutate(tinh = recode(provname,
+                       'An Giang' = 89,
+                       'Bà Rịa - Vũng Tàu' = 77,
+                       'Bắc Giang' = 24,
+                       'Bắc Kạn' = 6,
+                       'Bạc Liêu' = 95,
+                       'Bắc Ninh' = 27,
+                       'Bến Tre' = 83,
+                       'Bình Định' = 52,
+                       'Bình Dương' = 74,
+                       'Bình Phước' = 70,
+                       'Bình Thuận' = 60,
+                       'Cà Mau' = 96,
+                       'Cần Thơ' = 92,
+                       'Hậu Giang' = 93,
+                       'Cao Bằng' = 4,
+                       'Đà Nẵng' = 48,
+                       'Đắk Lắk' = 66,
+                       'Đắk Nông' = 67,
+                       'Điện Biên' = 11,
+                       'Lai Châu' = 12,
+                       'Đồng Nai' = 75,
+                       'Đồng Tháp' = 87,
+                       'Gia Lai' = 64,
+                       'Hà Giang' = 2,
+                       'Hà Nam' = 35,
+                       'Hà Nội' = 1,
+                       'Hà Tĩnh' = 42,
+                       'Hải Dương' = 30,
+                       'Hải Phòng' = 31,
+                       'Hồ Chí Minh' = 79,
+                       'Hoà Bình' = 17,
+                       'Hưng Yên' = 33,
+                       'Khánh Hòa' = 56,
+                       'Kiên Giang' = 91,
+                       'Kon Tum' = 62,
+                       'Lâm Đồng' = 68,
+                       'Lạng Sơn' = 20,
+                       'Lào Cai' = 10,
+                       'Long An' = 80,
+                       'Nam Định' = 36,
+                       'Nghệ An' = 40,
+                       'Ninh Bình' = 37,
+                       'Ninh Thuận' = 58,
+                       'Phú Thọ' = 25,
+                       'Phú Yên' = 54,
+                       'Quảng Bình' = 44,
+                       'Quảng Nam' = 49,
+                       'Quảng Ngãi' = 51,
+                       'Quảng Ninh' = 22,
+                       'Quảng Trị' = 45,
+                       'Sóc Trăng' = 94,
+                       'Sơn La' = 14,
+                       'Tây Ninh' = 72,
+                       'Thái Bình' = 34,
+                       'Thái Nguyên' = 19,
+                       'Thanh Hóa' = 38,
+                       'Thừa Thiên Huế' = 46,
+                       'Tiền Giang' = 82,
+                       'Trà Vinh' = 84,
+                       'Tuyên Quang' = 8,
+                       'Vĩnh Long' = 86,
+                       'Vĩnh Phúc' = 26,
+                       'Yên Bái' = 15,
+                       .default = NA_real_))
 
 ########
 # 2002 # 
@@ -332,3 +402,37 @@ fbus06 <- merge(fself_emp06, bus06, by = c("hhid06", "matv")) %>%
 vhlss06 <- vhlss06 %>% 
   left_join(fbus06, by = ivid06) %>% 
   mutate(f_manager = ifelse(is.na(f_manager) & selfemp == 1, 0, f_manager))
+
+########
+# 2010 #
+########
+
+vhlss10 <- list(m1a_10, m2a_10, m4a1_10, m4a2_10, m4a3_10, m4a4_10) %>% 
+  reduce(full_join, by = ivid06) %>% 
+  mutate(female = ifelse(m1ac2 == 2, 1, 0),
+         married = ifelse(m1ac6 == 2, 1, 0),
+         hhhead = ifelse(m1ac3 == 1, 1, 0),
+         fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
+         wagework = ifelse(m4ac1a == 1, 1, 0),
+         work = ifelse(m4ac2 == 1, 1, 0),
+         selfemp = ifelse(m4ac1c == 1, 1, 0),
+         selfagri = ifelse(m4ac1b == 1, 1, 0),
+         work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
+         tinh = ifelse(tinh == 105, 101, tinh)) %>% 
+  rename(age = m1ac5,
+         educ = m2ac1,
+         industry = m4ac4,
+         days = m4ac6,
+         hours = m4ac7,
+         inc = m4ac11) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, hhhead, fhead, female, age, educ, 
+         work, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
+  left_join(wt10, by = hhid10) %>% 
+  distinct() %>% 
+  group_by(tinh, huyen, xa, diaban, hoso) %>% 
+  mutate(hhid = cur_group_id())  %>% 
+  left_join(province_bmr_sum2, by = "tinh")
+
+########
+# 2012 #
+########
