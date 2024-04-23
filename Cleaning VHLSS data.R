@@ -11,7 +11,9 @@ def02 <- inc_02 %>% select(tinh02, huyen02, xa02, diaban02, hoso02, qui, hhsize,
 def04 <- inc_04 %>% select(tinh, huyen, xa, hoso, urban, rcpi, mcpi, wt45)
 def06 <- inc_04 %>% select(tinh, huyen, xa, hoso, urban, rcpi, mcpi, wt45)
 
+wt08 <- wt08 %>% select(tinh, huyen, xa, diaban, wt9)
 wt10 <- wt10 %>% select(-quyen) %>% rename(urban = ttnt)
+wt12 <- wt12 %>% select(tinh, huyen, xa, diaban, wt9)
 
 geoid_district <- lapply(geoid_list, function(i) {
   i %>%
@@ -377,20 +379,21 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
   mutate(hhid = cur_group_id())  %>% 
   left_join(province_bmr_sum, by = "tinh")
 
-# 2010 #
+########
+# 2008 #
 ########
 
-bus10 <- busid %>% 
-  filter(!is.na(hhid10)) %>%
-  select(hhid10, busi_num10, manager) %>% 
-  rename(hh = hhid10,
+managers08 <- busid %>% 
+  filter(!is.na(hhid08)) %>%
+  select(hhid08, manager) %>% 
+  rename(hh = hhid08,
          matv = manager) %>% 
   distinct() %>% 
-  mutate(manager = 1)
+  mutate(manager = 1)  
 
-vhlss10 <- list(m1a_10, m2a_10, m4a1_10, m4a2_10, m4a3_10, m4a4_10) %>% 
+vhlss08 <- list(m123a_08, m4a_08) %>% 
   reduce(full_join, by = ivid06) %>% 
-  mutate(hh = hoso + diaban*100 + xa*10^5,
+  mutate(hh = tinh*10^10 + huyen*10^8 + xa*10^6 + diaban*10^3 + hoso,
          female = ifelse(m1ac2 == 2, 1, 0),
          married = ifelse(m1ac6 == 2, 1, 0),
          hhhead = ifelse(m1ac3 == 1, 1, 0),
@@ -404,6 +407,42 @@ vhlss10 <- list(m1a_10, m2a_10, m4a1_10, m4a2_10, m4a3_10, m4a4_10) %>%
          m2ac1 = as.numeric(m2ac1)) %>% 
   rename(age = m1ac5,
          educ = m2ac1,
+         industry = m4ac5,
+         days = m4ac7,
+         hours = m4ac8,
+         inc = m4ac11) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, hhhead, fhead, female, age, educ, 
+         work, wagework, selfemp, selfagri, industry, inc, hours, days, hh) %>% 
+  left_join(wt08, by = c("tinh", "huyen", "xa", "diaban")) %>% 
+  left_join(managers08, by = c("hh", "matv")) %>% 
+  mutate(f_manager = ifelse(selfemp == 1 & manager == 1 & female == 1, 1, 0),
+         f_manager = ifelse(work == 0 | selfemp == 0 | is.na(manager), NA, f_manager),
+         m_manager = ifelse(selfemp == 1 & manager == 1 & female == 0, 1, 0),
+         m_manager = ifelse(work == 0 | selfemp == 0 | is.na(manager), NA, m_manager)) %>% 
+  distinct() %>% 
+  group_by(tinh, huyen, xa, diaban, hoso) %>% 
+  mutate(hhid = cur_group_id())  %>% 
+  left_join(province_bmr_sum, by = "tinh")
+
+########
+# 2010 #
+########
+
+vhlss10 <- list(m1a_10, m2a_10, m4a1_10, m4a2_10, m4a3_10, m4a4_10) %>% 
+  reduce(full_join, by = ivid06) %>% 
+  mutate(female = ifelse(m1ac2 == 2, 1, 0),
+         married = ifelse(m1ac6 == 2, 1, 0),
+         hhhead = ifelse(m1ac3 == 1, 1, 0),
+         fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
+         wagework = ifelse(m4ac1a == 1, 1, 0),
+         work = ifelse(m4ac2 == 1, 1, 0),
+         selfemp = ifelse(m4ac1c == 1, 1, 0),
+         selfagri = ifelse(m4ac1b == 1, 1, 0),
+         work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
+         tinh = ifelse(tinh == 28, 1, tinh),
+         m2ac1 = as.numeric(m2ac1)) %>% 
+  rename(age = m1ac5,
+         educ = m2ac1,
          industry = m4ac4,
          days = m4ac6,
          hours = m4ac7,
@@ -411,12 +450,37 @@ vhlss10 <- list(m1a_10, m2a_10, m4a1_10, m4a2_10, m4a3_10, m4a4_10) %>%
   select(tinh, huyen, xa, diaban, hoso, matv, hhhead, fhead, female, age, educ, 
          work, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
   left_join(wt10, by = hhid10) %>% 
-  left_join(managers10, by = c("hh", "matv")) %>% 
-  mutate(inc = inc/mcpi/rcpi,
-         f_manager = ifelse(selfemp == 1 & manager == 1 & female == 1, 1, 0),
-         f_manager = ifelse(work == 0 | selfemp == 0 | is.na(manager), NA, f_manager),
-         m_manager = ifelse(selfemp == 1 & manager == 1 & female == 0, 1, 0),
-         m_manager = ifelse(work == 0 | selfemp == 0 | is.na(manager), NA, m_manager)) %>% 
+  distinct() %>% 
+  group_by(tinh, huyen, xa, diaban, hoso) %>% 
+  mutate(hhid = cur_group_id())  %>% 
+  left_join(province_bmr_sum2, by = "tinh")
+
+########
+# 2012 #
+########
+
+vhlss12 <- list(m1a_12, m2a1_12) %>% 
+  reduce(full_join, by = ivid06) %>% 
+  mutate(female = ifelse(m1ac2 == 2, 1, 0),
+         married = ifelse(m1ac6 == 2, 1, 0),
+         hhhead = ifelse(m1ac3 == 1, 1, 0),
+         fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
+         wagework = ifelse(m4ac1a == 1, 1, 0),
+         work = ifelse(m4ac2 == 1, 1, 0),
+         selfemp = ifelse(m4ac1c == 1, 1, 0),
+         selfagri = ifelse(m4ac1b == 1, 1, 0),
+         work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
+         tinh = ifelse(tinh == 28, 1, tinh),
+         m2ac1 = as.numeric(m2ac1)) %>% 
+  rename(age = m1ac5,
+         educ = m2ac1,
+         industry = m4ac4,
+         days = m4ac6,
+         hours = m4ac7,
+         inc = m4ac11) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, hhhead, fhead, female, age, educ, 
+         work, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
+  left_join(wt12, by = c("tinh", "huyen", "xa", "diaban")) %>% 
   distinct() %>% 
   group_by(tinh, huyen, xa, diaban, hoso) %>% 
   mutate(hhid = cur_group_id())  %>% 
