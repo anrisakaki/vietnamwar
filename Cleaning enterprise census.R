@@ -75,12 +75,16 @@ province_bmr_sum0419 <- province_bmr_sum %>%
 dn0002_prov_fn <- function(i) {
   i %>%
     group_by(tinh) %>%
-    mutate(tinh = ifelse(tinh == 105, 101, tinh)) %>% 
+    mutate(tinh = ifelse(tinh == 105, 101, tinh),
+           share_f = fworkers/nworkers,
+           share_f = ifelse(fworkers < 1, 0, share_f)) %>% 
+    filter(nworkers > 0) %>% 
     summarise(
       nworkers = sum(nworkers, na.rm = TRUE),
       fworkers = sum(fworkers, na.rm = TRUE),
       nworkers_eoy = sum(nworkers_eoy, na.rm = TRUE),
-      fworkers_eoy = sum(fworkers_eoy, na.rm = TRUE)
+      fworkers_eoy = sum(fworkers_eoy, na.rm = TRUE),
+      share_f = mean(share_f, na.rm = T)
     ) %>%
     mutate(
       workerratio = (nworkers - fworkers) / fworkers,
@@ -93,12 +97,15 @@ dn0002_prov_fn <- function(i) {
 dn03_prov_fn <- function(i) {
   i %>%
     group_by(tinh) %>%
-    mutate(tinh = ifelse(tinh == 105, 101, tinh)) %>% 
+    mutate(tinh = ifelse(tinh == 105, 101, tinh),
+           share_f = fworkers/nworkers,
+           share_f = ifelse(fworkers < 1, 0, share_f)) %>% 
     summarise(
       nworkers = sum(nworkers, na.rm = TRUE),
       fworkers = sum(fworkers, na.rm = TRUE),
       nworkers_eoy = sum(nworkers_eoy, na.rm = TRUE),
-      fworkers_eoy = sum(fworkers_eoy, na.rm = TRUE)
+      fworkers_eoy = sum(fworkers_eoy, na.rm = TRUE),
+      share_f = mean(share_f, na.rm = T)
     ) %>%
     mutate(
       workerratio = (nworkers - fworkers) / fworkers,
@@ -115,12 +122,15 @@ dn_prov_fn <- function(i) {
            fworkers = ld12,
            nworkers_eoy = ld13,
            fworkers_eoy = ld14) %>% 
+    mutate(share_f = fworkers/nworkers,
+           share_f = ifelse(fworkers < 1, 0, share_f)) %>% 
     group_by(tinh) %>%
     summarise(
       nworkers = sum(nworkers, na.rm = TRUE),
       fworkers = sum(fworkers, na.rm = TRUE),
       nworkers_eoy = sum(nworkers_eoy, na.rm = TRUE),
-      fworkers_eoy = sum(fworkers_eoy, na.rm = TRUE)
+      fworkers_eoy = sum(fworkers_eoy, na.rm = TRUE),
+      share_f = mean(share_f, na.rm = T)
     ) %>%
     mutate(
       workerratio = (nworkers - fworkers) / fworkers,
@@ -190,7 +200,7 @@ dn09_prov <- dn_prov_fn(ec_list[[10]]) %>% mutate(year = 2009)
 dn10_prov <- dn_prov_fn(ec_list[[11]]) %>% mutate(year = 2010)
 dn11_prov <- dn1115_prov_fn(ec_list[[12]]) %>% dn_prov_fn() %>% mutate(year = 2011)
 dn12_prov <- dn1115_prov_fn(ec_list[[13]]) %>% dn_prov_fn() %>% mutate(year = 2012)
-dn13_prov <- dn1115_prov_fn(ec_list[[14]]) %>% dn_prov_fn() %>% mutate(year = 2013)
+dn13_prov <- dn1115_prov_fn(ec_list[[14]]) %>% dn_prov_fn() %>% mutate(year = 2013) %>% filter(!is.na(tot_bmr_prov))
 dn14_prov <- dn1115_prov_fn(ec_list[[15]]) %>% dn_prov_fn() %>% mutate(year = 2014)
 dn15_prov <- dn1115_prov_fn(ec_list[[16]]) %>% dn_prov_fn() %>% mutate(year = 2015)
 dn16_prov <- dn1619_prov_fn(ec_list[[17]]) %>% dn_prov_fn() %>% mutate(year = 2016)
