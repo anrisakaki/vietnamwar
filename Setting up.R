@@ -36,6 +36,10 @@ m1a_06 <- read_dta(file = "Full VHLSS/2006/muc1a.dta") #DF containing age and se
 m2a_06 <- read_dta(file = "Full VHLSS/2006/muc2a.dta") #DF containing educational attainment 
 m4a_06 <- read_dta(file = "Full VHLSS/2006/muc4a.dta") #DF containing employment & housework 
 
+m123a_08 <- read_dta(file = "Full VHLSS/2008/Hhold/muc123a.dta")
+m4a_08 <- read_dta(file = "Full VHLSS/2008/Hhold/muc4a.dta")
+wt08 <- read_dta(file = "Full VHLSS/2008/Hhold/weight08new4.dta")
+
 m1a_10 <- read_dta(file = "Full VHLSS/2010/muc1a.dta")
 m2a_10 <- read_dta(file = "Full VHLSS/2010/muc2a1.dta")
 m4a1_10 <- read_dta(file = "Full VHLSS/2010/muc4a1.dta")
@@ -45,13 +49,21 @@ m4a4_10 <- read_dta(file = "Full VHLSS/2010/muc4a4.dta")
 wt10 <- read_dta(file = "Full VHLSS/2010/wt10.dta")
 
 m1a_12 <- read_dta(file = "Full VHLSS/2012/Muc1A.dta")
-m1c_12 <- read_dta(file = "Full VHLSS/2012/Muc1C.dta")
 m2a1_12 <- read_dta(file = "Full VHLSS/2012/Muc2a1.dta")
-m4c1_12 <- read_dta(file = "Full VHLSS/2012/Muc4C1.dta")
+wt12 <- read_dta(file = "Full VHLSS/2012/wt2012new.dta")
 
 m1a_14 <- read_dta(file = "Full VHLSS/2014/Muc1A.dta")
 m2a_14 <- read_dta(file = "Full VHLSS/2014/Muc2A.dta")
 m4a_14 <- read_dta(file = "Full VHLSS/2014/Muc4a.dta")
+
+m1a_16 <- read_dta(file = "Full VHLSS/2016/Household/Muc1A.dta")
+m2ab_16 <- read_dta(file = "Full VHLSS/2016/Household/Muc2AB.dta")
+m4a_16 <- read_dta(file = "Full VHLSS/2016/Household/Muc4A.dta")
+wt16 <- read_dta(file = "Full VHLSS/2016/Household/wt16.dta")
+
+m1a_18 <- read_dta(file = "Full VHLSS/2018/2 - Data/1 - Households/MUC1A.dta")
+m2c_18 <- read_dta(file = "Full VHLSS/2018/2 - Data/1 - Households/MUC2V.dta")
+m4a_18 <- read_dta(file = "Full VHLSS/2018/2 - Data/1 - Households/MUC4A.dta")
 
 busid <- read_dta(file = "Full VHLSS/Business ids.dta")
 
