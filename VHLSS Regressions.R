@@ -15,9 +15,19 @@ vhlss_prov <- list(
         prov06_vhlss,
         vcov = ~tinh),
   feols(workerratio ~ log(tot_bmr_prov),
+        prov08_vhlss,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov),
         prov10_vhlss,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov),
+        prov12_vhlss,
         vcov = ~tinh)
 )
+
+vhlss_prov_coef <- lapply(vhlss_prov, tidy)
+vhlss_prov_coef <- do.call(rbind, vhlss_prov_coef) %>% filter(term != "(Intercept)")
+vhlss_prov_coef$year <- rep(seq(2001, 2013, by = 2), length.out = nrow(vhlss_prov_coef))
 
 vhlss_prov_s <-  list(
   feols(workerratio ~ log(tot_bmr_prov),
@@ -30,8 +40,14 @@ vhlss_prov_s <-  list(
         subset(prov06_vhlss, south == 1),
         vcov = ~tinh),
   feols(workerratio ~ log(tot_bmr_prov),
+        subset(prov08_vhlss, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov),
         subset(prov10_vhlss, south == 1),
-        vcov = ~tinh)  
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov),
+        subset(prov12_vhlss, south == 1),
+        vcov = ~tinh)
 )
 
 vhlss_prov_n <-  list(
@@ -45,8 +61,14 @@ vhlss_prov_n <-  list(
         subset(prov06_vhlss, south == 0),
         vcov = ~tinh),
   feols(workerratio ~ log(tot_bmr_prov),
+        subset(prov08_vhlss, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov),
         subset(prov10_vhlss, south == 0),
-        vcov = ~tinh)  
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov),
+        subset(prov12_vhlss, south == 0),
+        vcov = ~tinh)
 )
 
 vhlss_prov_coef_n <- lapply(vhlss_prov_n, tidy)
@@ -55,10 +77,8 @@ vhlss_prov_coef_n <- do.call(rbind, vhlss_prov_coef_n) %>% filter(term != "(Inte
 vhlss_prov_coef_s <- do.call(rbind, vhlss_prov_coef_s) %>% filter(term != "(Intercept)")
 vhlss_prov_coef_n$group <- "North"
 vhlss_prov_coef_s$group <- "South"
-vhlss_prov_coef_n$year <- rep(seq(2001, 2009, by = 2), length.out = nrow(vhlss_prov_coef_n))
-vhlss_prov_coef_n <- vhlss_prov_coef_n %>% mutate(year = ifelse(year == 2007, 2009, year))
-vhlss_prov_coef_s$year <- rep(seq(2001, 2009, by = 2), length.out = nrow(vhlss_prov_coef_s)) 
-vhlss_prov_coef_s <-  vhlss_prov_coef_s %>% mutate(year = ifelse(year == 2007, 2009, year))
+vhlss_prov_coef_n$year <- rep(seq(2001, 2013, by = 2), length.out = nrow(vhlss_prov_coef_n))
+vhlss_prov_coef_s$year <- rep(seq(2001, 2013, by = 2), length.out = nrow(vhlss_prov_coef_s)) 
 vhlss_prov_coef_ns <- rbind(vhlss_prov_coef_n, vhlss_prov_coef_s)
 
 # Ratio of managers of HH businesses 
