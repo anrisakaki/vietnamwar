@@ -201,15 +201,14 @@ dn_ols_prov_s <- (list(
 
 dn_ols_prov_coef_n <- lapply(dn_ols_prov_n, tidy)
 dn_ols_prov_coef_s <- lapply(dn_ols_prov_s, tidy)
-dn_ols_prov_coef_n <- do.call(rbind, dn_ols_prov_coef_n)
-dn_ols_prov_coef_s <- do.call(rbind, dn_ols_prov_coef_s)
+dn_ols_prov_coef_n <- do.call(rbind, dn_ols_prov_coef_n) %>% filter(term != "(Intercept)")
+dn_ols_prov_coef_s <- do.call(rbind, dn_ols_prov_coef_s) %>% filter(term != "(Intercept)")
 dn_ols_prov_coef_n$year <- rep(seq(2000, 2018), each = nrow(dn_ols_prov_coef_n) / length(seq(2000, 2018)))
 dn_ols_prov_coef_s$year <- rep(seq(2000, 2018), each = nrow(dn_ols_prov_coef_s) / length(seq(2000, 2018)))
 
 dn_ols_prov_coef_n$group <- "North"
 dn_ols_prov_coef_s$group <- "South"
 dn_ols_prov_coef_ns <- rbind(dn_ols_prov_coef_n, dn_ols_prov_coef_s)
-dn_ols_prov_coef_ns <- dn_ols_prov_coef_ns %>% filter(term != "(Intercept)")
 
 # Industry Fixed effects 
 dn_indfe_prov <- (list(
