@@ -1,3 +1,7 @@
+##############################
+# PROVINCE-LEVEL REGRESSIONS #
+##############################
+
 ggplot(vhlss_prov_coef_ns, aes(x = factor(year), y = estimate, ymin = estimate - std.error, ymax = estimate + std.error, color = group)) +
   geom_pointrange() +
   geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
@@ -14,3 +18,5 @@ ggplot(vhlss_prov_coef_ns, aes(x = factor(year), y = estimate, ymin = estimate -
         text = element_text(size=10)) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ggsave("vhlss_prov_coef_ns.jpeg", width = 7, height = 7)
+
+
