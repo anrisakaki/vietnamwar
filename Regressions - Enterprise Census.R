@@ -414,9 +414,6 @@ dn_indfe_prov_coef_ns <- dn_indfe_prov_coef_ns %>% filter(term != "(Intercept)")
 
 dn_prov_ols_models <- list(
   feols(workerratio ~ log(tot_bmr_prov),
-        dn00_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
         dn01_prov,
         vcov = ~tinh),
   feols(workerratio ~ log(tot_bmr_prov),
@@ -460,29 +457,16 @@ dn_prov_ols_models <- list(
         vcov = ~tinh),
   feols(workerratio ~ log(tot_bmr_prov),
         dn15_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        dn16_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        dn17_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        dn18_prov,
         vcov = ~tinh)
 )
 
 dn_prov_ols_coef <- lapply(dn_prov_ols_models, tidy)
-dn_prov_ols_coef <- do.call(rbind, dn_prov_ols_coef)
-dn_prov_ols_coef$year <- rep(seq(2000, 2018), each = nrow(dn_prov_ols_coef) / length(seq(2000, 2018)))
-dn_prov_ols_coef <- dn_prov_ols_coef %>% filter(term != "(Intercept)")
+dn_prov_ols_coef <- do.call(rbind, dn_prov_ols_coef) %>% filter(term != "(Intercept)")
+dn_prov_ols_coef$year <- rep(seq(2001, 2015), each = nrow(dn_prov_ols_coef) / length(seq(2001, 2015)))
 
 # By South 
 
 dn_prov_ols_s <- list(
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(dn00_prov, south == 1),
-        vcov = ~tinh),
   feols(workerratio ~ log(tot_bmr_prov),
         subset(dn01_prov, south == 1),
         vcov = ~tinh),
@@ -527,22 +511,10 @@ dn_prov_ols_s <- list(
         vcov = ~tinh),
   feols(workerratio ~ log(tot_bmr_prov),
         subset(dn15_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(dn16_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(dn17_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(dn18_prov, south == 1),
         vcov = ~tinh)
 )
 
 dn_prov_ols_n <- list(
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(dn00_prov, south == 0),
-        vcov = ~tinh),
   feols(workerratio ~ log(tot_bmr_prov),
         subset(dn01_prov, south == 0),
         vcov = ~tinh),
@@ -587,27 +559,17 @@ dn_prov_ols_n <- list(
         vcov = ~tinh),
   feols(workerratio ~ log(tot_bmr_prov),
         subset(dn15_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(dn16_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(dn17_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(dn18_prov, south == 0),
         vcov = ~tinh)
 )
 
 dn_prov_ols_coef_s <- lapply(dn_prov_ols_s, tidy)
-dn_prov_ols_coef_s <- do.call(rbind, dn_prov_ols_coef_s)
-dn_prov_ols_coef_s$year <- rep(seq(2000, 2018), each = nrow(dn_prov_ols_coef_s) / length(seq(2000, 2018)))
+dn_prov_ols_coef_s <- do.call(rbind, dn_prov_ols_coef_s) %>% filter(term != "(Intercept)")
+dn_prov_ols_coef_s$year <- rep(seq(2001, 2015), each = nrow(dn_prov_ols_coef_s) / length(seq(2001, 2015)))
 
 dn_prov_ols_coef_n <- lapply(dn_prov_ols_n, tidy)
-dn_prov_ols_coef_n <- do.call(rbind, dn_prov_ols_coef_n)
-dn_prov_ols_coef_n$year <- rep(seq(2000, 2018), each = nrow(dn_prov_ols_coef_n) / length(seq(2000, 2018)))
+dn_prov_ols_coef_n <- do.call(rbind, dn_prov_ols_coef_n) %>% filter(term != "(Intercept)")
+dn_prov_ols_coef_n$year <- rep(seq(2001, 2015), each = nrow(dn_prov_ols_coef_n) / length(seq(2001, 2015)))
 
 dn_prov_ols_coef_n$group <- "North"
 dn_prov_ols_coef_s$group <- "South"
 dn_prov_ols_coef_ns <- rbind(dn_prov_ols_coef_n, dn_prov_ols_coef_s)
-dn_prov_ols_coef_ns <- dn_prov_ols_coef_ns %>% filter(term != "(Intercept)")
