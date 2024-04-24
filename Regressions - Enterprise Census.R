@@ -18,9 +18,6 @@ for (i in bmr) {
 
 dn_ols_prov <- (list(
   feols(share_f ~ log(tot_bmr_prov),
-        dn00,
-        vcov = ~tinh),
-  feols(share_f ~ log(tot_bmr_prov),
         dn01,
         vcov = ~tinh),
   feols(share_f ~ log(tot_bmr_prov),
