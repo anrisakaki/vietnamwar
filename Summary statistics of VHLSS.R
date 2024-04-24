@@ -1,8 +1,12 @@
-#####################################
-# Calculating sex ratio of managers #
-#####################################
+vhlss <- c("vhlss02.Rda", "vhlss04.Rda", "vhlss06.Rda", "vhlss08.Rda", "vhlss10.Rda", "vhlss12.Rda")
 
-# Province level ratio of workers and share of women working 
+for (i in vhlss) {
+  load(i)
+}
+
+####################################
+# Calculating sex ratio of workers #
+####################################
 
 prov02_vhlss <- vhlss02 %>% 
   filter(!is.na(female), age > 15 & age < 65) %>% 
@@ -149,3 +153,10 @@ prov12_vhlss <- vhlss12 %>%
     flfp = f_workers / f_total,
     south = ifelse(tinh > 44, 1, 0)
   )
+
+save(prov02_vhlss, file = "prov02_vhlss.Rda")
+save(prov04_vhlss, file = "prov04_vhlss.Rda")
+save(prov06_vhlss, file = "prov06_vhlss.Rda")
+save(prov08_vhlss, file = "prov08_vhlss.Rda")
+save(prov10_vhlss, file = "prov10_vhlss.Rda")
+save(prov12_vhlss, file = "prov12_vhlss.Rda")
