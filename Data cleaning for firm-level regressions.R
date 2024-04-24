@@ -3,11 +3,11 @@ load("province_bmr_sum.Rda")
 
 dn_fn <- function(i) {
   i %>% 
+    filter(nworkers > 0 & fworkers > 0) %>% 
     mutate(fworkers = ifelse(is.na(fworkers), 0, fworkers), 
            workerratio = (nworkers-fworkers)/fworkers,
            share_f = fworkers/nworkers,
            across(c(tinh, huyen, xa), as.numeric)) %>% 
-    filter(nworkers > 0 & fworkers > 0) %>% 
     select(tinh, ma_thue, nganh_kd, lhdn, nworkers, fworkers, workerratio, share_f)
 }
 
