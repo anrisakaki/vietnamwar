@@ -1,6 +1,6 @@
-######
-# OLS#
-######
+##############
+# FIRM-LEVEL #
+##############
 
 ggplot(dn_ols_coef_prov, aes(x = factor(year), y = estimate, ymin = estimate - std.error, ymax = estimate + std.error)) +
   geom_pointrange() +
