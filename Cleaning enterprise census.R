@@ -4,7 +4,6 @@
 
 dn_prov_fn <- function(i) {
   i %>%
-    filter(nworkers > 0) %>% 
     group_by(tinh) %>%
     summarise(
       nworkers = sum(nworkers, na.rm = TRUE),
@@ -153,7 +152,7 @@ dn15_prov <- ec_list[[16]] %>%
   left_join(province_bmr_sum0419, by = "tinh") %>% 
   mutate(year = 2015) 
 
-dn_prov <- bind_rows(dn04_prov, dn05_prov, dn06_prov,
+dn_prov <- bind_rows(dn01_prov, dn02_prov, dn03_prov, dn04_prov, dn05_prov, dn06_prov,
                      dn07_prov, dn08_prov, dn09_prov, dn10_prov, dn11_prov, dn12_prov,
-                     dn13_prov, dn14_prov, dn15_prov, dn16_prov, dn17_prov, dn18_prov)
+                     dn13_prov, dn14_prov, dn15_prov)
 save(dn_prov, file = "dn_prov.Rda")
