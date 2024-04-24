@@ -4,7 +4,7 @@ load("province_bmr_sum.Rda")
 dn_fn <- function(i) {
   i %>% 
     mutate(fworkers = ifelse(is.na(fworkers), 0, fworkers), 
-           workerratio = (nworkers-fworkers)/nworkers,
+           workerratio = (nworkers-fworkers)/fworkers,
            share_f = fworkers/nworkers,
            share_f = ifelse(fworkers < 1, 0, share_f),
            workerratio = ifelse(fworkers < 1, nworkers, workerratio), 
