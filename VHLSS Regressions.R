@@ -1,3 +1,15 @@
+vhlss <- c("vhlss02.Rda", "vhlss04.Rda", "vhlss06.Rda", "vhlss08.Rda", "vhlss10.Rda", "vhlss12.Rda")
+
+for (i in vhlss) {
+  load(i)
+}
+
+prov_vhlss <- c("prov02_vhlss.Rda", "prov04_vhlss.Rda", "prov06_vhlss.Rda", "prov08_vhlss.Rda", "prov10_vhlss.Rda", "prov12_vhlss.Rda")
+
+for (i in prov_vhlss) {
+  load(i)
+}
+
 ######################################
 # VHLSS REGRESSIONS - PROVINCE LEVEL #
 ######################################
@@ -83,50 +95,6 @@ vhlss_prov_coef_ns <- rbind(vhlss_prov_coef_n, vhlss_prov_coef_s)
 
 # Ratio of managers of HH businesses 
 
-vhlss_prov <- list(
-  feols(workerratio ~ log(tot_bmr_prov),
-        prov02_vhlss,
-        vcov = ~tinh02),
-  feols(workerratio ~ log(tot_bmr_prov),
-        prov04_vhlss,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        prov06_vhlss,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        prov10_vhlss,
-        vcov = ~tinh)
-)
-
-vhlss_prov_s <-  list(
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(prov02_vhlss, south == 1),
-        vcov = ~tinh02),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(prov04_vhlss, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(prov06_vhlss, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(prov10_vhlss, south == 1),
-        vcov = ~tinh)  
-)
-
-vhlss_prov_n <-  list(
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(prov02_vhlss, south == 0),
-        vcov = ~tinh02),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(prov04_vhlss, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(prov06_vhlss, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov),
-        subset(prov10_vhlss, south == 0),
-        vcov = ~tinh)  
-)
 
 ########################################
 # VHLSS REGRESSIONS - INDIVIDUAL LEVEL #
