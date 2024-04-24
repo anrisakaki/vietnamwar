@@ -8,12 +8,9 @@ library(lubridate)
 library(sjPlot)
 library(sfheaders)
 library(mgrs)
-library(mapview)
 library(broom)
 library(patchwork)
-library(stars)
-library(raster)
-library(terra)
+
 rm(list=ls())
 
 # VHLSS 
