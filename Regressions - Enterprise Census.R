@@ -1,8 +1,6 @@
-####################
-# Firm level - OLS #
-####################
-
-# All workers 
+################################
+# Firm level OLS - ALL WORKERS #
+################################
 
 dn_ols_prov <- (list(
   feols(tot_workerratio ~ log(tot_bmr_prov) | lhdn,
@@ -188,9 +186,11 @@ dn_ols_prov_coef_n$group <- "North"
 dn_ols_prov_coef_s$group <- "South"
 dn_ols_prov_coef_ns <- rbind(dn_ols_prov_coef_n, dn_ols_prov_coef_s)
 
-# Industry Fixed effects 
+###############################
+# Firm level FE - ALL WORKERS #
+###############################
 dn_indfe_prov <- (list(
-  feols(tot_workerratio ~ log(tot_bmr_prov) | nganh_kd + lhdn + namsxkd,
+  feols(tot_workerratio ~ log(tot_bmr_prov) | nganh_kd + lhdn,
         dn01,
         vcov = ~tinh),
   feols(tot_workerratio ~ log(tot_bmr_prov) | nganh_kd + lhdn,
@@ -373,67 +373,330 @@ dn_indfe_prov_coef_n$group <- "North"
 dn_indfe_prov_coef_s$group <- "South"
 dn_indfe_prov_coef_ns <- rbind(dn_indfe_prov_coef_n, dn_indfe_prov_coef_s)
 
-# Formal workers 
+##################################
+# Firm level FE - FORMAL WORKERS #
+##################################
 
-dn_ols_prov <- (list(
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+dn_formal_fe_prov <- (list(
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn01,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn02,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn03,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn04,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn05,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn06,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn07,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn08,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn09,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn10,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn11,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn12,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn13,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn14,
         vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
         dn15,
-        vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
-        dn16,
-        vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
-        dn17,
-        vcov = ~tinh),
-  feols(tot_workerratio ~ log(tot_bmr_prov),
-        dn18,
         vcov = ~tinh)))
 
-dn_ols_coef_prov<- lapply(dn_ols_prov, tidy)
-dn_ols_coef_prov <- do.call(rbind, dn_ols_coef_prov) %>% filter(term != "(Intercept)")
-dn_ols_coef_prov$year <- rep(seq(2001, 2018), each = nrow(dn_ols_coef_prov) / length(seq(2001, 2018)))
+dn_formal_fe_coef_prov<- lapply(dn_formal_fe_prov, tidy)
+dn_formal_fe_coef_prov <- do.call(rbind, dn_formal_fe_coef_prov) %>% filter(term != "(Intercept)")
+dn_formal_fe_coef_prov$year <- rep(seq(2001, 2015), each = nrow(dn_formal_fe_coef_prov) / length(seq(2001, 2015)))
+
+# By south 
+
+dn_formal_fe_prov_n <- (list(
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn01, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn02, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn03, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn04, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn05, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn06, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn07, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn08, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn09, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn10, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn11, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn12, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn13, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn14, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn15, south == 0),
+        vcov = ~tinh)))
+
+dn_formal_fe_prov_s <- (list(
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn01, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn02, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn03, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn04, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn05, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn06, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn07, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn08, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn09, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn10, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn11, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn12, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn13, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn14, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn + nganh_kd,
+        subset(dn15, south == 1),
+        vcov = ~tinh)))
+
+dn_formal_fe_prov_coef_n <- lapply(dn_formal_fe_prov_n, tidy)
+dn_formal_fe_prov_coef_s <- lapply(dn_formal_fe_prov_s, tidy)
+dn_formal_fe_prov_coef_n <- do.call(rbind, dn_formal_fe_prov_coef_n) %>% filter(term != "(Intercept)")
+dn_formal_fe_prov_coef_s <- do.call(rbind, dn_formal_fe_prov_coef_s) %>% filter(term != "(Intercept)")
+dn_formal_fe_prov_coef_n$year <- rep(seq(2001, 2015), each = nrow(dn_formal_fe_prov_coef_n) / length(seq(2001, 2015)))
+dn_formal_fe_prov_coef_s$year <- rep(seq(2001, 2015), each = nrow(dn_formal_fe_prov_coef_s) / length(seq(2001, 2015)))
+
+dn_formal_fe_prov_coef_n$group <- "North"
+dn_formal_fe_prov_coef_s$group <- "South"
+dn_formal_fe_prov_coef_ns <- rbind(dn_formal_fe_prov_coef_n, dn_formal_fe_prov_coef_s)
+
+###################################
+# Firm level OLS - FORMAL WORKERS #
+###################################
+
+dn_formal_ols_prov <- (list(
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn01,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn02,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn03,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn04,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn05,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn06,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn07,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn08,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn09,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn10,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn11,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn12,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn13,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn14,
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        dn15,
+        vcov = ~tinh)))
+
+dn_formal_ols_coef_prov<- lapply(dn_formal_ols_prov, tidy)
+dn_formal_ols_coef_prov <- do.call(rbind, dn_formal_ols_coef_prov) %>% filter(term != "(Intercept)")
+dn_formal_ols_coef_prov$year <- rep(seq(2001, 2015), each = nrow(dn_formal_ols_coef_prov) / length(seq(2001, 2015)))
+
+# By south 
+
+dn_formal_ols_prov_n <- (list(
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn01, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn02, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn03, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn04, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn05, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn06, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn07, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn08, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn09, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn10, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn11, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn12, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn13, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn14, south == 0),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn15, south == 0),
+        vcov = ~tinh)))
+
+dn_formal_ols_prov_s <- (list(
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn01, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn02, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn03, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn04, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn05, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn06, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn07, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn08, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn09, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn10, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn11, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn12, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn13, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn14, south == 1),
+        vcov = ~tinh),
+  feols(workerratio ~ log(tot_bmr_prov) | lhdn,
+        subset(dn15, south == 1),
+        vcov = ~tinh)))
+
+dn_formal_ols_prov_coef_n <- lapply(dn_formal_ols_prov_n, tidy)
+dn_formal_ols_prov_coef_s <- lapply(dn_formal_ols_prov_s, tidy)
+dn_formal_ols_prov_coef_n <- do.call(rbind, dn_formal_ols_prov_coef_n) %>% filter(term != "(Intercept)")
+dn_formal_ols_prov_coef_s <- do.call(rbind, dn_formal_ols_prov_coef_s) %>% filter(term != "(Intercept)")
+dn_formal_ols_prov_coef_n$year <- rep(seq(2001, 2015), each = nrow(dn_formal_ols_prov_coef_n) / length(seq(2001, 2015)))
+dn_formal_ols_prov_coef_s$year <- rep(seq(2001, 2015), each = nrow(dn_formal_ols_prov_coef_s) / length(seq(2001, 2015)))
+
+dn_formal_ols_prov_coef_n$group <- "North"
+dn_formal_ols_prov_coef_s$group <- "South"
+dn_formal_ols_prov_coef_ns <- rbind(dn_formal_ols_prov_coef_n, dn_formal_ols_prov_coef_s)
+
 
 #################
 # Province level#
