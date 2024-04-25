@@ -8,7 +8,9 @@ dn_fn <- function(i) {
            tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
            across(c(tinh, huyen, xa), as.numeric),
            workerratio = ifelse(nworkers == 0 | fworkers == 0, NA, workerratio),
-           tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio))
+           tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio)) %>% 
+    select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, nworkers, fworkers,
+           workerratio, tot_workerratio, share_f)
 }
 
 dn01 <- ec_list[[2]] %>% 
@@ -16,14 +18,10 @@ dn01 <- ec_list[[2]] %>%
          ldc21 = ifelse(is.na(ldc21), 0, ldc21),
          ldc22 = ifelse(is.na(ldc22), 0, ldc22),
          nworkers = ldc11 - ldc21,
-         fworkers = ldc12 - ldc22,
-         south = ifelse(tinh > 407, 1, 0)) %>% 
+         fworkers = ldc12 - ldc22) %>% 
   rename(tot_workers = ld13,
-         tot_fworkers = ld14,
-         namsxkd = namtl) %>% 
-  dn_fn() %>% 
-  select(tinh, ma_thue, namsxkd, nganh_kd, lhdn, tot_workers, tot_fworkers, nworkers, fworkers,
-         workerratio, tot_workerratio, share_f) %>% 
+         tot_fworkers = ld14) %>% 
+  dn_fn() %>%
   left_join(province_bmr_sum0002, by = "tinh") %>% 
   mutate( south = ifelse(tinh > 407, 1, 0)) 
 
@@ -32,11 +30,8 @@ dn02 <- ec_list[[3]] %>%
   rename(nworkers = ld33,
          fworkers = ld34,
          tot_workers = ld13,
-         tot_fworkers = ld14,
-         namsxkd = namkd) %>% 
+         tot_fworkers = ld14) %>% 
   dn_fn() %>% 
-  select(tinh, ma_thue, namsxkd, nganh_kd, lhdn, tot_workers, tot_fworkers, nworkers, fworkers,
-         workerratio, tot_workerratio, share_f) %>%
   left_join(province_bmr_sum0002, by = "tinh") %>% 
   mutate( south = ifelse(tinh > 407, 1, 0)) 
 
@@ -45,68 +40,44 @@ dn03 <- ec_list[[4]] %>%
   rename(nworkers = ld33,
          fworkers = ld34,
          tot_workers = ld13,
-         tot_fworkers = ld14,
-         pretax_profit = kqkd7) %>%  
+         tot_fworkers = ld14) %>%  
   dn_fn() %>% 
-  select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, nworkers, fworkers,
-         workerratio, tot_workerratio, share_f, pretax_profit) %>%
   left_join(province_bmr_sum, by = "tinh")
 
 dn04 <- ec_list[[5]] %>% 
-  mutate(tinh = ifelse(tinh == 28, 1, tinh),
-         export = ifelse(xk == 1, 1, 0),
-         export = ifelse(is.na(export), 0, export)) %>% 
+  mutate(tinh = ifelse(tinh == 28, 1, tinh)) %>% 
   rename(nworkers = ld33,
          fworkers = ld34,
          tot_workers = ld13,
-         tot_fworkers = ld14,
-         pretax_profit = kqkd8) %>% 
+         tot_fworkers = ld14,) %>% 
   dn_fn() %>% 
-  select(tinh, ma_thue, nganh_kd, lhdn, export, tot_workers, tot_fworkers, nworkers, fworkers,
-         workerratio, tot_workerratio, share_f, pretax_profit) %>%  
   left_join(province_bmr_sum0419, by = "tinh")
 
 dn05 <- ec_list[[6]] %>% 
-  mutate(tinh = ifelse(tinh == 28, 1, tinh),
-         export = ifelse(co_xnk == 1, 1, 0),
-         export = ifelse(is.na(export), 0, export)) %>% 
+  mutate(tinh = ifelse(tinh == 28, 1, tinh)) %>% 
   rename(nworkers = ld33,
          fworkers = ld34,
          tot_workers = ld13,
-         tot_fworkers = ld14,
-         namsxkd = nam_sxkd,
-         pretax_profit = kqkd8) %>% 
+         tot_fworkers = ld14) %>% 
   dn_fn() %>% 
-  select(tinh, ma_thue, nganh_kd, lhdn, namsxkd, export, tot_workers, tot_fworkers, nworkers, fworkers,
-         workerratio, tot_workerratio, share_f, pretax_profit) %>%  
   left_join(province_bmr_sum0419, by = "tinh")
 
 dn06 <- ec_list[[7]] %>% 
-  mutate(tinh = ifelse(tinh == 28, 1, tinh),
-         export = ifelse(co_xnk == 1, 1, 0),
-         export = ifelse(is.na(export), 0, export)) %>% 
+  mutate(tinh = ifelse(tinh == 28, 1, tinh)) %>% 
   rename(nworkers = ld23,
          fworkers = ld24,
          tot_workers = ld13,
-         tot_fworkers = ld14,
-         pretax_profit = kqkd8) %>% 
+         tot_fworkers = ld14) %>% 
   dn_fn() %>% 
-  select(tinh, ma_thue, nganh_kd, lhdn, export, tot_workers, tot_fworkers, nworkers, fworkers,
-         workerratio, tot_workerratio, share_f, pretax_profit) %>%  
   left_join(province_bmr_sum0419, by = "tinh")
 
 dn07 <- ec_list[[8]] %>% 
-  mutate(tinh = ifelse(tinh == 28, 1, tinh),
-         export = ifelse(co_xnk == 1, 1, 0),
-         export = ifelse(is.na(export), 0, export)) %>% 
+  mutate(tinh = ifelse(tinh == 28, 1, tinh)) %>% 
   rename(nworkers = ld23,
          fworkers = ld24,
          tot_workers = ld13,
-         tot_fworkers = ld14,
-         pretax_profit = kqkd9) %>% 
+         tot_fworkers = ld14) %>% 
   dn_fn() %>% 
-  select(tinh, ma_thue, nganh_kd, lhdn, namsxkd, export, tot_workers, tot_fworkers, nworkers, fworkers,
-         workerratio, tot_workerratio, share_f, pretax_profit) %>%  
   left_join(province_bmr_sum0419, by = "tinh")
 
 dn08 <- ec_list[[9]] %>% 
@@ -114,11 +85,8 @@ dn08 <- ec_list[[9]] %>%
   rename(nworkers = ld23,
          fworkers = ld24,
          tot_workers = ld13,
-         tot_fworkers = ld14,
-         pretax_profit = kqkd9) %>% 
+         tot_fworkers = ld14) %>% 
   dn_fn() %>% 
-  select(tinh, ma_thue, nganh_kd, lhdn, namsxkd, export, tot_workers, tot_fworkers, nworkers, fworkers,
-         workerratio, tot_workerratio, share_f, pretax_profit) %>% 
   left_join(province_bmr_sum0419, by = "tinh")
 
 dn09 <- ec_list[[10]] %>% 
