@@ -193,9 +193,7 @@ vhlss08 <- list(m123a_08, m4a_08) %>%
          selfemp = ifelse(m4ac1c == 1, 1, 0),
          selfagri = ifelse(m4ac1b == 1, 1, 0),
          work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
-         tinh = ifelse(tinh == 105, 101, tinh),
          m2ac1 = as.numeric(m2ac1),
-         tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
   rename(age = m1ac5,
@@ -233,6 +231,7 @@ vhlss10 <- list(m1a_10, m2a_10, m4a1_10, m4a2_10, m4a3_10, m4a4_10) %>%
          selfagri = ifelse(m4ac1b == 1, 1, 0),
          work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
          tinh = ifelse(tinh == 28, 1, tinh),
+         tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          m2ac1 = as.numeric(m2ac1)) %>% 
   rename(age = m1ac5,
          educ = m2ac1,
@@ -264,6 +263,7 @@ vhlss12 <- list(m1a_12, m2a1_12) %>%
          selfagri = ifelse(m4ac1b == 1, 1, 0),
          work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
          tinh = ifelse(tinh == 28, 1, tinh),
+         tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          m2ac1 = as.numeric(m2ac1)) %>% 
   rename(age = m1ac5,
          educ = m2ac1,
@@ -279,38 +279,9 @@ vhlss12 <- list(m1a_12, m2a1_12) %>%
   mutate(hhid = cur_group_id())  %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
-########
-# 2014 #
-########
-
-vhlss14 <- list(m1a_14, m2a_14, m4a_14) %>% 
-  reduce(full_join, by = ivid06) %>% 
-  mutate(female = ifelse(m1ac2 == 2, 1, 0),
-         married = ifelse(m1ac8 == 2, 1, 0),
-         hhhead = ifelse(m1ac3 == 1, 1, 0),
-         fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
-         wagework = ifelse(m4ac1a == 1, 1, 0),
-         work = ifelse(m4ac2 == 1, 1, 0),
-         selfemp = ifelse(m4ac1c == 1, 1, 0),
-         selfagri = ifelse(m4ac1b == 1, 1, 0),
-         work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
-         tinh = ifelse(tinh == 105, 101, tinh)) %>% 
-  rename(age = m1ac5,
-         educ = m2ac1,
-         industry = m4ac4,
-         days = m4ac6,
-         hours = m4ac7,
-         inc = m4ac11) %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, hhhead, fhead, female, age, educ, 
-         work, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
-  group_by(tinh, huyen, xa, diaban, hoso) %>% 
-  mutate(hhid = cur_group_id())  %>% 
-  left_join(province_bmr_sum2, by = "tinh")
-
 save(vhlss02, file = "vhlss02.Rda")
 save(vhlss04, file = "vhlss04.Rda")
 save(vhlss06, file = "vhlss06.Rda")
 save(vhlss08, file = "vhlss08.Rda")
 save(vhlss10, file = "vhlss10.Rda")
 save(vhlss12, file = "vhlss12.Rda")
-save(vhlss14, file = "vhlss14.Rda")
