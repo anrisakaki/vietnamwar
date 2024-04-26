@@ -36,7 +36,8 @@ vhlss02 <- list(m1_02, m2_02, m3_02) %>%
          inc = m5ac6 + m5ac7e,
          wartime = ifelse(m1c5 > 42 & m1c5 < 62, 1, 0),
          work = ifelse(work == 0 & m1c5 < 15 | work == 0 & m1c5 > 64, NA, work),
-         tinh02 = ifelse(tinh02 == 105, 101, tinh02)) %>% 
+         tinh02 = ifelse(tinh02 == 105, 101, tinh02),
+         tinh02 = ifelse(tinh02 == 303 | tinh02 == 302, 301, tinh02)) %>% 
   rename(age = m1c5,
          educ = m2c1,
          hours = m3c3,
@@ -97,7 +98,8 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
          formal = ifelse(m4ac10b == 1, 1, 0),
          wartime = ifelse(m1ac5 > 44 & m1ac5 < 64, 1, 0),
          work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
-         tinh = ifelse(tinh == 105, 101, tinh)) %>% 
+         tinh = ifelse(tinh == 105, 101, tinh),
+         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
   rename(age = m1ac5,
          educ = m2c1,
          industry = m4ac5,
@@ -145,7 +147,8 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
          formal = ifelse(m4ac10b == 1, 1, 0),
          wartime = ifelse(m1ac5 > 44 & m1ac5 < 64, 1, 0),
          work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
-         tinh = ifelse(tinh == 105, 101, tinh)) %>% 
+         tinh = ifelse(tinh == 105, 101, tinh),
+         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
   rename(age = m1ac5,
          educ = m2ac1,
          industry = m4ac5,
@@ -191,7 +194,10 @@ vhlss08 <- list(m123a_08, m4a_08) %>%
          selfagri = ifelse(m4ac1b == 1, 1, 0),
          work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
          tinh = ifelse(tinh == 105, 101, tinh),
-         m2ac1 = as.numeric(m2ac1)) %>% 
+         m2ac1 = as.numeric(m2ac1),
+         tinh = ifelse(tinh == 105, 101, tinh),
+         tinh = ifelse(tinh == 105, 101, tinh),
+         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
   rename(age = m1ac5,
          educ = m2ac1,
          industry = m4ac5,
