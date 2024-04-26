@@ -84,14 +84,6 @@ province_names <- province_bmr %>%
   distinct() %>% 
   filter(!is.na(varname_1))
 
-south <- left_join(province_names, south, by = "varname_1") %>% 
-  mutate(south_corrected = ifelse(varname_1 == "Dak Nong", 1, south_corrected),
-         south_corrected = ifelse(varname_1 == "Hau Giang", 1, south_corrected),
-         south_corrected = ifelse(varname_1 == "Dien Bien", 0, south_corrected)) %>% 
-  rename(south = south_corrected)
-
-province_bmr <- left_join(province_bmr, south, by = c("name_1", "varname_1"))
-
 province_bmr_sum <- province_bmr %>% 
   ungroup() %>% 
   filter(!is.na(varname_1)) %>% 
@@ -136,8 +128,49 @@ distance_info <- province_bmr_sf %>%
   select(varname_1, dist_nearest_base, dist_nearest_hochi)
 distance_info <- sf::st_drop_geometry(distance_info)
 
-province_bmr_sum <- left_join(province_bmr_sum, distance_info, by = "varname_1") %>% 
-  left_join(south, c("varname_1", "name_1"))
+prov_controls <- bombs_province_miguel %>%
+  select(province, provincename, area_sum, popdensity1960_n, popdensity1961, area_251_500m, area_501_1000m, area_over_1000m) %>% 
+  mutate(popdensity1961 = ifelse(province == "Quang Tri", popdensity1961 + popdensity1960_n, popdensity1961),
+         popdensity1961 = ifelse(province == "Thuathien-Hue", popdensity1961 + popdensity1960_n, popdensity1961),
+         ppn60 = popdensity1960_n*area_sum,
+         ppn60 = ifelse(is.na(ppn60), popdensity1961*area_sum, ppn60)) %>% 
+  mutate(varname_1 = recode(provincename,
+                       'Ba Ria' = 'Ba Ria - Vung Tau',
+                       'Da Nang (City)' = 'Da Nang',
+                       'Hai Phong (City)' = 'Hai Phong',
+                       'Ho Chi Minh (City)' = 'Ho Chi Minh',
+                       'Ha Noi (City)' = 'Ha Noi',
+                       'Thuathien-Hue' = 'Thua Thien Hue',
+                       .default = provincename)) %>% 
+  select(-c(province, provincename))
+
+province_bmr_sum <- list(province_bmr_sum, distance_info, prov_controls) %>% 
+  reduce(full_join, by = "varname_1")
+
+province_bmr_sum <- province_bmr_sum %>% 
+  filter(!is.na(tot_bmr)) %>% 
+  ungroup() %>% 
+  select(-varname_1) %>%
+  mutate(name_1 = recode(name_1,
+                         'Điện Biên' = 'Lai Châu',
+                         'Đắk Nông' = 'Đắk Lắk',
+                         'Hậu Giang' = 'Cần Thơ',
+                         .default = name_1)) %>% 
+  group_by(name_1) %>% 
+  mutate(ppn60 = ifelse(is.na(ppn60), 0, ppn60),
+         ppn60 = ifelse(name_1 == "Hồ Chí Minh", 1485295, ppn60)) %>% 
+  summarise(tot_bmr_prov = sum(tot_bmr),
+            tot_bmr_lb_prov = sum(tot_bmr_lb),
+            killed_tot_prov = sum(killed_tot),
+            dist_nearest_base_prov = min(dist_nearest_base),
+            dist_nearest_hochi_prov = min(dist_nearest_hochi),
+            ppn60 = max(ppn60),
+            area_251_500m = min(area_251_500m),
+            area_501_1000m = min(area_501_1000m),
+            area_over_1000m = min(area_over_1000m)) %>% 
+  mutate(tot_bmr_prov_ppn = tot_bmr_prov/ppn60,
+         tot_bmr_lb_prov_ppn = tot_bmr_lb_prov/ppn60,
+         killed_tot_prov_ppn = killed_tot_prov/ppn60)
 
 save(province_bmr_sum, file = "province_bmr_sum.Rda")
 
