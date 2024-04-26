@@ -28,14 +28,11 @@ prov02_vhlss <- vhlss02 %>%
     mwagework = sum(wt75 * (female == 0 & wagework == 1), na.rm = T),
     fwagework = sum(wt75 * (female == 1 & wagework == 1), na.rm = T)
   ) %>% 
-  left_join(province_bmr_sum, by = "tinh") %>% 
+  left_join(province_bmr_sum02, by = "tinh") %>% 
   prov_sum_fn () %>% 
   mutate(south = ifelse(tinh > 407, 1, 0))
 
 prov04_vhlss <- vhlss04 %>% 
-  mutate(tinh = ifelse(tinh == 302, 301, tinh),
-         tinh = ifelse(tinh == 606, 605, tinh),
-         tinh = ifelse(tinh == 816, 815, tinh)) %>% 
   filter(!is.na(female), age > 15 & age < 65) %>% 
   group_by(tinh) %>% 
   summarise(
@@ -53,9 +50,6 @@ prov04_vhlss <- vhlss04 %>%
   mutate(south = ifelse(tinh > 407, 1, 0))
 
 prov06_vhlss <- vhlss06 %>% 
-  mutate(tinh = ifelse(tinh == 302, 301, tinh),
-         tinh = ifelse(tinh == 606, 605, tinh),
-         tinh = ifelse(tinh == 816, 815, tinh)) %>% 
   filter(!is.na(female), age > 15 & age < 65) %>% 
   group_by(tinh) %>% 
   summarise(
@@ -73,9 +67,6 @@ prov06_vhlss <- vhlss06 %>%
   mutate(south = ifelse(tinh > 407, 1, 0))
 
 prov08_vhlss <- vhlss08 %>% 
-  mutate(tinh = ifelse(tinh == 302, 301, tinh),
-         tinh = ifelse(tinh == 606, 605, tinh),
-         tinh = ifelse(tinh == 816, 815, tinh)) %>% 
   filter(!is.na(female), age > 15 & age < 65) %>% 
   group_by(tinh) %>% 
   summarise(
@@ -93,9 +84,6 @@ prov08_vhlss <- vhlss08 %>%
   mutate(south = ifelse(tinh > 407, 1, 0))
 
 prov10_vhlss <- vhlss10 %>% 
-  mutate(tinh = ifelse(tinh == 67, 66, tinh),
-         tinh = ifelse(tinh == 11, 12, tinh),
-         tinh = ifelse(tinh == 93, 92, tinh)) %>% 
   filter(!is.na(female), age > 15 & age < 65) %>% 
   group_by(tinh) %>% 
   summarise(
@@ -113,9 +101,6 @@ prov10_vhlss <- vhlss10 %>%
   mutate(south = ifelse(tinh > 44, 1, 0))  
 
 prov12_vhlss <- vhlss12 %>% 
-  mutate(tinh = ifelse(tinh == 67, 66, tinh),
-         tinh = ifelse(tinh == 11, 12, tinh),
-         tinh = ifelse(tinh == 93, 92, tinh)) %>% 
   filter(!is.na(female), age > 15 & age < 65) %>% 
   group_by(tinh) %>% 
   summarise(
