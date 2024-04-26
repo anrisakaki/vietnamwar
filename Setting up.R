@@ -107,6 +107,8 @@ postwar_ppn <- read.csv("Male and Female Population 1976.csv")
 
 sexratios <- read.csv("E02.09.csv")
 
+ppn60 <- read.csv("ppn60.csv")
+
 # Bombing data 
 
 bombs_district <- read_dta(file = "Corrigendum_Impact-bombing-Vietnam_Code-Data_2023-07-24/data/clean/district_bombing_corrected.dta")
