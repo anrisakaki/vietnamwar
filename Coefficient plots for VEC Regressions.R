@@ -34,6 +34,7 @@ ggplot(dn_formal_ols_coef_prov, aes(x = factor(year), y = estimate, ymin = estim
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+ggsave("dn_formal_ols_coef_prov.jpeg", width = 7, height = 7)
 
 # By south 
 
@@ -69,6 +70,7 @@ ggplot(dn_formal_ols_prov_coef_ns, aes(x = factor(year), y = estimate, ymin = es
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+ggsave("dn_formal_ols_prov_coef_ns.jpeg", width = 7, height = 7)
 
 #################
 # FIXED EFFECTS #
@@ -106,6 +108,7 @@ ggplot(dn_formal_fe_coef_prov, aes(x = factor(year), y = estimate, ymin = estima
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+ggsave("dn_formal_fe_coef_prov.jpeg", width = 7, height = 7)
 
 # By South 
 
@@ -141,6 +144,7 @@ ggplot(dn_formal_fe_prov_coef_ns, aes(x = factor(year), y = estimate, ymin = est
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+ggsave("dn_formal_fe_prov_coef_ns.jpeg", width = 7, height = 7)
 
 #################
 # Province-level#
