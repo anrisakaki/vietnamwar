@@ -30,10 +30,9 @@ vhlss02 <- list(m1_02, m2_02, m3_02) %>%
          fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
          wagework = ifelse(m3c1a == 1, 1, 0),
          work = ifelse(m3c2 == 1, 1, 0),
-         selfemp = ifelse(m3c8 == 0, 1, 0),
          selfagri = ifelse(m3c1b == 1, 1, 0),
          selfagri = ifelse(selfagri == 0 & work == 0, NA, selfagri),
-         nonagri = ifelse(m3c1c == 1, 1, 0),
+         selfemp = ifelse(m3c1c == 1, 1, 0),
          inc = m5ac6 + m5ac7e,
          wartime = ifelse(m1c5 > 42 & m1c5 < 62, 1, 0),
          work = ifelse(work == 0 & m1c5 < 15 | work == 0 & m1c5 > 64, NA, work),
@@ -48,8 +47,9 @@ vhlss02 <- list(m1_02, m2_02, m3_02) %>%
   select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, qui, phieu, hhhead, fhead, female, age, wartime, educ, 
          work, wagework, selfemp, selfagri, industry, inc, hours, days, hhid) %>% 
   left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui")) %>% 
-  left_join(province_bmr_sum02, by = "tinh02") %>% 
-  mutate(south = ifelse(tinh02 > 407, 1, 0))
+  rename(tinh = tinh02) %>% 
+  left_join(province_bmr_sum, by = "tinh") %>% 
+  mutate(south = ifelse(tinh > 407, 1, 0))
 
 ########
 # 2004 # 
