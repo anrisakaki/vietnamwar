@@ -72,9 +72,10 @@ ggplot(vhlss_formal_prov_coef_ns, aes(x = factor(year), y = (estimate), ymin = (
         text = element_text(size=10)) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-###############################################
-# PROVINCE-LEVEL REGRESSIONS - FORMAL WORKERS #
-###############################################
+
+######################################################
+# PROVINCE-LEVEL REGRESSIONS - SELF EMPLOYED WORKERS #
+######################################################
 
 ggplot(vhlss_selfemp_prov_coef, aes(x = factor(year), y = estimate, ymin = estimate - std.error, ymax = estimate + std.error)) +
   geom_pointrange() +
