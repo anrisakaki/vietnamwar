@@ -11,7 +11,8 @@ dn_fn <- function(i) {
            tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
            across(c(tinh, huyen, xa), as.numeric),
            workerratio = ifelse(nworkers == 0 | fworkers == 0, NA, workerratio),
-           tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio)) %>% 
+           tot_workerratio = ifelse(tot_workers == 0, NA, tot_workerratio),
+           tot_workerratio = ifelse(tot_fworkers == 0, tot_workers, tot_workerratio)) %>% 
     select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, nworkers, fworkers,
            workerratio, tot_workerratio, share_f) %>% 
     left_join(sexratios, by = "tinh")
@@ -27,6 +28,8 @@ dn01 <- ec_list[[2]] %>%
   rename(tot_workers = ld13,
          tot_fworkers = ld14) %>% 
   dn_fn() %>%
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   left_join(province_bmr_sum02, by = "tinh") %>%
   mutate(south = ifelse(tinh > 407, 1, 0)) %>% 
   left_join(sexratio01, by = "tinh")
@@ -39,6 +42,8 @@ dn02 <- ec_list[[3]] %>%
          tot_workers = ld13,
          tot_fworkers = ld14) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   left_join(province_bmr_sum02, by = "tinh") %>% 
   mutate(south = ifelse(tinh > 407, 1, 0)) %>% 
   left_join(sexratio01, by = "tinh")
@@ -51,6 +56,8 @@ dn03 <- ec_list[[4]] %>%
          tot_workers = ld13,
          tot_fworkers = ld14) %>%  
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 407, 1, 0)) %>% 
   left_join(province_bmr_sum02, by = "tinh") %>% 
   left_join(sexratio03, by = "tinh")
@@ -63,6 +70,8 @@ dn04 <- ec_list[[5]] %>%
          tot_workers = ld13,
          tot_fworkers = ld14,) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -74,6 +83,8 @@ dn05 <- ec_list[[6]] %>%
          tot_workers = ld13,
          tot_fworkers = ld14) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -85,6 +96,8 @@ dn06 <- ec_list[[7]] %>%
          tot_workers = ld13,
          tot_fworkers = ld14) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -96,6 +109,8 @@ dn07 <- ec_list[[8]] %>%
          tot_workers = ld13,
          tot_fworkers = ld14) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -107,6 +122,8 @@ dn08 <- ec_list[[9]] %>%
          tot_workers = ld13,
          tot_fworkers = ld14) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -118,6 +135,8 @@ dn09 <- ec_list[[10]] %>%
          tot_workers = ld13,
          tot_fworkers = ld14) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -129,6 +148,8 @@ dn10 <- ec_list[[11]] %>%
          tot_workers = ld13,
          tot_fworkers = ld14) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -140,6 +161,8 @@ dn11 <- ec_list[[12]] %>%
          tot_workers = ld11,
          tot_fworkers = ld12) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -151,6 +174,8 @@ dn12 <- ec_list[[13]] %>%
          tot_workers = ld11,
          tot_fworkers = ld12) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -162,6 +187,8 @@ dn13 <- ec_list[[14]] %>%
          tot_workers = ld11,
          tot_fworkers = ld12) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -173,6 +200,8 @@ dn14 <- ec_list[[15]] %>%
          tot_workers = ld11,
          tot_fworkers = ld12) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -184,6 +213,8 @@ dn15 <- ec_list[[16]] %>%
          tot_workers = ld11,
          tot_fworkers = ld12) %>% 
   dn_fn() %>% 
+  mutate(formal_f = tot_fworkers/tot_workers,
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -193,9 +224,12 @@ dn16 <- ec_list[[17]] %>%
   rename(tot_workers = ld11,
          tot_fworkers = ld21) %>% 
   mutate(tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
+         share_f = tot_fworkers/tot_workers,
+         share_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, share_f),
          across(c(tinh, huyen, xa), as.numeric),
-         tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio)) %>% 
-  select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, tot_workerratio) %>% 
+         tot_workerratio = ifelse(tot_workers == 0, NA, tot_workerratio),
+         tot_workerratio = ifelse(tot_fworkers == 0, tot_workers, tot_workerratio)) %>% 
+  select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(sexratios, by = "tinh")
@@ -207,8 +241,11 @@ dn17 <- ec_list[[18]] %>%
          tot_fworkers = ld21) %>% 
   mutate(tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
          across(c(tinh, huyen, xa), as.numeric),
-         tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio)) %>% 
-  select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, tot_workerratio) %>% 
+         share_f = tot_fworkers/tot_workers,
+         share_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, share_f),
+         ttot_workerratio = ifelse(tot_workers == 0, NA, tot_workerratio),
+         tot_workerratio = ifelse(tot_fworkers == 0, tot_workers, tot_workerratio)) %>% 
+  select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>%
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(sexratios, by = "tinh")
@@ -220,8 +257,11 @@ dn18 <- ec_list[[19]] %>%
          tot_fworkers = ld21) %>% 
   mutate(tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
          across(c(tinh, huyen, xa), as.numeric),
-         tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio)) %>% 
-  select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, tot_workerratio) %>% 
+         tot_workerratio = ifelse(tot_workers == 0, NA, tot_workerratio),
+         tot_workerratio = ifelse(tot_fworkers == 0, tot_workers, tot_workerratio),
+         share_f = tot_fworkers/tot_workers,
+         share_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, share_f)) %>% 
+  select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(sexratios, by = "tinh")
