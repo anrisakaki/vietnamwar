@@ -235,7 +235,7 @@ vhlss_selfemp_prov_n <-  list(
   feols(selfemp_workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov10_vhlss, south == 0),
         vcov = ~tinh),
-  feols(wagework_workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(selfemp_workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov12_vhlss, south == 0),
         vcov = ~tinh)
 )
