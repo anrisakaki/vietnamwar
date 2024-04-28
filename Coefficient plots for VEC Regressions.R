@@ -159,7 +159,7 @@ ggplot(dn_formal_fe_prov_coef, aes(x = factor(year), y = estimate, ymin = estima
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-ggsave("dn_formal_fe_coef_prov.jpeg", width = 7, height = 7)
+ggsave("dn_formal_fe_prov_coef.jpeg", width = 7, height = 7)
 
 ggplot(dn_workerratio_coef_prov_cas, aes(x = factor(year), y = estimate, ymin = estimate - std.error, ymax = estimate + std.error)) +
   geom_pointrange() +
@@ -212,7 +212,7 @@ ggplot(dn_formal_fe_coef_prov_ns, aes(x = factor(year), y = estimate, ymin = est
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-ggsave("dn_formal_fe_prov_coef_ns.jpeg", width = 7, height = 7)
+ggsave("dn_formal_fe_coef_prov_ns.jpeg", width = 7, height = 7)
 
 #################
 # Province-level#
