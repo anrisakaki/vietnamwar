@@ -11,6 +11,9 @@ prov_sum_fn <- function (i) {
       workerratio = m_workers / f_workers,
       selfemp_workerratio = mself_emp / fself_emp,
       flfp = f_workers / f_total,
+      fshare_wagework = fwagework / f_total,
+      fshare_selfemp = fself_emp / f_total,
+      fshare_agri = fagri_work / f_total,
       wagework_workerratio = mwagework/fwagework
     )
   }
@@ -26,7 +29,8 @@ prov02_vhlss <- vhlss02 %>%
     fself_emp = sum(wt75 * (female == 1 & selfemp == 1), na.rm = T),
     mself_emp = sum(wt75 * (female == 0 & selfemp == 1), na.rm = T),
     mwagework = sum(wt75 * (female == 0 & wagework == 1), na.rm = T),
-    fwagework = sum(wt75 * (female == 1 & wagework == 1), na.rm = T)
+    fwagework = sum(wt75 * (female == 1 & wagework == 1), na.rm = T),
+    fagri_work = sum(wt75 * (female == 1 & selfagri == 1), na.rm = T)
   ) %>% 
   left_join(province_bmr_sum02, by = "tinh") %>% 
   prov_sum_fn () %>% 
@@ -43,7 +47,8 @@ prov04_vhlss <- vhlss04 %>%
     fself_emp = sum(wt45 * (female == 1 & selfemp == 1), na.rm = T),
     mself_emp = sum(wt45 * (female == 0 & selfemp == 1), na.rm = T),
     mwagework = sum(wt45 * (female == 0 & wagework == 1), na.rm = T),
-    fwagework = sum(wt45 * (female == 1 & wagework == 1), na.rm = T)
+    fwagework = sum(wt45 * (female == 1 & wagework == 1), na.rm = T),
+    fagri_work = sum(wt45 * (female == 1 & selfagri == 1), na.rm = T)
   ) %>% 
   prov_sum_fn () %>% 
   left_join(province_bmr_sum, by = "tinh") %>% 
@@ -60,7 +65,8 @@ prov06_vhlss <- vhlss06 %>%
     fself_emp = sum(wt45 * (female == 1 & selfemp == 1), na.rm = T),
     mself_emp = sum(wt45 * (female == 0 & selfemp == 1), na.rm = T),
     mwagework = sum(wt45 * (female == 0 & wagework == 1), na.rm = T),
-    fwagework = sum(wt45 * (female == 1 & wagework == 1), na.rm = T)
+    fwagework = sum(wt45 * (female == 1 & wagework == 1), na.rm = T),
+    fagri_work = sum(wt45 * (female == 1 & selfagri == 1), na.rm = T)
   ) %>% 
   left_join(province_bmr_sum, by = "tinh") %>% 
   prov_sum_fn () %>% 
@@ -77,7 +83,8 @@ prov08_vhlss <- vhlss08 %>%
     fself_emp = sum(wt9 * (female == 1 & selfemp == 1), na.rm = T),
     mself_emp = sum(wt9 * (female == 0 & selfemp == 1), na.rm = T),
     mwagework = sum(wt9 * (female == 0 & wagework == 1), na.rm = T),
-    fwagework = sum(wt9 * (female == 1 & wagework == 1), na.rm = T)
+    fwagework = sum(wt9 * (female == 1 & wagework == 1), na.rm = T),
+    fagri_work = sum(wt9 * (female == 1 & selfagri == 1), na.rm = T)
   ) %>% 
   left_join(province_bmr_sum, by = "tinh") %>% 
   prov_sum_fn() %>% 
@@ -94,7 +101,8 @@ prov10_vhlss <- vhlss10 %>%
     f_workers = sum(wt9 * (female == 1 & work == 1), na.rm = T),
     mself_emp = sum(wt9 * (female == 0 & selfemp == 1), na.rm = T),
     mwagework = sum(wt9 * (female == 0 & wagework == 1), na.rm = T),
-    fwagework = sum(wt9 * (female == 1 & wagework == 1), na.rm = T)
+    fwagework = sum(wt9 * (female == 1 & wagework == 1), na.rm = T),
+    fagri_work = sum(wt9 * (female == 1 & selfagri == 1), na.rm = T)
   ) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   prov_sum_fn() %>% 
@@ -111,7 +119,8 @@ prov12_vhlss <- vhlss12 %>%
     f_workers = sum(wt9 * (female == 1 & work == 1), na.rm = T),
     mself_emp = sum(wt9 * (female == 0 & selfemp == 1), na.rm = T),
     mwagework = sum(wt9 * (female == 0 & wagework == 1), na.rm = T),
-    fwagework = sum(wt9 * (female == 1 & wagework == 1), na.rm = T)
+    fwagework = sum(wt9 * (female == 1 & wagework == 1), na.rm = T),
+    fagri_work = sum(wt9 * (female == 1 & selfagri == 1), na.rm = T)
   ) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   prov_sum_fn() %>% 
