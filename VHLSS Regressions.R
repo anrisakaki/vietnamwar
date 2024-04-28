@@ -14,24 +14,25 @@ for (i in prov_vhlss) {
 # VHLSS REGRESSIONS - PROVINCE LEVEL #
 ######################################
 
-# Ratio of workers 
+# share of women employed in agriculture 
+
 vhlss_prov <- list(
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         prov02_vhlss,
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         prov04_vhlss,
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         prov06_vhlss,
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         prov08_vhlss,
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         prov10_vhlss,
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         prov12_vhlss,
         vcov = ~tinh)
 )
@@ -41,43 +42,43 @@ vhlss_prov_coef <- do.call(rbind, vhlss_prov_coef) %>% filter(term == "log(tot_b
 vhlss_prov_coef$year <- rep(seq(2001, 2011, by = 2), length.out = nrow(vhlss_prov_coef))
 
 vhlss_prov_s <-  list(
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov02_vhlss, south == 1),
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov04_vhlss, south == 1),
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov06_vhlss, south == 1),
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov08_vhlss, south == 1),
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov10_vhlss, south == 1),
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov12_vhlss, south == 1),
         vcov = ~tinh)
 )
 
 vhlss_prov_n <-  list(
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov02_vhlss, south == 0),
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov04_vhlss, south == 0),
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov06_vhlss, south == 0),
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov08_vhlss, south == 0),
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov10_vhlss, south == 0),
         vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + dist_nearest_base_prov + dist_nearest_hochi_prov,
+  feols(flfp ~ log(tot_bmr_prov_ppn) + dist_nearest_base_prov + dist_nearest_hochi_prov,
         subset(prov12_vhlss, south == 0),
         vcov = ~tinh)
 )
@@ -254,74 +255,160 @@ vhlss_selfemp_prov_coef_ns <- rbind(vhlss_selfemp_prov_coef_n, vhlss_selfemp_pro
 # VHLSS REGRESSIONS - INDIVIDUAL LEVEL #
 ########################################
 
-# Probability of working 
+# Probability of self agriculture 
 
-etable(list(
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss02),
+iplot(list(
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss02, work == 1),
         weights = ~wt75,
         vcov = ~tinh),
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss04),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss04, work == 1),
         weights = ~wt45,
         vcov = ~tinh),
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss06),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss06, work == 1),
         weights = ~wt45,
         vcov = ~tinh),
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss10),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10, work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12, work == 1),
+        weights = ~wt9,
+        vcov = ~tinh)  
+), main = "")
+
+iplot(list(
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss02, south == 1 & work == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss04, south == 1 & work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss06, south == 1 & work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss08, south == 1 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10, south == 1 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12, south == 1 & work == 1),
         weights = ~wt9,
         vcov = ~tinh)
 ))
 
-etable(list(
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss02, south == 1),
+iplot(list(
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss02, south == 0 & work == 1),
         weights = ~wt75,
         vcov = ~tinh),
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss04, south == 1),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ  + as.factor(urban),
+        subset(vhlss04, south == 0 & work == 1),
         weights = ~wt45,
         vcov = ~tinh),
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss06, south == 1),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss06, south == 0 & work == 1),
         weights = ~wt45,
-        vcov = ~tinh)  
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss08, south == 0 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10, south == 0 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12, south == 0 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh)
 ))
 
-etable(list(
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss02, south == 0),
-        weights = ~wt75,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss04, south == 0),
-        weights = ~wt45,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
-        subset(vhlss06, south == 0),
-        weights = ~wt45,
-        vcov = ~tinh)  
-))
+# Probability of working 
 
-# Probability of being a manager of HH business 
-
-etable(list(
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
         subset(vhlss02),
         weights = ~wt75,
         vcov = ~tinh),
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
         subset(vhlss04),
         weights = ~wt45,
         vcov = ~tinh),
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
         subset(vhlss06),
         weights = ~wt45,
         vcov = ~tinh),
-  feols(work ~ as.factor(female)/log(tot_bmr_prov) + age + age^2 + educ,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
         subset(vhlss10),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12),
+        weights = ~wt9,
+        vcov = ~tinh)  
+))
+
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss02, south == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss04, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss06, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss08, south == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10, south == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12, south == 1),
+        weights = ~wt9,
+        vcov = ~tinh)
+))
+
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss02, south == 0),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss04, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss06, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss08, south == 0),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10, south == 0),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12, south == 0),
         weights = ~wt9,
         vcov = ~tinh)
 ))
