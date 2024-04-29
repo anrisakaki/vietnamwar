@@ -255,87 +255,9 @@ vhlss_selfemp_prov_coef_ns <- rbind(vhlss_selfemp_prov_coef_n, vhlss_selfemp_pro
 # VHLSS REGRESSIONS - INDIVIDUAL LEVEL #
 ########################################
 
-# Probability of self agriculture 
-
-iplot(list(
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
-        subset(vhlss02, work == 1),
-        weights = ~wt75,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
-        subset(vhlss04, work == 1),
-        weights = ~wt45,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
-        subset(vhlss06, work == 1),
-        weights = ~wt45,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
-        subset(vhlss10, work == 1),
-        weights = ~wt9,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
-        subset(vhlss12, work == 1),
-        weights = ~wt9,
-        vcov = ~tinh)  
-), main = "")
-
-iplot(list(
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
-        subset(vhlss02, south == 1 & work == 1),
-        weights = ~wt75,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
-        subset(vhlss04, south == 1 & work == 1),
-        weights = ~wt45,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
-        subset(vhlss06, south == 1 & work == 1),
-        weights = ~wt45,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
-        subset(vhlss08, south == 1 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
-        subset(vhlss10, south == 1 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
-        subset(vhlss12, south == 1 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh)
-))
-
-iplot(list(
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
-        subset(vhlss02, south == 0 & work == 1),
-        weights = ~wt75,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ  + as.factor(urban),
-        subset(vhlss04, south == 0 & work == 1),
-        weights = ~wt45,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
-        subset(vhlss06, south == 0 & work == 1),
-        weights = ~wt45,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
-        subset(vhlss08, south == 0 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
-        subset(vhlss10, south == 0 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh),
-  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
-        subset(vhlss12, south == 0 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh)
-))
-
 # Probability of working 
 
+png("work_vhlss.png")
 iplot(list(
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
         subset(vhlss02),
@@ -350,6 +272,10 @@ iplot(list(
         weights = ~wt45,
         vcov = ~tinh),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss08),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
         subset(vhlss10),
         weights = ~wt9,
         vcov = ~tinh),
@@ -358,7 +284,38 @@ iplot(list(
         weights = ~wt9,
         vcov = ~tinh)  
 ))
+legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
+dev.off()
 
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss02),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss04),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss06),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss08),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12),
+        weights = ~wt9,
+        vcov = ~tinh)  
+))
+
+png("work_vhlss_s.png")
 iplot(list(
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
         subset(vhlss02, south == 1),
@@ -385,7 +342,11 @@ iplot(list(
         weights = ~wt9,
         vcov = ~tinh)
 ))
+legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
+dev.off()
 
+png("work_vhlss_n.png")
 iplot(list(
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
         subset(vhlss02, south == 0),
@@ -409,6 +370,178 @@ iplot(list(
         vcov = ~tinh),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
         subset(vhlss12, south == 0),
+        weights = ~wt9,
+        vcov = ~tinh)
+))
+legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
+dev.off()
+
+
+# Probability of self agriculture 
+
+iplot(list(
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss02, work == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss04, work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss06, work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10, work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12, work == 1),
+        weights = ~wt9,
+        vcov = ~tinh)  
+), main = "")
+legend("bottomleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
+
+png("selfagri_vhlss_s.png")
+iplot(list(
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss02, south == 1 & work == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss04, south == 1 & work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss06, south == 1 & work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss08, south == 1 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10, south == 1 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12, south == 1 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh)
+))
+legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
+dev.off()
+
+png("selfagri_vhlss_n.png")
+iplot(list(
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss02, south == 0 & work == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ  + as.factor(urban),
+        subset(vhlss04, south == 0 & work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss06, south == 0 & work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss08, south == 0 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10, south == 0 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(selfagri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12, south == 0 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh)
+))
+legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
+dev.off()
+
+# Probability of manufacturing  
+
+iplot(list(
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss02, work == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss04, work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss06, work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10, work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12, work == 1),
+        weights = ~wt9,
+        vcov = ~tinh)  
+), main = "")
+
+iplot(list(
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss02, south == 1 & work == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss04, south == 1 & work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss06, south == 1 & work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss08, south == 1 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10, south == 1 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12, south == 1 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh)
+))
+
+iplot(list(
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss02, south == 0 & work == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ  + as.factor(urban),
+        subset(vhlss04, south == 0 & work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + as.factor(urban),
+        subset(vhlss06, south == 0 & work == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss08, south == 0 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss10, south == 0 & work == 1),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ,
+        subset(vhlss12, south == 0 & work == 1),
         weights = ~wt9,
         vcov = ~tinh)
 ))
