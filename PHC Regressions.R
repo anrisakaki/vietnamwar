@@ -16,15 +16,15 @@ setFixest_coefplot(dict = dict, grid = F, zero.par = list( type="dotted", lty=2)
 
 png("work_phc.png")
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov | regnvn,
         phc89,
         weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov | regnvn,
         phc99,
         weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov | regnvn,
         phc09,
         weights = ~perwt,
         vcov = ~geo1_vn2009)))
@@ -34,15 +34,15 @@ dev.off()
 
 png("work_phc_n.png")
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov | regnvn,
         subset(phc89, south == 0),
         weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov | regnvn,
         subset(phc99, south == 0),
         weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov | regnvn,
         subset(phc09, south == 0),
         weights = ~perwt,
         vcov = ~geo1_vn2009)))
@@ -52,15 +52,15 @@ dev.off()
 
 png("work_phc_s.png")
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov | regnvn,
         subset(phc89, south == 1),
         weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov | regnvn,
         subset(phc99, south == 1),
         weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov | regnvn,
         subset(phc09, south == 1),
         weights = ~perwt,
         vcov = ~geo1_vn2009)))
