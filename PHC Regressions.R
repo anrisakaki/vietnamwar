@@ -4,300 +4,178 @@ for (i in phc) {
   load(i)
 }
 
+dict = c("as.factor(female)" = "Female")
 
-# PHC Regressions 
+setFixest_coefplot(dict = dict, grid = F, zero.par = list( type="dotted", lty=2), main = "")
 
-## Individual-level regressions 
+################################
+# Individual-level regressions #
+################################
 
-etable(list(
-  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+# Probability of working 
+
+png("work_phc.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
         phc89,
+        weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
         phc99,
+        weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
         phc09,
-        vcov = ~geo1_vn2009)
-), tex = T)
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
 
-etable(list(
-  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+png("work_phc_n.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
         subset(phc89, south == 0),
+        weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
         subset(phc99, south == 0),
+        weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
         subset(phc09, south == 0),
-        vcov = ~geo1_vn2009),
-  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
+
+png("work_phc_s.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
         subset(phc89, south == 1),
+        weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
         subset(phc99, south == 1),
+        weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(work ~ as.factor(female)/log(tot_bomb) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
         subset(phc09, south == 1),
-        vcov = ~geo1_vn2009)
-), tex = T)
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("topleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
 
-etable(list(
-  feols(work ~ as.factor(female)/log(tot_killed) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
-        phc89,
-        vcov = ~geo1_vn1989),
-  feols(work ~ as.factor(female)/log(tot_killed) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
-        phc99,
-        vcov = ~geo1_vn1999),
-  feols(work ~ as.factor(female)/log(tot_killed) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
-        phc09,
-        vcov = ~geo1_vn2009)
-), tex = T)
+# Probability of working in agriculture 
 
-## Occupation 
+png("agri_phc.png")
+iplot(list(
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc89, work == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc99, work == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
+        subset(phc09, work == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
 
-occisco_prov_sum <- left_join(occisco_prov_sum, regvn, by = c("geo1_vn1999"))
+png("agri_phc_n.png")
+iplot(list(
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc89, work == 1 & south == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc99, work == 1 & south == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
+        subset(phc09, work == 1 & south == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
 
-etable(list(
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Legislators, senior officials & managers"),
+png("agri_phc_s.png")
+iplot(list(
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc89, work == 1 & south == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc99, work == 1 & south == 1),
+        weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Professionals"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Technicians & associate professionals"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Clerks"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Service workers"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Skilled agricultural & fishery workers"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Crafts & related trades workers"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Plant & machine operators"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Elementary occupations"),
-        vcov = ~geo1_vn1999)
-), tex = T)
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
+        subset(phc09, work == 1 & south == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
 
-etable(list(
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Legislators, senior officials & managers" & south == 0),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Professionals" & south == 0),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Technicians & associate professionals" & south == 0),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Clerks" & south == 0),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Service workers" & south == 0),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Skilled agricultural & fishery workers" & south == 0),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Crafts & related trades workers" & south == 0),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Plant & machine operators" & south == 0),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Elementary occupations" & south == 0),
-        vcov = ~geo1_vn1999)
-), tex = T)
+# Probability of working in manufacturing 
 
-etable(list(
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Legislators, senior officials & managers" & south == 1),
+png("manu_phc.png")
+iplot(list(
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc89, work == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc99, work == 1),
+        weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Professionals" & south == 1),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Technicians & associate professionals" & south == 1),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Clerks" & south == 1),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Service workers" & south == 1),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Skilled agricultural & fishery workers" & south == 1),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Crafts & related trades workers" & south == 1),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Plant & machine operators" & south == 1),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Elementary occupations" & south == 1),
-        vcov = ~geo1_vn1999)
-), tex = T)
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
+        subset(phc09, work == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
 
-etable(list(
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Legislators, senior officials & managers"),
+png("manu_phc_n.png")
+iplot(list(
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc89, work == 1 & south == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc99, work == 1 & south == 0),
+        weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Professionals"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Technicians & associate professionals"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Clerks"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Service workers"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Skilled agricultural & fishery workers"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Crafts & related trades workers"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Plant & machine operators"),
-        vcov = ~geo1_vn1999),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(occisco_prov_sum, Occupation == "Elementary occupations"),
-        vcov = ~geo1_vn1999)
-), tex = T)
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
+        subset(phc09, work == 1 & south == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
 
-## Industry 
-
-indgen_prov_sum <- merge(indgen_prov_sum, regvn, by = "geo1_vn1989")
-
-etable(list(
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Agriculture"),
+png("manu_phc_s.png")
+iplot(list(
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc89, work == 1 & south == 1),
+        weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Manufacturing"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Construction"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Business services and real estate"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Education"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Wholesale and retail trade"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Hotels and restaurants"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Transportation"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Financial services and insurance"),
-        vcov = ~geo1_vn1989)
-), tex = T)
-
-etable(list(
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Agriculture" & south == 0),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Manufacturing" & south == 0),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Construction" & south == 0),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Business services and real estate" & south == 0),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Education" & south == 0),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Wholesale and retail trade" & south == 0),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Hotels and restaurants" & south == 0),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Transportation" & south == 0),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Financial services and insurance" & south == 0),
-        vcov = ~geo1_vn1989)
-), tex = T)
-
-etable(list(
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Agriculture" & south == 1),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Manufacturing" & south == 1),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Construction" & south == 1),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Business services and real estate" & south == 1),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Education" & south == 1),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Wholesale and retail trade" & south == 1),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Hotels and restaurants" & south == 1),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Transportation" & south == 1),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_bomb) | regnvn,
-        subset(indgen_prov_sum, Industry == "Financial services and insurance" & south == 1),
-        vcov = ~geo1_vn1989)
-), tex = T)
-
-etable(list(
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(indgen_prov_sum, Industry == "Agriculture"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(indgen_prov_sum, Industry == "Manufacturing"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(indgen_prov_sum, Industry == "Construction"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(indgen_prov_sum, Industry == "Business services and real estate"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(indgen_prov_sum, Industry == "Education"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(indgen_prov_sum, Industry == "Wholesale and retail trade"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(indgen_prov_sum, Industry == "Hotels and restaurants"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(indgen_prov_sum, Industry == "Transportation"),
-        vcov = ~geo1_vn1989),
-  feols(workerratio ~ log(tot_killed) | regnvn,
-        subset(indgen_prov_sum, Industry == "Financial services and insurance"),
-        vcov = ~geo1_vn1989)
-), tex = T)
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2 | regnvn,
+        subset(phc99, work == 1 & south == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + married + as.factor(minority) + age + age^2| regnvn,
+        subset(phc09, work == 1 & south == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
