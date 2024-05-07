@@ -22,7 +22,7 @@ ggsave("vhlss_prov_coef.jpeg", width = 7, height = 7)
 ggplot(vhlss_prov_coef_ns, aes(x = factor(year), y = (estimate), ymin = ((estimate - std.error)), ymax = ((estimate + std.error)), color = group)) +
   geom_pointrange() +
   geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
-  labs(x = "Year", y = "Estimate and 95% Interval", color = "Region") +
+  labs(x = "Age in 2001", y = "Estimate and 95% Interval", color = "Region") +
   ggtitle("") +
   theme_minimal() +
   guides(fill = "none") +  
