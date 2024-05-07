@@ -1,12 +1,16 @@
 load("district_bmr_sum.Rda")
 load("province_bmr_sum.Rda")
+load("province_bmr_sum02.Rda")
+load("prov02_vhlss.Rda")
+load("prov04_vhlss.Rda")
 
-sexratio01 <- prov02_vhlss %>% select(tinh02, sex_ratio) %>% rename(tinh = tinh02)
+sexratio01 <- prov02_vhlss %>% select(tinh, sex_ratio)
 sexratio03 <- prov04_vhlss %>% select(tinh, sex_ratio)
 
 dn_fn <- function(i) {
   i %>% 
-    mutate(workerratio = (nworkers-fworkers)/fworkers,
+    mutate(nganh_kd = as.numeric(substr(nganh_kd, 1, 4)),
+           workerratio = (nworkers-fworkers)/fworkers,
            share_f = fworkers/nworkers,
            tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
            across(c(tinh, huyen, xa), as.numeric),
@@ -31,7 +35,9 @@ dn01 <- ec_list[[2]] %>%
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   left_join(province_bmr_sum02, by = "tinh") %>%
-  mutate(south = ifelse(tinh > 407, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 407, 1, 0),
+         manu = ifelse(nganh_kd > 1429 & nganh_kd < 4010, 1, 0),
+         year = 2001) %>% 
   left_join(sexratio01, by = "tinh")
 
 dn02 <- ec_list[[3]] %>% 
@@ -45,7 +51,9 @@ dn02 <- ec_list[[3]] %>%
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
   left_join(province_bmr_sum02, by = "tinh") %>% 
-  mutate(south = ifelse(tinh > 407, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 407, 1, 0),
+         manu = ifelse(nganh_kd > 1429 & nganh_kd < 4010, 1, 0),
+         year = 2002) %>% 
   left_join(sexratio01, by = "tinh")
 
 dn03 <- ec_list[[4]] %>% 
@@ -58,7 +66,9 @@ dn03 <- ec_list[[4]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 407, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 407, 1, 0),
+         manu = ifelse(nganh_kd > 1429 & nganh_kd < 4010, 1, 0),
+         year = 2003) %>% 
   left_join(province_bmr_sum02, by = "tinh") %>% 
   left_join(sexratio03, by = "tinh")
 
@@ -72,7 +82,9 @@ dn04 <- ec_list[[5]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 1429 & nganh_kd < 4010, 1, 0),
+         year = 2004) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn05 <- ec_list[[6]] %>% 
@@ -85,7 +97,9 @@ dn05 <- ec_list[[6]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 1429 & nganh_kd < 4010, 1, 0),
+         year = 2005) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn06 <- ec_list[[7]] %>% 
@@ -98,7 +112,9 @@ dn06 <- ec_list[[7]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 1429 & nganh_kd < 4010, 1, 0),
+         year = 2006) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn07 <- ec_list[[8]] %>% 
@@ -111,7 +127,9 @@ dn07 <- ec_list[[8]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 1429 & nganh_kd < 4010, 1, 0),
+         yuear = 2007) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn08 <- ec_list[[9]] %>% 
@@ -123,7 +141,9 @@ dn08 <- ec_list[[9]] %>%
          tot_fworkers = ld14) %>% 
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
-         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
+         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
+         manu = ifelse(nganh_kd > 323 & nganh_kd < 4100, 1, 0),
+         year = 2008) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -137,7 +157,9 @@ dn09 <- ec_list[[10]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 323 & nganh_kd < 4100, 1, 0),
+         year = 2009) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn10 <- ec_list[[11]] %>% 
@@ -150,7 +172,9 @@ dn10 <- ec_list[[11]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 323 & nganh_kd < 4100, 1, 0),
+         year = 2010) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn11 <- ec_list[[12]] %>% 
@@ -163,7 +187,9 @@ dn11 <- ec_list[[12]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 323 & nganh_kd < 4100, 1, 0),
+         year = 2011) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn12 <- ec_list[[13]] %>% 
@@ -176,7 +202,9 @@ dn12 <- ec_list[[13]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 323 & nganh_kd < 4100, 1, 0),
+         year = 2012) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn13 <- ec_list[[14]] %>% 
@@ -189,7 +217,9 @@ dn13 <- ec_list[[14]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 323 & nganh_kd < 4100, 1, 0),
+         year = 2013) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn14 <- ec_list[[15]] %>% 
@@ -202,7 +232,9 @@ dn14 <- ec_list[[15]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 323 & nganh_kd < 4100, 1, 0),
+         year = 2014) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn15 <- ec_list[[16]] %>% 
@@ -215,27 +247,40 @@ dn15 <- ec_list[[16]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 323 & nganh_kd < 4100, 1, 0),
+         year = 2015) %>% 
   left_join(province_bmr_sum2, by = "tinh")
+
+namsxkd16 <- ec_list[[18]] %>% select(tinh, huyen, xa, ma_thue, ma_thue2, lhdn, namsxkd)
 
 dn16 <- ec_list[[17]] %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh)) %>% 
   rename(tot_workers = ld11,
-         tot_fworkers = ld21) %>% 
-  mutate(tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
+         tot_fworkers = ld21,
+         dir_yob = namsinh,
+         dir_ethnicity = dantoc) %>% 
+  left_join(namsxkd16, by = c("tinh", "huyen", "xa", "ma_thue", "ma_thue2", "lhdn")) %>% 
+  mutate(nganh_kd = as.numeric(nganh_kd),
+         tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
          share_f = tot_fworkers/tot_workers,
          share_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, share_f),
          across(c(tinh, huyen, xa), as.numeric),
          tot_workerratio = ifelse(tot_workers == 0, NA, tot_workerratio),
-         tot_workerratio = ifelse(tot_fworkers == 0, tot_workers, tot_workerratio)) %>% 
-  select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f) %>% 
+         tot_workerratio = ifelse(tot_fworkers == 0, tot_workers, tot_workerratio),
+         female_dir = ifelse(gioitinh == 2, 1, 0),
+         female_dir = ifelse(female_dir == 0 & gioitinh == 0 | quoctich != "VN", NA, female_dir)) %>% 
+  select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f, gioitinh, quoctich, female_dir, dir_yob, dir_ethnicity, namsxkd) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 323 & nganh_kd < 4100, 1, 0),
+         year = 2016) %>% 
   left_join(sexratios, by = "tinh")
 
 dn17 <- ec_list[[18]] %>% 
-  mutate(tinh = ifelse(tinh == 28, 1, tinh),
+  mutate(nganh_kd = as.numeric(nganh_kd),
+         tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh)) %>% 
   rename(tot_workers = ld11,
          tot_fworkers = ld21) %>% 
@@ -247,11 +292,14 @@ dn17 <- ec_list[[18]] %>%
          tot_workerratio = ifelse(tot_fworkers == 0, tot_workers, tot_workerratio)) %>% 
   select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>%
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 323 & nganh_kd < 4100, 1, 0),
+         year = 2017) %>% 
   left_join(sexratios, by = "tinh")
 
 dn18 <- ec_list[[19]] %>% 
-  mutate(tinh = ifelse(tinh == 28, 1, tinh),
+  mutate(nganh_kd = as.numeric(nganh_kd),
+         tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh)) %>% 
   rename(tot_workers = ld11,
          tot_fworkers = ld21) %>% 
@@ -263,5 +311,9 @@ dn18 <- ec_list[[19]] %>%
          share_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, share_f)) %>% 
   select(tinh, ma_thue, nganh_kd, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) %>% 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         manu = ifelse(nganh_kd > 323 & nganh_kd < 4100, 1, 0),
+         year = 2018) %>% 
   left_join(sexratios, by = "tinh")
+
+dn <- bind_rows(dn01, dn02, dn03, dn04, dn05, dn06, dn07, dn08, dn09, dn10, dn11, dn12, dn13, dn14, dn15, dn16, dn17, dn18)
