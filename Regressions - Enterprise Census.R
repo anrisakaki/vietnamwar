@@ -936,170 +936,23 @@ dn_workerratio_coef_prov_cas <- lapply(dn_formal_fe_prov_cas, tidy)
 dn_workerratio_coef_prov_cas <- do.call(rbind, dn_workerratio_coef_prov_cas) %>% filter(term == "log(killed_tot_prov_ppn)")
 dn_workerratio_coef_prov_cas$year <- rep(seq(2001, 2015), each = nrow(dn_workerratio_coef_prov_cas) / length(seq(2001, 2015)))
 
-#################
-# Province level#
-#################
+##################
+# FEMALE DORECTOR#
+##################
 
-# OLS
+# By year of establishment 
 
-dn_prov_ols_models <- list(
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn01_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn02_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn03_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn04_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn05_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn06_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn07_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn08_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn09_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn10_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn11_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn12_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn13_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn14_prov,
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        dn15_prov,
-        vcov = ~tinh)
-)
 
-dn_prov_ols_coef <- lapply(dn_prov_ols_models, tidy)
-dn_prov_ols_coef <- do.call(rbind, dn_prov_ols_coef) %>% filter(term != "(Intercept)")
-dn_prov_ols_coef$year <- rep(seq(2001, 2015), each = nrow(dn_prov_ols_coef) / length(seq(2001, 2015)))
+femaledir_yob_fe_prov_s <-  tidy(feols(female_dir ~ i(dir_yob, log(tot_bmr_prov_ppn)) + sexratio16 | nganh_kd + lhdn + dir_yob + dir_ethnicity,
+                                       subset(dn16, south == 1 & dir_yob > 1951 & dir_yob < 1991),
+                                       vcov = ~tinh + dir_yob)) %>% filter(grepl("log\\(tot_bmr_prov_ppn\\)", term))
+femaledir_yob_fe_prov_n <-  tidy(feols(female_dir ~ i(dir_yob, log(tot_bmr_prov_ppn)) + sexratio16 | nganh_kd + lhdn + dir_yob + dir_ethnicity,
+                                       subset(dn16, south == 0 & dir_yob > 1951 & dir_yob < 1991),
+                                       vcov = ~tinh + dir_yob)) %>% filter(grepl("log\\(tot_bmr_prov_ppn\\)", term))
 
-# By South 
+femaledir_yob_fe_prov_n$year <- rep(seq(1952, 1990), each = nrow(femaledir_yob_fe_prov_n) / length(seq(1952, 1990)))
+femaledir_yob_fe_prov_s$year <- rep(seq(1952, 1990), each = nrow(femaledir_yob_fe_prov_s) / length(seq(1952, 1990)))
 
-dn_prov_ols_s <- list(
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn01_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn02_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn03_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn04_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn05_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn06_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn07_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn08_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn09_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn10_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn11_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn12_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn13_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn14_prov, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn15_prov, south == 1),
-        vcov = ~tinh)
-)
-
-dn_prov_ols_n <- list(
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn01_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn02_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn03_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn04_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn05_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn06_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn07_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn08_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn09_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn10_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn11_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn12_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn13_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn14_prov, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn),
-        subset(dn15_prov, south == 0),
-        vcov = ~tinh)
-)
-
-dn_prov_ols_coef_s <- lapply(dn_prov_ols_s, tidy)
-dn_prov_ols_coef_s <- do.call(rbind, dn_prov_ols_coef_s) %>% filter(term != "(Intercept)")
-dn_prov_ols_coef_s$year <- rep(seq(2001, 2015), each = nrow(dn_prov_ols_coef_s) / length(seq(2001, 2015)))
-
-dn_prov_ols_coef_n <- lapply(dn_prov_ols_n, tidy)
-dn_prov_ols_coef_n <- do.call(rbind, dn_prov_ols_coef_n) %>% filter(term != "(Intercept)")
-dn_prov_ols_coef_n$year <- rep(seq(2001, 2015), each = nrow(dn_prov_ols_coef_n) / length(seq(2001, 2015)))
-
-dn_prov_ols_coef_n$group <- "North"
-dn_prov_ols_coef_s$group <- "South"
-dn_prov_ols_coef_ns <- rbind(dn_prov_ols_coef_n, dn_prov_ols_coef_s)
+femaledir_yob_fe_prov_n$group <- "North"
+femaledir_yob_fe_prov_s$group <- "South"
+femaledir_yob_fe_prov_s_ns <- rbind(femaledir_yob_fe_prov_n, femaledir_yob_fe_prov_s)
