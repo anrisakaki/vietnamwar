@@ -1,3 +1,5 @@
+load("province_bmr_sum02.Rda")
+
 ############################
 # Province-level summaries #
 ############################
