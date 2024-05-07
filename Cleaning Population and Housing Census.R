@@ -17,12 +17,15 @@ phc <- phc %>%
          agri = ifelse(indgen == 10, 1, 0),
          housework = ifelse(empstatd == 310, 1, 0),
          manu = ifelse(indgen == 30, 1, 0),
+         self = ifelse(empsect == 22, 1, 0),
          migration = ifelse(migrate5 == 10 | migrate5 == 11 | migrate5 == 12, 0, 1),
          age = ifelse(age == 999, NA, age),
          work = ifelse(work == 0 & age < 17 | work == 0 & age > 64, NA, work),
          agri = ifelse(agri == 0 & age < 17 | agri == 0 & age > 64, NA, agri),
          manu = ifelse(manu == 0 & age < 17 | manu == 0 & age > 64, NA, manu),
-         housework = ifelse(housework == 0 & age < 17 | housework == 0 & age > 64, NA, housework)) %>% 
+         self = ifelse(self == 1 & age < 17 | self == 1 & age > 64, NA, self),
+         housework = ifelse(housework == 0 & age < 17 | housework == 0 & age > 64, NA, housework),
+         urban = ifelse(urban == 1, 1, 0)) %>% 
   mutate(
     age_cohort = case_when(
       age <= 4 ~ "0-4",
@@ -48,7 +51,7 @@ phc89 <- phc %>%
   filter(year == 1989) %>% 
   mutate(geo1_vn1989 = ifelse(geo1_vn1989 == 16, 13, geo1_vn1989)) %>% 
   select(year, serial, hhwt, geo1_vn, geo1_vn1989, regnvn, pernum, perwt, nchild, age, age_cohort, female, marst, married, widowed,
-         birthyr, minority, migration, literate, work, edattain, yrschool, labforce, occisco, indgen, agri, manu, housework, empsect, ind, geomig1_5) %>% 
+         birthyr, minority, migration, literate, work, edattain, yrschool, labforce, occisco, indgen, agri, manu, housework, empsect, self, ind, geomig1_5, urban, popdensgeo1) %>% 
   left_join(bombs_province89, by = "geo1_vn1989") %>% 
   mutate(south = ifelse(geo1_vn1989 > 26 | geo1_vn1989 == 2, 1, 0))
 
@@ -57,7 +60,7 @@ phc99 <- phc %>%
   mutate(geo1_vn1999 = ifelse(geo1_vn1999 == 105, 101, geo1_vn1999),
          geo1_vn1999 = ifelse(geo1_vn1999 == 303, 301, geo1_vn1999)) %>% 
   select(year, serial, hhwt, geo1_vn, geo1_vn1999, regnvn, pernum, perwt, nchild, age, age_cohort, female, marst, married, widowed,
-         birthyr, minority, migration, literate, work, edattain, yrschool, labforce, occisco, indgen, agri, manu, housework, empsect, ind, geomig1_5) %>% 
+         birthyr, minority, migration, literate, work, edattain, yrschool, labforce, occisco, indgen, agri, manu, housework, empsect, self, ind, geomig1_5, urban, popdensgeo1) %>% 
   left_join(bombs_province99, by = "geo1_vn1999") %>% 
   mutate(south = ifelse(geo1_vn1999 > 405, 1, 0))
 
@@ -67,7 +70,7 @@ phc09 <- phc %>%
   mutate(geo1_vn2009 = ifelse(geo1_vn2009 == 11, 12, geo1_vn2009),
          geo1_vn2009 = ifelse(geo1_vn2009 == 14, 12, geo1_vn2009)) %>% 
   select(year, serial, hhwt, geo1_vn, geo1_vn2009, regnvn, pernum, perwt, nchild, age, age_cohort, female, marst, married, widowed,
-         birthyr, minority, migration, literate, work, edattain, yrschool, labforce, occisco, indgen, agri, manu, housework, empsect, ind, geomig1_5) %>% 
+         birthyr, minority, migration, literate, work, edattain, yrschool, labforce, occisco, indgen, agri, manu, housework, empsect, self, ind, geomig1_5, urban, popdensgeo1) %>% 
   left_join(bombs_province09, by = "geo1_vn2009") %>% 
   mutate(south = ifelse(geo1_vn2009 > 44, 1, 0))
 
