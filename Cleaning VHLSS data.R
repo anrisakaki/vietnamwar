@@ -338,6 +338,35 @@ vhlss12 <- list(m1a_12, m2a1_12) %>%
          hours = ifelse(is.na(work), NA, hours),
          days = ifelse(is.na(work), NA, days))
 
+########
+# 2014 #
+########
+vhlss14 <- list(m1a_14, m2a_14, m4a_14) %>% 
+  reduce(full_join, by = ivid06) %>% 
+  mutate(female = ifelse(m1ac2 == 2, 1, 0),
+         married = ifelse(m1ac8 == 2, 1, 0),
+         widowed = ifelse(m1ac8 == 3, 1, 0),
+         single = ifelse(m1ac8 == 1, 1, 0),
+         hhhead = ifelse(m1ac3 == 1, 1, 0),
+         fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
+         wagework = ifelse(m4ac1a == 1, 1, 0),
+         work = ifelse(m4ac2 == 1, 1, 0),
+         selfemp = ifelse(m4ac1c == 1, 1, 0),
+         selfagri = ifelse(m4ac1b == 1, 1, 0),
+         work = ifelse(work == 0 & m1ac5 < 15 | work == 0 & m1ac5 > 64, NA, work),
+         tinh = ifelse(tinh == 105, 101, tinh)) %>% 
+  rename(age = m1ac5,
+         educ = m2ac1,
+         industry = m4ac4,
+         days = m4ac6,
+         hours = m4ac7,
+         inc = m4ac11) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, hhhead, fhead, female, age, educ, 
+         work, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
+  group_by(tinh, huyen, xa, diaban, hoso) %>% 
+  mutate(hhid = cur_group_id())  %>% 
+  left_join(province_bmr_sum2, by = "tinh")
+
 save(vhlss02, file = "vhlss02.Rda")
 save(vhlss04, file = "vhlss04.Rda")
 save(vhlss06, file = "vhlss06.Rda")
