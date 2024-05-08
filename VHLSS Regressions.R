@@ -297,68 +297,22 @@ legend("bottomleft", col = 1:6, pch = 16, bty = "n", cex = 0.9,
        legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
 dev.off()
 
-# Probability of manufacturing  
+# Probability by parental exposure 
 
-png("manu_vhlss_s.png")
 iplot(list(
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss02, south == 1 & work == 1),
-        weights = ~wt75,
-        vcov = ~tinh),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss04, south == 1 & work == 1),
-        weights = ~wt45,
-        vcov = ~tinh),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss06, south == 1 & work == 1),
-        weights = ~wt45,
-        vcov = ~tinh),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss08, south == 1 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss10, south == 1 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss12, south == 1 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh)
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn_mat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | age_mat,
+        subset(vhlss14, south == 1 & child == 1),
+        vcov = ~m1ac11_mat + age_mat),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn_pat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | age_pat,
+        subset(vhlss14, south == 1 & child == 1),
+        vcov = ~m1ac11_mat + age_pat)
 ))
-legend("bottomleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
-       legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
-dev.off()
 
-png("manu_vhlss_n.png")
 iplot(list(
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss02, south == 0 & work == 1),
-        weights = ~wt75,
-        vcov = ~tinh),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss04, south == 0 & work == 1),
-        weights = ~wt45,
-        vcov = ~tinh),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss06, south == 0 & work == 1),
-        weights = ~wt45,
-        vcov = ~tinh),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss08, south == 0 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss10, south == 0 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | minority + urban,
-        subset(vhlss12, south == 0 & work == 1),
-        weights = ~wt9,
-        vcov = ~tinh)
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn_mat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | age_mat,
+        subset(vhlss14, south == 0 & child == 1),
+        vcov = ~m1ac11_mat + age_mat),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn_pat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | age_pat,
+        subset(vhlss14, south == 0 & child == 1),
+        vcov = ~m1ac11_mat + age_pat)
 ))
-legend("bottomleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
-       legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
-dev.off()
-
-# Probability of wage work
