@@ -341,6 +341,25 @@ vhlss12 <- list(m1a_12, m2a1_12) %>%
 ########
 # 2014 #
 ########
+
+mat_pob <- m1a_14 %>% 
+  filter(m1ac3 == 1 | m1ac3 == 2,
+         m1ac2 == 2) %>% 
+  select(tinh, huyen, xa, diaban, hoso, m1ac11, m1ac5) %>% 
+  rename(mat_pob = m1ac11,
+         maat_age = m1ac5) %>% 
+  distinct()
+
+pat_pob <- m1a_14 %>% 
+  filter(m1ac3 == 1 | m1ac3 == 2,
+         m1ac2 == 1) %>% 
+  select(tinh, huyen, xa, diaban, hoso, m1ac11, m1ac5) %>% 
+  rename(pat_pob = m1ac11,
+         pat_age = m1ac5) %>% 
+  distinct()
+
+matpat_pob <- full_join(mat_pob, pat_pob, by = c("tinh", "huyen", "xa", "diaban", "hoso"))
+
 vhlss14 <- list(m1a_14, m2a_14, m4a_14) %>% 
   reduce(full_join, by = ivid06) %>% 
   mutate(female = ifelse(m1ac2 == 2, 1, 0),
@@ -361,7 +380,7 @@ vhlss14 <- list(m1a_14, m2a_14, m4a_14) %>%
          days = m4ac6,
          hours = m4ac7,
          inc = m4ac11) %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, hhhead, fhead, female, age, educ, 
+  select(tinh, huyen, xa, diaban, hoso, matv, hhhead, fhead, female, age, married, widowed, single, educ, 
          work, wagework, selfemp, selfagri, industry, inc, hours, days) %>% 
   group_by(tinh, huyen, xa, diaban, hoso) %>% 
   mutate(hhid = cur_group_id())  %>% 
