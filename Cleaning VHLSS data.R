@@ -86,7 +86,10 @@ vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
          inc = ifelse(is.na(work), NA, inc),
          hours = ifelse(is.na(work), NA, hours),
          days = ifelse(is.na(work), NA, days),
-         urban = ifelse(urban == 1, 1, 0))
+         urban = ifelse(urban == 1, 1, 0)) %>% 
+  group_by(hhid) %>% 
+  mutate(widow_hh = ifelse(any(widowed == 1 & female == 1), 1, 0),
+         widow_hh = ifelse(is.na(widow_hh), 0, widow_hh))
 
 ########
 # 2004 # 
@@ -137,7 +140,11 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
          inc = ifelse(is.na(work), NA, inc),
          hours = ifelse(is.na(work), NA, hours),
          days = ifelse(is.na(work), NA, days),
-         urban = ifelse(urban == 1, 1, 0))
+         urban = ifelse(urban == 1, 1, 0))%>% 
+  group_by(hhid) %>% 
+  mutate(widow_hh = ifelse(any(widowed == 1 & female == 1), 1, 0),
+         widow_hh = ifelse(is.na(widow_hh), 0, widow_hh))
+
 
 ########
 # 2006 # 
@@ -192,7 +199,10 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
          inc = ifelse(is.na(work), NA, inc),
          hours = ifelse(is.na(work), NA, hours),
          days = ifelse(is.na(work), NA, days),
-         urban = ifelse(urban == 1, 1, 0))
+         urban = ifelse(urban == 1, 1, 0)) %>% 
+  group_by(hhid) %>% 
+  mutate(widow_hh = ifelse(any(widowed == 1 & female == 1), 1, 0),
+         widow_hh = ifelse(is.na(widow_hh), 0, widow_hh))
 
 ########
 # 2008 #
@@ -240,7 +250,10 @@ vhlss08 <- list(m123a_08, m4a_08) %>%
          manu = ifelse(manu == 0 & age < 17 | manu == 0 & age > 64, NA, manu),
          inc = ifelse(is.na(work), NA, inc),
          hours = ifelse(is.na(work), NA, hours),
-         days = ifelse(is.na(work), NA, days))
+         days = ifelse(is.na(work), NA, days)) %>% 
+  group_by(hhid) %>% 
+  mutate(widow_hh = ifelse(any(widowed == 1 & female == 1), 1, 0),
+         widow_hh = ifelse(is.na(widow_hh), 0, widow_hh))
 
 ########
 # 2010 #
@@ -288,7 +301,10 @@ vhlss10 <- list(m1a_10, m2a_10, m4a1_10, m4a2_10, m4a3_10, m4a4_10) %>%
          inc = ifelse(is.na(work), NA, inc),
          hours = ifelse(is.na(work), NA, hours),
          days = ifelse(is.na(work), NA, days),
-         urban = ifelse(urban == 1, 1, 0))
+         urban = ifelse(urban == 1, 1, 0)) %>% 
+  group_by(hhid) %>% 
+  mutate(widow_hh = ifelse(any(widowed == 1 & female == 1), 1, 0),
+         widow_hh = ifelse(is.na(widow_hh), 0, widow_hh))
 
 ########
 # 2012 #
@@ -336,33 +352,45 @@ vhlss12 <- list(m1a_12, m2a1_12) %>%
          manu = ifelse(manu == 0 & age < 17 | manu == 0 & age > 64, NA, manu),
          inc = ifelse(is.na(work), NA, inc),
          hours = ifelse(is.na(work), NA, hours),
-         days = ifelse(is.na(work), NA, days))
+         days = ifelse(is.na(work), NA, days)) %>% 
+  group_by(hhid) %>% 
+  mutate(widow_hh = ifelse(any(widowed == 1 & female == 1), 1, 0),
+         widow_hh = ifelse(is.na(widow_hh), 0, widow_hh))
 
 ########
 # 2014 #
 ########
 
 mat_pob <- m1a_14 %>% 
-  filter(m1ac3 == 1 | m1ac3 == 2,
-         m1ac2 == 2) %>% 
+  filter(m1ac2 == 2,
+         m1ac5 > 63 & m1ac5 < 94) %>% 
   select(tinh, huyen, xa, diaban, hoso, m1ac11, m1ac5) %>% 
   rename(age = m1ac5) %>% 
   mutate(m1ac11 = ifelse(m1ac11 == 28, 1, m1ac11),
          m1ac11 = ifelse(m1ac11 == 14 | m1ac11 == 11, 12, m1ac11)) %>% 
   left_join(province_bmr_sum2, by = c("m1ac11" = "tinh")) %>% 
-  rename_with(~ paste0(., "_mat"), -c(tinh, huyen, xa, diaban, hoso)) %>% 
-  distinct()
+  distinct() %>% 
+  group_by(tinh, huyen, xa, diaban, hoso) %>% 
+  summarise(age = max(age),
+            tot_bmr_prov_ppn = max(tot_bmr_prov),
+            killed_tot_prov_ppn = max(killed_tot_prov_ppn)) %>% 
+  rename_with(~ paste0(., "_mat"), -c(tinh, huyen, xa, diaban, hoso))
 
 pat_pob <- m1a_14 %>% 
-  filter(m1ac3 == 1 | m1ac3 == 2,
-         m1ac2 == 1) %>% 
+  filter(m1ac2 == 1,
+         m1ac5 > 63 & m1ac5 < 94) %>% 
   select(tinh, huyen, xa, diaban, hoso, m1ac11, m1ac5) %>% 
   rename(age = m1ac5) %>% 
   mutate(m1ac11 = ifelse(m1ac11 == 28, 1, m1ac11),
          m1ac11 = ifelse(m1ac11 == 14 | m1ac11 == 11, 12, m1ac11)) %>% 
   left_join(province_bmr_sum2, by = c("m1ac11" = "tinh")) %>% 
-  rename_with(~ paste0(., "_pat"), -c(tinh, huyen, xa, diaban, hoso)) %>% 
-  distinct()
+  distinct() %>% 
+  group_by(tinh, huyen, xa, diaban, hoso) %>% 
+  summarise(age = max(age),
+            tot_bmr_prov_ppn = max(tot_bmr_prov),
+            killed_tot_prov_ppn = max(killed_tot_prov_ppn)) %>% 
+  rename_with(~ paste0(., "_pat"), -c(tinh, huyen, xa, diaban, hoso))
+
 
 matpat_pob <- full_join(mat_pob, pat_pob, by = c("tinh", "huyen", "xa", "diaban", "hoso")) %>% distinct()
 
@@ -394,6 +422,9 @@ vhlss14 <- list(m1a_14, m2a_14, m4a_14) %>%
   mutate(hhid = cur_group_id())  %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   left_join(matpat_pob, by = c("tinh", "huyen", "xa", "diaban", "hoso")) %>% 
+  group_by(hhid) %>% 
+  mutate(widow_hh = ifelse(any(widowed == 1 & female == 1), 1, 0),
+         widow_hh = ifelse(is.na(widow_hh), 0, widow_hh)) %>% 
   mutate(south = ifelse(tinh > 44, 1, 0)) 
 
 save(vhlss02, file = "vhlss02.Rda")
