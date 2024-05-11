@@ -300,33 +300,48 @@ dev.off()
 # Probability by parental exposure 
 
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn_mat)) + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + age + age^2 | age_mat,
-        subset(vhlss14, south == 1 & child == 1),
-        vcov = ~m1ac11_mat + age_mat),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn_pat)) + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + age + age^2 | age_pat,
-        subset(vhlss14, south == 1 & child == 1),
-        vcov = ~m1ac11_mat + age_pat)
+  feols(work ~ i(as.factor(female), log(tot_bmr_prov_ppn_mat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + age_mat + as.factor(female),
+        subset(vhlss14, south == 0 & age < 40),
+        vcov = ~tinh),
+  feols(work ~ i(as.factor(female), log(tot_bmr_prov_ppn_mat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + age_mat + as.factor(female),
+        subset(vhlss14, south == 1 & age < 40),
+        vcov = ~tinh)
 ))
+legend("topleft", col = 1:2, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("North", "South"))
 
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn_mat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | age_mat,
-        subset(vhlss14, south == 0 & child == 1),
-        vcov = ~m1ac11_mat + age_mat),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn_pat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | age_pat,
-        subset(vhlss14, south == 0 & child == 1),
-        vcov = ~m1ac11_mat + age_pat)
+  feols(work ~ i(as.factor(female), log(tot_bmr_prov_ppn_pat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + age_pat + as.factor(female),
+        subset(vhlss14, south == 0 & age < 40),
+        vcov = ~tinh),
+  feols(work ~ i(as.factor(female), log(tot_bmr_prov_ppn_pat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + age_pat + as.factor(female),
+        subset(vhlss14, south == 1 & age < 40),
+        vcov = ~tinh)
 ))
 
-work_parent_did_s <- tidy(feols(work ~ i(as.factor(age_mat), log(tot_bmr_prov_ppn_mat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | age_mat,
-                                subset(vhlss14, south == 1 & child == 1 & female == 1 & age_mat > 31 & age_mat < 83),
-                                vcov = ~m1ac11_mat + age_mat)) %>% filter(grepl("log\\(tot_bmr_prov_ppn_mat\\)", term))
-work_parent_did_n <- tidy(feols(work ~ i(as.factor(age_mat), log(tot_bmr_prov_ppn_mat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | age_mat,
-                                subset(vhlss14, south == 0 & child == 1 & female == 1 & age_mat > 31 & age_mat < 83),
-                                vcov = ~m1ac11_mat + age_mat)) %>% filter(grepl("log\\(tot_bmr_prov_ppn_mat\\)", term))
 
-work_parent_did_s$age <- rep(seq(32, 82), each = nrow(work_parent_did_s) / length(seq(32, 82)))
-work_parent_did_n$age <- rep(seq(32, 82), each = nrow(work_parent_did_n) / length(seq(32, 62)))
-
-work_parent_did_n$group <- "North"
-work_parent_did_s$group <- "South"
-work_parent_did_ns <- bind_rows(work_parent_did_n, work_parent_did_s)
+etable(list(
+  feols(work ~ as.factor(widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | urban ,
+        subset(vhlss02, south == 1 & age < 28 & female == 1),
+        vcov = ~tinh,
+        weights = ~wt75),
+  feols(work ~ as.factor(widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | urban,
+        subset(vhlss04, south == 1 & age < 30 & female == 1),
+        vcov = ~tinh,
+        weights = ~wt45),
+  feols(work ~ as.factor(widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | urban,
+      subset(vhlss06, south == 1 & age < 32 & female == 1),
+      vcov = ~tinh,
+      weights = ~wt45),
+  feols(work ~ as.factor(widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | urban,
+      subset(vhlss08, south == 1 & age < 34 & female == 1),
+      vcov = ~tinh,
+      weights = ~wt9),
+  feols(work ~ as.factor(widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | urban,
+        subset(vhlss10, south == 1 & age < 36 & female == 1),
+        vcov = ~tinh,
+        weights = ~wt9),
+  feols(work ~ as.factor(widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | urban,
+        subset(vhlss12, south == 1 & age < 38 & female == 1),
+        vcov = ~tinh,
+        weights = ~wt9)))
