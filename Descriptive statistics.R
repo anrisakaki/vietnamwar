@@ -547,7 +547,7 @@ ggplot(dplyr::filter(agecohort_sum,  year == 1989 &
                        !(age_cohort == "5-9" | age_cohort == "0-4" | age_cohort == "10-14" | age_cohort == "65+")),
        aes(x = as.factor(age_cohort), y = flfp, fill = group89)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
-  labs(x = "Age cohort",
+  labs(x = "Age group",
        y = "FLFP rate in 1989") +
   theme_minimal() +
   theme(axis.line = element_line(color='black'),
@@ -563,7 +563,7 @@ ggplot(dplyr::filter(agecohort_sum,  year == 1999 &
                        !(age_cohort == "5-9" | age_cohort == "0-4" | age_cohort == "10-14" | age_cohort == "65+")),
        aes(x = as.factor(age_cohort), y = flfp, fill = group99)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
-  labs(x = "Age cohort",
+  labs(x = "Age group",
        y = "FLFP rate in 1999") +
   theme_minimal() +
   theme(axis.line = element_line(color='black'),
@@ -579,7 +579,7 @@ ggplot(dplyr::filter(agecohort_sum,  year == 2009 &
                        !(age_cohort == "5-9" | age_cohort == "0-4" | age_cohort == "10-14" | age_cohort == "65+")),
        aes(x = as.factor(age_cohort), y = flfp, fill = group09)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
-  labs(x = "Age cohort",
+  labs(x = "Age group",
        y = "FLFP rate in 2009") +
   theme_minimal() +
   theme(axis.line = element_line(color='black'),
