@@ -10,38 +10,44 @@ for (i in phc) {
   load(i)
 }
 
+sexratio_phc <- function(i){
+  i %>% 
+    filter(!is.na(age)) %>% 
+    group_by(age, female) %>% 
+    summarise(total = sum(perwt)) %>% 
+    pivot_wider(names_from = female, values_from = total) %>% 
+    rename(m_total = 2,
+           f_total = 3) %>% 
+    mutate(sex_ratio = m_total/f_total)
+}
+
 # Calculating sex ratio by age, and by north and south 
 
+## 1989
+
 bc_sexratio89 <- phc89 %>% 
-  filter(!is.na(age)) %>% 
-  group_by(age, female) %>% 
-  summarise(total = sum(perwt)) %>% 
-  pivot_wider(names_from = female, values_from = total) %>% 
-  rename(m_total = 2,
-         f_total = 3) %>% 
-  mutate(sex_ratio = m_total/f_total)
+  sexratio_phc()
 
 bc_sexratio89_s <- phc89 %>% 
   filter(!is.na(age) & geo1_vn1989 > 26) %>% 
-  group_by(age, female) %>% 
-  summarise(total = sum(perwt)) %>% 
-  pivot_wider(names_from = female, values_from = total) %>% 
-  rename(m_south = 2,
-         f_south = 3) %>% 
-  mutate(sex_ratio_south = m_south/f_south)
+  sexratio_phc() %>% 
+  mutate(sex_ratio_south = m_total/f_total)
 
 bc_sexratio89_n <- phc89 %>% 
   filter(!is.na(age) & geo1_vn1989 <= 26) %>% 
-  group_by(age, female) %>% 
-  summarise(total = sum(perwt)) %>% 
-  pivot_wider(names_from = female, values_from = total) %>% 
-  rename(m_north = 2,
-         f_north = 3) %>% 
-  mutate(sex_ratio_north = m_north/f_north)
+  sexratio_phc() %>% 
+  mutate(sex_ratio_north = m_total/f_total)
 
 bc_sexratio89 <- list(bc_sexratio89, bc_sexratio89_n, bc_sexratio89_s) %>% 
   reduce(full_join, by = "age") %>% 
   select(age, sex_ratio, sex_ratio_north, sex_ratio_south)
+
+bc_sexratio89_long <- bc_sexratio89 %>% 
+  rename(North = sex_ratio_north,
+         South = sex_ratio_south) %>% 
+  pivot_longer(!age, names_to = "group",
+               values_to = "sex_ratio") %>% 
+  filter(group != "sex_ratio")
 
 # Calculating the sex ratio and LFP of men and women by age cohort in 1989 
 prov_89_f <- phc89 %>% 
@@ -339,7 +345,7 @@ indgen_prov_sum <- merge(ind_m_prov, ind_f_prov, by = c("geo1_vn1989", "indgen")
 indgen_prov_sum <- left_join(indgen_prov_sum, bombs_province89, by = "geo1_vn1989")
 
 ## By north/south 
-ind_ratio_ns 
+
 ind_ratio_n <- phc %>% 
   filter(geo1_vn1989 <= 26 | geo1_vn1999 <= 408 | geo1_vn2009 <= 44) %>% 
   group_by(year, female, indgen) %>% 
