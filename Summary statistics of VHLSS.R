@@ -16,7 +16,7 @@ prov_sum_fn <- function (i) {
       fshare_agri = fagri_work / f_total,
       wagework_workerratio = mwagework/fwagework
     )
-  }
+}
 
 prov02_vhlss <- vhlss02 %>% 
   filter(!is.na(female), age > 15 & age < 65) %>% 
