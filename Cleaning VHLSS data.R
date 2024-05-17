@@ -22,6 +22,12 @@ wt08 <- wt08 %>% select(tinh, huyen, xa, wt9)
 wt10 <- wt10 %>% select(-c(quyen, diaban, hoso)) %>% rename(urban = ttnt)
 wt12 <- wt12 %>% select(tinh, huyen, xa, wt9)
 
+####################################
+# Cleaning population density data #
+####################################
+
+
+
 vhlss_emp_fn <- function(i){
   i %>% 
     mutate(
