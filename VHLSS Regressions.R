@@ -301,10 +301,10 @@ dev.off()
 
 iplot(list(
   feols(work ~ i(as.factor(female), log(tot_bmr_prov_ppn_mat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + age_mat + as.factor(female),
-        subset(vhlss14, south == 0 & age < 40),
+        subset(vhlss14, south == 0 & age < 55),
         vcov = ~tinh),
   feols(work ~ i(as.factor(female), log(tot_bmr_prov_ppn_mat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + age_mat + as.factor(female),
-        subset(vhlss14, south == 1 & age < 40),
+        subset(vhlss14, south == 1 & age < 55),
         vcov = ~tinh)
 ))
 legend("topleft", col = 1:2, pch = 16, bty = "n", cex = 0.9, 
@@ -312,10 +312,10 @@ legend("topleft", col = 1:2, pch = 16, bty = "n", cex = 0.9,
 
 iplot(list(
   feols(work ~ i(as.factor(female), log(tot_bmr_prov_ppn_pat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + age_pat + as.factor(female),
-        subset(vhlss14, south == 0 & age < 40),
+        subset(vhlss14, south == 0 & age < 55),
         vcov = ~tinh),
   feols(work ~ i(as.factor(female), log(tot_bmr_prov_ppn_pat)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + age_pat + as.factor(female),
-        subset(vhlss14, south == 1 & age < 40),
+        subset(vhlss14, south == 1 & age < 55),
         vcov = ~tinh)
 ))
 
