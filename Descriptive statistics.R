@@ -60,25 +60,6 @@ ggplot(dplyr::filter(sexratio_prov_09, tot_casualties_per > 0), aes(x = log(tot_
        y = "log(Casualties)")
 ggsave("bombs_casualties.jpeg", width = 7, height = 7)
 
-# 1976
-
-ggplot(oldprov_sexratio, aes(x = log(tot_bmr), y = sexratio)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Bombs, Missiles and Rockets)",
-       y = "Sex Ratio in 1976")
-ggsave("bmr_sexratio76.jpeg", width = 7, height = 7)
-
 # 1989 
 bc_sexratio89_long <- bc_sexratio89 %>%
   pivot_longer(cols = c(sex_ratio_south, sex_ratio_north),
@@ -591,6 +572,32 @@ ggplot(dplyr::filter(agecohort_sum,  year == 2009 &
   scale_fill_manual(values = c("#FF7256", "#EE3B3B"), labels = c("Born before reunification", "Born after reunification"))
 ggsave("flfp09_agecohort.jpeg", width = 7, height = 7)
 
+# Birth cohort and sex ratio 
+
+ggplot(bc_sexratio89_long, aes(x = age, y = sex_ratio, colour = as.factor(group), group = as.factor(group))) +
+  geom_line(size = 1.1) +
+  # geom_vline(xintercept = 39, linetype = "dashed", color = "") + 
+  geom_rect(
+    xmin = 39, xmax = 68, ymin = -Inf, ymax = Inf,
+    fill = "gray", alpha = 0.01
+  ) +
+  annotate(
+    "text", x = (53.5), y = 1.1,  
+    label = "Prime working age in 1975", size = 4
+  ) + 
+  # geom_vline(xintercept = 68, linetype = "dashed", color = "blue") +
+  labs(x = "Age",
+       y = "Sex Ratio") +
+  theme_minimal() +
+  scale_x_continuous(breaks=seq(0,100,5)) +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank())
+ggsave("age_sexratio89.jpeg", width = 17, height = 7)
+
 # Birth cohort and education levels 
 
 ggplot(birthcohort_sum_vhlss, aes(x = birth_year, y = educ_mean, colour = as.factor(female), group = as.factor(female))) +
@@ -608,8 +615,8 @@ ggplot(birthcohort_sum_vhlss, aes(x = birth_year, y = educ_mean, colour = as.fac
   geom_text(aes(x = 1975, y = max(9.25), label = "Fall of Saigon"),
             vjust = -0.5, hjust = 1.3, color = "red") +
   # Reunification of Vietnam 
-  geom_vline(xintercept = 1976, linetype = "dashed", color = "dark green") +  
-  geom_text(aes(x = 1976, y = max(9.25), label = "Reunification"),
+  geom_vline(xintercept = 1975, linetype = "dashed", color = "dark green") +  
+  geom_text(aes(x = 1975, y = max(9.25), label = "Reunification"),
             vjust = -0.5, hjust = -0.2, color = "dark green") +  
   # Doi Moi reforms 
   geom_vline(xintercept = 1980, linetype = "dashed", color = "dark green") +  
@@ -624,7 +631,7 @@ ggplot(birthcohort_sum_vhlss, aes(x = birth_year, y = educ_mean, colour = as.fac
     "text", x = (1970), y = 8.5,  # Add text label
     label = "Period of intense American bombing", size = 4
   ) +  
-  scale_x_continuous(breaks=seq(1946,1987,1)) +
+  c
   labs(x = "Birth cohort",
        y = "") +
   theme_minimal() +
