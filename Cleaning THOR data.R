@@ -209,15 +209,17 @@ province_bmr_sum <- province_bmr_sum %>%
 save(province_bmr_sum, file = "province_bmr_sum.Rda")
 
 # Target type by north/south 
-
 targets_sum <- province_bmr %>% 
   sf::st_drop_geometry() %>% 
-  group_by(tgttype) %>% 
-  summarise(tot_s = sum(numweaponsdelivered[south == 1], na.rm = T),
-            tot_n = sum(numweaponsdelivered[south == 0], na.rm = T),
-            ) %>% 
-  filter(!is.na(tgttype)) %>% 
-  filter(!grepl("UNKNOWN", tgttype, ignore.case = TRUE))
+  summarise(agri_s = sum(numweaponsdelivered[tgtcountry == "SOUTH VIETNAM" & agriculture == 1], na.rm = T),
+            agri_n = sum(numweaponsdelivered[tgtcountry == "NORTH VIETNAM" & agriculture == 1], na.rm = T),
+            infra_s = sum(numweaponsdelivered[tgtcountry == "SOUTH VIETNAM" & infrastructure == 1], na.rm = T),
+            infra_n = sum(numweaponsdelivered[tgtcountry == "NORTH VIETNAM" & infrastructure == 1], na.rm = T),
+            civilian_s = sum(numweaponsdelivered[tgtcountry == "SOUTH VIETNAM" & civilian == 1], na.rm = T),
+            civilian_n = sum(numweaponsdelivered[tgtcountry == "NORTH VIETNAM" & civilian == 1], na.rm = T),
+            industry_s = sum(numweaponsdelivered[tgtcountry == "SOUTH VIETNAM" & industry == 1], na.rm = T),
+            industry_n = sum(numweaponsdelivered[tgtcountry == "NORTH VIETNAM" & industry == 1], na.rm = T))
+
 
 # Bombing intensity by district 
 
