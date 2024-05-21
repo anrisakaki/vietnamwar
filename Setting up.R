@@ -20,6 +20,7 @@ m1_02 <- read_dta(file = "Full VHLSS/VHLSS 2002 N= 45,000/muc1.dta") #DF contain
 m2_02 <- read_dta (file = "Full VHLSS/VHLSS 2002 N= 45,000/muc2.dta") #DF containing educational attainment 
 m3_02 <- read_dta (file = "Full VHLSS/VHLSS 2002 N= 45,000/muc3.dta") #DF containing work 
 m5a_02 <- read_dta (file = "Full VHLSS/VHLSS 2002 N= 45,000/muc5a.dta") #DF containing work
+m5c_02 <- read_dta(file = "Full VHLSS/VHLSS 2002 N= 45,000/muc5c1.dta")
 m9_02 <- read_dta(file = "Full VHLSS/VHLSS 2002 N= 45,000/muc9.dta")
 
 inc_04 <- read_dta(file = "Full VHLSS/2004/hhinc04.dta")
