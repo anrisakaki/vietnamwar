@@ -21,11 +21,11 @@ phc <- phc %>%
          self = ifelse(empsect == 22, 1, 0),
          migration = ifelse(migrate5 == 10 | migrate5 == 11 | migrate5 == 12, 0, 1),
          age = ifelse(age == 999, NA, age),
-         work = ifelse(work == 0 & age < 17 | work == 0 & age > 64, NA, work),
-         agri = ifelse(agri == 0 & age < 17 | agri == 0 & age > 64, NA, agri),
-         manu = ifelse(manu == 0 & age < 17 | manu == 0 & age > 64, NA, manu),
-         self = ifelse(self == 1 & age < 17 | self == 1 & age > 64, NA, self),
-         housework = ifelse(housework == 0 & age < 17 | housework == 0 & age > 64, NA, housework),
+         work = ifelse(age < 17 | age > 64, NA, work),
+         agri = ifelse(age < 17 | age > 64, NA, agri),
+         manu = ifelse(age < 17 | age > 64, NA, manu),
+         self = ifelse(age < 17 | age > 64, NA, self),
+         housework = ifelse(age < 17 | age > 64, NA, housework),
          urban = ifelse(urban == 1, 1, 0)) %>% 
   mutate(
     age_cohort = case_when(
