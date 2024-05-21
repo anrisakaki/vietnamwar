@@ -458,10 +458,11 @@ ggplot(dplyr::filter(sexratio_prov_89, south == 1), aes(x = age3064_widowed_f*10
 ggsave("widowed3064_workerratio3064_89_s.jpeg", width = 7, height = 7)
 
 # Female and male labour force composition 
-ggplot(dplyr::filter(indgen_sum, year == 1989 & indgen < 999), aes(x = (f_comp), y = reorder(Industry, f_comp))) + 
+
+ggplot(dplyr::filter(industry_02, fshare_s > 3.5), aes(x = (fshare_s), y = reorder(Industry, fshare_s))) + 
   geom_bar(stat = "identity", fill = "skyblue") +
-  geom_text(aes(label = round(f_comp, 2)), hjust = -0.2, size = 3) +
-  labs(x = "Share of Female Labour Force in 1989 (%)",
+  geom_text(aes(x = fshare_s / 2, label = round(fshare_s, 2)), size = 5, color = "black") +
+  labs(x = "Share of Working Women in 2001 (%)",
        y = "Industry") +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
@@ -469,14 +470,14 @@ ggplot(dplyr::filter(indgen_sum, year == 1989 & indgen < 999), aes(x = (f_comp),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         legend.title=element_blank(),
-        text = element_text(size=15)) + 
+        text = element_text(size=20)) + 
   scale_x_continuous(breaks = NULL) 
-ggsave("fcomp_89.jpeg", width = 12, height = 12)
+ggsave("fcomp_02_s.jpeg", width = 12, height = 12)
 
-ggplot(dplyr::filter(indgen_sum, year == 1989 & indgen < 999), aes(x = (m_comp), y = reorder(Industry, m_comp))) + 
+ggplot(dplyr::filter(industry_02, fshare_n > 1.61), aes(x = (fshare_n), y = reorder(Industry, fshare_n))) + 
   geom_bar(stat = "identity", fill = "skyblue") +
-  geom_text(aes(label = round(m_comp, 2)), hjust = -0.2, size = 3) +
-  labs(x = "Share of Male Labour Force in 1989 (%)",
+  geom_text(aes(x = fshare_n / 2, label = round(fshare_n, 2)), size = 5, color = "black") +
+  labs(x = "Share of Working Women in 2001 (%)",
        y = "Industry") +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
@@ -484,16 +485,14 @@ ggplot(dplyr::filter(indgen_sum, year == 1989 & indgen < 999), aes(x = (m_comp),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         legend.title=element_blank(),
-        text = element_text(size=15)) + 
+        text = element_text(size=20)) + 
   scale_x_continuous(breaks = NULL) 
-ggsave("mcomp_89.jpeg", width = 12, height = 12)
+ggsave("fcomp_02_n.jpeg", width = 12, height = 12)
 
-# Male to female ratio in each industry 
-
-ggplot(dplyr::filter(indgen_sum, year == 1989 & indgen < 999), aes(x = (workerratio)*100, y = reorder(Industry, workerratio))) + 
+ggplot(dplyr::filter(industry_02, mshare_s > 5), aes(x = (mshare_s), y = reorder(Industry, mshare_s))) + 
   geom_bar(stat = "identity", fill = "skyblue") +
-  geom_text(aes(label = round(workerratio*100, 2)), hjust = -0.2, size = 3) +
-  labs(x = "Ratio of Male to Female Workers in 1989",
+  geom_text(aes(x = mshare_s / 2, label = round(mshare_s, 2)), size = 5, color = "black") +
+  labs(x = "Share of Working Men in 2001 (%)",
        y = "Industry") +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
@@ -501,26 +500,24 @@ ggplot(dplyr::filter(indgen_sum, year == 1989 & indgen < 999), aes(x = (workerra
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         legend.title=element_blank(),
-        text = element_text(size=15)) + 
+        text = element_text(size=20)) + 
   scale_x_continuous(breaks = NULL) 
-ggsave("indgen_sum_89.jpeg", width = 12, height = 12)
+ggsave("mcomp_02_s.jpeg", width = 12, height = 12)
 
-# Male to female ratio in each occupation 
-
-ggplot(dplyr::filter(occisco_sum, year == 1999 & occisco < 99), aes(x = (workerratio)*100, y = reorder(Occupation, workerratio))) + 
+ggplot(dplyr::filter(industry_02, mshare_n > 3), aes(x = (mshare_n), y = reorder(Industry, mshare_n))) + 
   geom_bar(stat = "identity", fill = "skyblue") +
-  geom_text(aes(label = round(workerratio*100, 2)), hjust = -0.2, size = 3) +
-  labs(x = "Ratio of Male to Female Workers in 1999",
-       y = "Occupation") +
+  geom_text(aes(x = mshare_n / 2, label = round(mshare_n, 2)), size = 5, color = "black") +
+  labs(x = "Share of Working Men in 2001 (%)",
+       y = "Industry") +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         legend.title=element_blank(),
-        text = element_text(size=15)) + 
+        text = element_text(size=20)) + 
   scale_x_continuous(breaks = NULL) 
-ggsave("occisco_sum_99.jpeg", width = 12, height = 12)
+ggsave("mcomp_02_n.jpeg", width = 12, height = 12)
 
 # Birth cohort and labour force participation rate by age cohort
 
