@@ -64,16 +64,12 @@ vhlss_emp_fn <- function(i){
       self = ifelse(selfagri == 1 & selfemp == 1, 1, 0),
       wagework = ifelse(is.na(wagework) & work == 1, 0, wagework),
       manu = ifelse(is.na(manu) & work == 1, 0, manu),
-      retail = ifelse(is.na(retail) & work == 1, 0, retail),
-      apparel = ifelse(is.na(apparel) & work == 1, 0, apparel),
       agri = ifelse(age < 17 | age > 64, NA, agri),
       selfagri = ifelse(age < 17 | age > 64, NA, selfagri),
       selfemp = ifelse(age < 17 | age > 64, NA, selfemp),
       self = ifelse(age < 17 | age > 64, NA, self),
       wagework = ifelse(age < 17 | age > 64, NA, wagework),
       manu = ifelse(age < 17 | age > 64, NA, manu),
-      retail = ifelse(age < 17 | age > 64, NA, retail),
-      apparel = ifelse(age < 17 | age > 64, NA, apparel),
       inc = ifelse(is.na(work), NA, inc),
       hours = ifelse(is.na(work), NA, hours),
       days = ifelse(is.na(work), NA, days),
@@ -89,12 +85,6 @@ vhlss_emp_fn <- function(i){
 
 province_bmr_sum02 <- province_bmr_sum02 %>% 
   rename(tinh = tinh02)
-
-hhbus_02 <- m5c_02 %>% 
-  filter(m5cc1 == 1) %>% 
-  rename(matv02 = m5c1c3t1) %>% 
-  select(tinh02, huyen02, xa02, hoso02, matv02, qui, phieu) %>% 
-  mutate(hhbus_manager = 1)
 
 vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
   map(~mutate(.x, matv02 = as.numeric(str_sub(as.character(matv02), -2)))) %>%
@@ -117,15 +107,16 @@ vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
          fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
          wagework = ifelse(m3c1a == 1, 1, 0),
          work = ifelse(m3c2 == 1, 1, 0),
+         agri = ifelse(industry < 5, 1, 0),
+         manu = ifelse(industry > 14 & industry < 40, 1, 0),
          selfagri = ifelse(m3c1b == 1, 1, 0),
          selfemp = ifelse(m3c1c == 1, 1, 0),
-         hhbus = ifelse(m3c8 == 1 | m3c8 == 0, 1, 0),
          inc = m5ac6 + m5ac7e,
          south = ifelse(tinh02 > 407, 1, 0),
          minority = ifelse(ch_dantoc > 1, 1, 0)) %>% 
   vhlss_emp_fn () %>% 
   select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, hhid, qui, phieu, minority, hhhead, fhead, female, age, married, widowed, single,
-         educ, work, wagework, selfemp, selfagri, self, hhbus, industry, inc, hours, days, widow_hh, south) %>% 
+         educ, work, wagework, selfemp, selfagri, self, agri, manu, industry, inc, hours, days, widow_hh, south) %>% 
   left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui")) %>% 
   left_join(wt02, by = c("tinh02", "huyen02", "xa02")) %>% 
   rename(tinh = tinh02) %>% 
@@ -158,20 +149,19 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
          hhhead = ifelse(m1ac3 == 1, 1, 0),
          fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
          wagework = ifelse(m4ac1a == 1, 1, 0),
-         work = ifelse(m4ac2 == 1, 1, 0),
+         work = ifelse(m3c2 == 1, 1, 0),
+         agri = ifelse(industry < 5, 1, 0),
+         manu = ifelse(industry > 14 & industry < 40, 1, 0),
          selfemp = ifelse(m4ac1c == 1, 1, 0),
          selfagri = ifelse(m4ac1b == 1, 1, 0),
-         manu = ifelse(industry > 14 & industry < 40, 1, 0),
-         retail = ifelse(industry == 52, 1, 0),
-         apparel = ifelse(industry == 18, 1, 0),
          formal = ifelse(m4ac10b == 1, 1, 0),
          minority = ifelse(dantoc > 1, 1, 0),
          south = ifelse(tinh > 407, 1, 0)) %>% 
   mutate(hhid = cur_group_id(),
          south = ifelse(tinh > 407, 1, 0)) %>% 
   vhlss_emp_fn () %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, ky, hhid, hhhead, fhead, minority, female, age, married, widowed, single, educ, 
-         work, formal, wagework, selfemp, selfagri, self, agri, manu, retail, apparel, industry, inc, hours, days, widow_hh, south) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, ky, hhid, minority, hhhead, fhead, female, age, married, widowed, single,
+         educ, work, wagework, selfemp, selfagri, self, agri, manu, industry, inc, hours, days, widow_hh, south) %>% 
   left_join(def04, by = c("tinh", "huyen", "xa", "hoso")) %>% 
   left_join(wt04, by = c("tinh", "huyen", "xa")) %>% 
   mutate(inc = inc/mcpi/rcpi,
@@ -212,14 +202,13 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
          work = ifelse(m4ac2 == 1, 1, 0),
          selfemp = ifelse(m4ac1c == 1, 1, 0),
          selfagri = ifelse(m4ac1b == 1, 1, 0),
+         agri = ifelse(industry < 5, 1, 0),
          manu = ifelse(industry > 14 & industry < 40, 1, 0),
-         retail = ifelse(industry == 52, 1, 0),
-         apparel = ifelse(industry == 18, 1, 0),
          formal = ifelse(m4ac10b == 1, 1, 0),
          south = ifelse(tinh > 407, 1, 0)) %>% 
   vhlss_emp_fn () %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, hhid, hhhead, fhead, minority, female, age, married, widowed, single, educ, 
-         work, formal, wagework, selfemp, selfagri, self, agri, manu, industry, inc, hours, days, widow_hh, south) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, hhid, minority, hhhead, fhead, female, age, married, widowed, single,
+         educ, work, wagework, selfemp, selfagri, self, agri, manu, formal, industry, inc, hours, days, widow_hh, south) %>% 
   left_join(def06, by = hhid06) %>% 
   left_join(wt06, by = c("tinh", "huyen", "xa")) %>% 
   mutate(inc = inc/mcpi/rcpi,
@@ -255,16 +244,15 @@ vhlss08 <- list(m123a_08, m4a_08) %>%
          work = ifelse(m4ac2 == 1, 1, 0),
          selfemp = ifelse(m4ac1c == 1, 1, 0),
          selfagri = ifelse(m4ac1b == 1, 1, 0),
+         agri = ifelse(industry < 5, 1, 0),
          manu = ifelse(industry > 14 & industry < 40, 1, 0),
-         retail = ifelse(industry == 52, 1, 0),
-         apparel = ifelse(industry == 18, 1, 0),
          educ = as.numeric(educ),
          minority = ifelse(dantoc > 1, 1, 0),
          urban = ifelse(ttnt == 1, 1, 0),
          south = ifelse(tinh > 407, 1, 0)) %>% 
   vhlss_emp_fn () %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, hhid, hhhead, fhead, minority, female, age, married, widowed,single,  educ, 
-         work, wagework, selfemp, selfagri, self, industry, agri, manu, retail, apparel, inc, hours, days, urban, widow_hh, south) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, minority, hhhead, fhead, female, age, married, widowed, single,
+         educ, work, wagework, selfemp, selfagri, self, agri, manu, industry, inc, hours, days, widow_hh, south) %>% 
   left_join(wt08, by = c("tinh", "huyen", "xa")) %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
