@@ -157,109 +157,10 @@ save(sexratio_prov_89, file = "sexratio_prov_89.Rda")
 save(sexratio_prov_99, file = "sexratio_prov_99.Rda")
 save(sexratio_prov_09, file = "sexratio_prov_09.Rda")
 
-# Calculating male the female ratio in each occupation
-
-occ_m <- phc %>% 
-  filter(female == 0 & !is.na(occisco)) %>% 
-  select(year, occisco, perwt) %>% 
-  group_by(year, occisco) %>% 
-  count(occisco, year, wt = perwt) %>% 
-  rename(m_workers = n)
-
-occ_f <- phc %>% 
-  filter(female == 1 & !is.na(occisco)) %>% 
-  select(year, occisco, perwt) %>% 
-  group_by(year, occisco) %>% 
-  count(occisco, year, wt = perwt) %>% 
-  rename(f_workers = n)
-
-occisco_sum <- merge(occ_m, occ_f, by = c("year", "occisco")) %>% 
-  mutate(workerratio = m_workers/f_workers,
-         Occupation = case_when(occisco == 1 ~ 'Legislators, senior officials & managers',
-                                occisco == 2 ~ 'Professionals',
-                                occisco == 3 ~ 'Technicians & associate professionals',
-                                occisco == 4 ~ 'Clerks',
-                                occisco == 5 ~ 'Service workers',
-                                occisco == 6 ~ 'Skilled agricultural & fishery workers',
-                                occisco == 7 ~ 'Crafts & related trades workers',
-                                occisco == 8 ~ 'Plant & machine operators',
-                                occisco == 9 ~ 'Elementary occupations',
-                                occisco == 10 ~ 'Armed forces',
-                                occisco == 11 ~ 'Other',
-                                TRUE ~ NA_character_))
-
-## By province 
-
-occisco_prov_m <- phc %>% 
-  filter(year == 1999 & female == 0 & !is.na(occisco)) %>% 
-  group_by(geo1_vn1999, occisco) %>% 
-  count(occisco, geo1_vn1999, wt = perwt) %>% 
-  rename(m_workers = n)
-
-occisco_prov_f <- phc %>% 
-  filter(year == 1999 & female == 1 & !is.na(occisco)) %>% 
-  group_by(geo1_vn1999, occisco) %>% 
-  count(occisco, geo1_vn1999, wt = perwt) %>% 
-  rename(f_workers = n)
-
-occisco_prov_sum <- merge(occisco_prov_m, occisco_prov_f, by = c("geo1_vn1999", "occisco")) %>% 
-  mutate(workerratio = m_workers/f_workers,
-         Occupation = case_when(occisco == 1 ~ 'Legislators, senior officials & managers',
-                                occisco == 2 ~ 'Professionals',
-                                occisco == 3 ~ 'Technicians & associate professionals',
-                                occisco == 4 ~ 'Clerks',
-                                occisco == 5 ~ 'Service workers',
-                                occisco == 6 ~ 'Skilled agricultural & fishery workers',
-                                occisco == 7 ~ 'Crafts & related trades workers',
-                                occisco == 8 ~ 'Plant & machine operators',
-                                occisco == 9 ~ 'Elementary occupations',
-                                occisco == 10 ~ 'Armed forces',
-                                occisco == 11 ~ 'Other',
-                                TRUE ~ NA_character_))
-occisco_prov_sum <- left_join(occisco_prov_sum, bombs_province99, by = "geo1_vn1999")
-
-## By north/south 
-
-occ_ratio_n <- phc %>% 
-  filter(geo1_vn1989 <= 26 | geo1_vn1999 <= 408 | geo1_vn2009 <= 44) %>% 
-  group_by(year, female, occisco) %>% 
-  count(occisco, female, wt = perwt) %>% 
-  pivot_wider(names_from = female, values_from = n) %>% 
-  rename(north_m = 3,
-         north_f = 4) %>% 
-  mutate(workerratio_n = north_m/north_f) %>% 
-  filter(!is.na(occisco))
-
-occ_ratio_s <- phc %>% 
-  filter(geo1_vn1989 > 26 | geo1_vn1999 > 408 | geo1_vn2009 > 44) %>% 
-  group_by(year, female, occisco) %>% 
-  count(occisco, female, wt = perwt) %>% 
-  pivot_wider(names_from = female, values_from = n) %>% 
-  rename(south_m = 3,
-         south_f = 4) %>% 
-  mutate(workerratio_s = south_m/south_f) %>% 
-  filter(!is.na(occisco))
-
-occisco_ns <- merge(occ_ratio_n, occ_ratio_s, by = c("year", "occisco")) %>% 
-  mutate(Occupation = case_when(occisco == 1 ~ 'Legislators, senior officials & managers',
-                                occisco == 2 ~ 'Professionals',
-                                occisco == 3 ~ 'Technicians & associate professionals',
-                                occisco == 4 ~ 'Clerks',
-                                occisco == 5 ~ 'Service workers',
-                                occisco == 6 ~ 'Skilled agricultural & fishery workers',
-                                occisco == 7 ~ 'Crafts & related trades workers',
-                                occisco == 8 ~ 'Plant & machine operators',
-                                occisco == 9 ~ 'Elementary occupations',
-                                occisco == 10 ~ 'Armed forces',
-                                occisco == 11 ~ 'Other',
-                                TRUE ~ NA_character_)) %>% 
-  filter(occisco < 98) %>% 
-  select(year, Occupation, workerratio_n, workerratio_s)
-
 # Calculating male the female ratio in each industry 
 
 female <- phc %>%
-  filter(labforce == 2) %>% 
+  filter(work == 1) %>% 
   group_by(year, female) %>% 
   count(female, year, wt = perwt) %>% 
   pivot_wider(names_from = female, values_from = n) %>% 
@@ -299,9 +200,8 @@ indgen_sum <- merge(ind_m, ind_f, by = c("year", "indgen")) %>%
                               indgen == 114 ~ 'Other services',
                               indgen == 120 ~ 'Private household services',
                               indgen == 130 ~ 'Other industry',
-                              TRUE ~ NA_character_))
-
-indgen_sum <- merge(indgen_sum, female, by = "year") %>% 
+                              TRUE ~ NA_character_)) %>%
+  merge(female, by = "year") %>% 
   mutate(f_comp = round((f_workers/total_f_workers)*100, 2),
          m_comp = round((m_workers/total_m_workers)*100, 2))
 
