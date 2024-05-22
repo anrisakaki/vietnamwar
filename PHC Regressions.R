@@ -32,20 +32,162 @@ dev.off()
 
 png("work_phc_s.png")
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + as.factor(edattain) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc89, south == 1 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + as.factor(edattain) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc99, south == 1 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + as.factor(edattain) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc09, south == 1 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn2009)))
 legend("topleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
        legend = c("1989", "1999", "2009"))
+dev.off()
+
+#############################################
+# Probability of working by education level #
+#############################################
+
+# 1989
+
+png("work_edattain_phc89_s.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc89, south == 1 & migration == 0 & edattain < 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc89, south == 1 & migration == 0 & edattain == 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc89, south == 1 & migration == 0 & edattain == 3),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc89, south == 1 & migration == 0 & edattain > 3 & edattain < 9),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989)))
+legend("topleft", col = 1:4, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("Less than primary", "Primary", "Secondary", "University"))
+dev.off()
+
+png("work_edattain_phc89_n.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc89, south == 0 & migration == 0 & edattain < 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc89, south == 0 & migration == 0 & edattain == 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc89, south == 0 & migration == 0 & edattain == 3),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc89, south == 0 & migration == 0 & edattain > 3 & edattain < 9),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989)))
+legend("bottomleft", col = 1:4, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("Less than primary", "Primary", "Secondary", "University"))
+dev.off()
+
+# 1999
+
+png("work_edattain_phc99_s.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 1 & migration == 0 & edattain < 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 1 & migration == 0 & edattain == 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 1 & migration == 0 & edattain == 3),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 1 & migration == 0 & edattain > 3 & edattain < 9),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999)))
+legend("topleft", col = 1:4, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("Less than primary", "Primary", "Secondary", "University"))
+dev.off()
+
+png("work_edattain_phc99_n.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 0 & migration == 0 & edattain < 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 0 & migration == 0 & edattain == 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 0 & migration == 0 & edattain == 3),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 0 & migration == 0 & edattain > 3 & edattain < 9),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999)))
+legend("bottomleft", col = 1:4, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("Less than primary", "Primary", "Secondary", "University"))
+dev.off()
+
+# 2009
+
+png("work_edattain_phc09_s.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 1 & migration == 0 & edattain < 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 1 & migration == 0 & edattain == 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 1 & migration == 0 & edattain == 3),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 1 & migration == 0 & edattain > 3 & edattain < 9),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("topleft", col = 1:4, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("Less than primary", "Primary", "Secondary", "University"))
+dev.off()
+
+png("work_edattain_phc09_n.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 0 & migration == 0 & edattain < 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 0 & migration == 0 & edattain == 2),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 0 & migration == 0 & edattain == 3),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 0 & migration == 0 & edattain > 3 & edattain < 9),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:4, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("Less than primary", "Primary", "Secondary", "University"))
 dev.off()
 
 ###############################################
