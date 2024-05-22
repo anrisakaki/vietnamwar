@@ -62,7 +62,7 @@ vhlss_emp_fn <- function(i){
       agri = ifelse(industry == 1, 1, 0),
       selfagri = ifelse(is.na(selfagri) & work == 1, 0, selfagri),
       selfemp = ifelse(is.na(selfemp) & work == 1, 0, selfemp),
-      self = ifelse(selfagri == 1 & selfemp == 1, 1, 0),
+      self = ifelse(selfagri == 1 | selfemp == 1, 1, 0),
       wagework = ifelse(is.na(wagework) & work == 1, 0, wagework),
       manu = ifelse(is.na(manu) & work == 1, 0, manu),
       agri = ifelse(age < 17 | age > 64, NA, agri),
@@ -91,7 +91,6 @@ vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
   map(~mutate(.x, matv02 = as.numeric(str_sub(as.character(matv02), -2)))) %>%
   reduce(full_join, by = ivid02) %>% 
   left_join(m9_02, by = hhid02) %>% 
-  left_join(hhbus_02, by = c("tinh02", "huyen02", "xa02", "hoso02", "matv02", "qui", "phieu")) %>% 
   group_by(tinh02, huyen02, xa02, diaban02, hoso02, qui, phieu) %>% 
   mutate(hhid = cur_group_id()) %>% 
   ungroup() %>% 
