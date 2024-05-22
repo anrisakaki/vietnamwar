@@ -48,6 +48,82 @@ legend("topleft", col = 1:3, pch = 16, bty = "n", cex = 0.9,
        legend = c("1989", "1999", "2009"))
 dev.off()
 
+png("work_prewar_phc_s.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 1 & migration == 0 & age >= 44 & age <= 54),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 1 & migration == 0 & age >= 55 & age <= 64),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:2, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1999", "2009"))
+dev.off()
+
+png("work_postwar_phc_s.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 1 & migration == 0 & age < 44),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 1 & migration == 0 & age < 54),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("topleft", col = 1:2, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1999", "2009"))
+dev.off()
+
+png("work_prewar_phc_n.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 0 & migration == 0 & age > (1999-1950)),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 0 & migration == 0 & age > (2009-1950)),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:2, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1999", "2009"))
+dev.off()
+
+png("work_postwar_phc_n.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 0 & migration == 0 & age <= (1999-1975)),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 0 & migration == 0 & age <= (2009-1975)),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("bottomleft", col = 1:2, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1999", "2009"))
+dev.off()
+
+# By casualties 
+
+png("work_phc_cas.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + as.factor(edattain) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc89, south == 1 & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + as.factor(edattain) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc99, south == 1 & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + as.factor(edattain) + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+        subset(phc09, south == 1 & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("topleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
+
 #############################################
 # Probability of working by education level #
 #############################################
