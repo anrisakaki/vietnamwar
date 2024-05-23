@@ -459,26 +459,13 @@ ggsave("widowed3064_workerratio3064_89_s.jpeg", width = 7, height = 7)
 
 # Female and male labour force composition 
 
-ggplot(dplyr::filter(industry_02, fshare_s > 3.5), aes(x = (fshare_s), y = reorder(Industry, fshare_s))) + 
-  geom_bar(stat = "identity", fill = "skyblue") +
-  geom_text(aes(x = fshare_s / 2, label = round(fshare_s, 2)), size = 5, color = "black") +
-  labs(x = "Share of Working Women in 2001 (%)",
-       y = "Industry") +
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=20)) + 
-  scale_x_continuous(breaks = NULL) 
-ggsave("fcomp_02_s.jpeg", width = 12, height = 12)
+# 1989
 
-ggplot(dplyr::filter(industry_02, fshare_n > 1.61), aes(x = (fshare_n), y = reorder(Industry, fshare_n))) + 
+ggplot(dplyr::filter(indgen_s, year == 1989 & f_comp>1.1), aes(x = (f_comp), y = reorder(Industry, f_comp))) + 
   geom_bar(stat = "identity", fill = "skyblue") +
-  geom_text(aes(x = fshare_n / 2, label = round(fshare_n, 2)), size = 5, color = "black") +
-  labs(x = "Share of Working Women in 2001 (%)",
-       y = "Industry") +
+  geom_text(aes(x = f_comp / 2, label = f_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Women in 1989 (%)",
+       y = "") +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
@@ -487,13 +474,13 @@ ggplot(dplyr::filter(industry_02, fshare_n > 1.61), aes(x = (fshare_n), y = reor
         legend.title=element_blank(),
         text = element_text(size=20)) + 
   scale_x_continuous(breaks = NULL) 
-ggsave("fcomp_02_n.jpeg", width = 12, height = 12)
+ggsave("fcomp89_s.jpeg", width = 12, height = 12)
 
-ggplot(dplyr::filter(industry_02, mshare_s > 5), aes(x = (mshare_s), y = reorder(Industry, mshare_s))) + 
+ggplot(dplyr::filter(indgen_n, year == 1989 & f_comp>1.4), aes(x = (f_comp), y = reorder(Industry, f_comp))) + 
   geom_bar(stat = "identity", fill = "skyblue") +
-  geom_text(aes(x = mshare_s / 2, label = round(mshare_s, 2)), size = 5, color = "black") +
-  labs(x = "Share of Working Men in 2001 (%)",
-       y = "Industry") +
+  geom_text(aes(x = f_comp / 2, label = f_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Women in 1989 (%)",
+       y = "") +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
@@ -502,13 +489,13 @@ ggplot(dplyr::filter(industry_02, mshare_s > 5), aes(x = (mshare_s), y = reorder
         legend.title=element_blank(),
         text = element_text(size=20)) + 
   scale_x_continuous(breaks = NULL) 
-ggsave("mcomp_02_s.jpeg", width = 12, height = 12)
+ggsave("fcomp89_n.jpeg", width = 12, height = 12)
 
-ggplot(dplyr::filter(industry_02, mshare_n > 3), aes(x = (mshare_n), y = reorder(Industry, mshare_n))) + 
+ggplot(dplyr::filter(indgen_s, year == 1989 & m_comp>3), aes(x = (m_comp), y = reorder(Industry, m_comp))) + 
   geom_bar(stat = "identity", fill = "skyblue") +
-  geom_text(aes(x = mshare_n / 2, label = round(mshare_n, 2)), size = 5, color = "black") +
-  labs(x = "Share of Working Men in 2001 (%)",
-       y = "Industry") +
+  geom_text(aes(x = m_comp / 2, label = m_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Men in 1989 (%)",
+       y = "") +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
@@ -517,7 +504,146 @@ ggplot(dplyr::filter(industry_02, mshare_n > 3), aes(x = (mshare_n), y = reorder
         legend.title=element_blank(),
         text = element_text(size=20)) + 
   scale_x_continuous(breaks = NULL) 
-ggsave("mcomp_02_n.jpeg", width = 12, height = 12)
+ggsave("mcomp89_s.jpeg", width = 12, height = 12)
+
+ggplot(dplyr::filter(indgen_n, year == 1989 & m_comp>2), aes(x = (m_comp), y = reorder(Industry, m_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(x = m_comp / 2, label = m_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Men in 1989 (%)",
+       y = "") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=20)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("mcomp89_n.jpeg", width = 12, height = 12)
+
+# 1999
+
+ggplot(dplyr::filter(indgen_s, year == 1999 & f_comp>2), aes(x = (f_comp), y = reorder(Industry, f_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(x = f_comp / 2, label = f_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Women in 1999 (%)",
+       y = "") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=20)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("fcomp99_s.jpeg", width = 12, height = 12)
+
+ggplot(dplyr::filter(indgen_n, year == 1999 & f_comp>1), aes(x = (f_comp), y = reorder(Industry, f_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(x = f_comp / 2, label = f_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Women in 1999 (%)",
+       y = "") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=20)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("fcomp99_n.jpeg", width = 12, height = 12)
+
+ggplot(dplyr::filter(indgen_s, year == 1999 & m_comp>2), aes(x = (m_comp), y = reorder(Industry, m_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(x = m_comp / 2, label = m_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Men in 1999 (%)",
+       y = "") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=20)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("mcomp99_s.jpeg", width = 12, height = 12)
+
+ggplot(dplyr::filter(indgen_n, year == 1999 & m_comp>3), aes(x = (m_comp), y = reorder(Industry, m_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(x = m_comp / 2, label = m_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Men in 1999 (%)",
+       y = "") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=20)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("mcomp99_n.jpeg", width = 12, height = 12)
+
+# 2009
+
+ggplot(dplyr::filter(indgen_s, year == 2009 & f_comp>4), aes(x = (f_comp), y = reorder(Industry, f_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(x = f_comp / 2, label = f_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Women in 2009 (%)",
+       y = "") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=20)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("fcomp09_s.jpeg", width = 12, height = 12)
+
+ggplot(dplyr::filter(indgen_n, year == 2009 & f_comp>2), aes(x = (f_comp), y = reorder(Industry, f_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(x = f_comp / 2, label = f_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Women in 2009 (%)",
+       y = "") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=20)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("fcomp09_n.jpeg", width = 12, height = 12)
+
+ggplot(dplyr::filter(indgen_s, year == 2009 & m_comp>6), aes(x = (m_comp), y = reorder(Industry, m_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(x = m_comp / 2, label = m_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Men in 2009 (%)",
+       y = "") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=20)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("mcomp09_s.jpeg", width = 12, height = 12)
+
+ggplot(dplyr::filter(indgen_n, year == 2009 & m_comp>4), aes(x = (m_comp), y = reorder(Industry, m_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(x = m_comp / 2, label = m_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Men in 2009 (%)",
+       y = "") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=20)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("mcomp09_n.jpeg", width = 12, height = 12)
 
 # Birth cohort and labour force participation rate by age cohort
 
