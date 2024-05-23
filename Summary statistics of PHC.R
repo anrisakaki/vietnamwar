@@ -159,30 +159,61 @@ save(sexratio_prov_09, file = "sexratio_prov_09.Rda")
 
 # Calculating male the female ratio in each industry 
 
-female <- phc %>%
+female_n_fn <- function(i){
+  i %>% 
+    filter(work == 1) %>% 
+    group_by(female, south) %>% 
+    count(female, south, wt = perwt) %>% 
+    pivot_wider(names_from = female, values_from = n) %>% 
+    rename(total_m_workers = 2,
+           total_f_workers = 3)  
+}
+
+indgen_m_fn <- function(i){
+  i %>% 
+    filter(female == 0) %>% 
+    group_by(south, indgen) %>% 
+    summarise(N_m = sum(perwt)) %>% 
+    filter(indgen > 0)
+}
+
+indgen_f_fn <- function(i){
+  i %>% 
+    filter(female == 1) %>% 
+    group_by(south, indgen) %>% 
+    summarise(N_f = sum(perwt)) %>% 
+    filter(indgen > 0)
+}
+
+femalen <- phc_all %>% 
   filter(work == 1) %>% 
-  group_by(year, female) %>% 
-  count(female, year, wt = perwt) %>% 
-  pivot_wider(names_from = female, values_from = n) %>% 
-  rename(total_m_workers = 2,
-         total_f_workers = 3)
-  
-ind_m <- phc %>% 
-  filter(female == 0 & !is.na(indgen) & indgen > 0) %>% 
-  select(year, indgen, perwt) %>% 
-  group_by(year, indgen) %>% 
-  count(indgen, year, wt = perwt) %>% 
-  rename(m_workers = n)
+  group_by(year, south, female) %>%
+  summarise(count = sum(perwt)) %>% 
+  pivot_wider(names_from = female, values_from = count) %>% 
+  rename(total_m = 3,
+         total_f = 4)
 
-ind_f <- phc %>% 
-  filter(female == 1 & !is.na(indgen) & indgen > 0) %>% 
-  select(year, indgen, perwt) %>% 
-  group_by(year, indgen) %>% 
-  count(indgen, year, wt = perwt) %>% 
-  rename(f_workers = n)
+indgen89_m <- phc89 %>% 
+  indgen_m_fn()
+indgen89_f <- phc89 %>% 
+  indgen_f_fn()
+indgen89 <- merge(indgen89_m, indgen89_f, by = c("south", "indgen")) %>% mutate(year = 1989)
 
-indgen_sum <- merge(ind_m, ind_f, by = c("year", "indgen")) %>% 
-  mutate(workerratio = m_workers/f_workers,
+indgen99_m <- phc99 %>% 
+  indgen_m_fn()
+indgen99_f <- phc99 %>% 
+  indgen_f_fn()
+indgen99 <- merge(indgen99_m, indgen99_f, by = c("south", "indgen")) %>% mutate(year = 1999)
+
+indgen09_m <- phc09 %>% 
+  indgen_m_fn()
+indgen09_f <- phc09 %>% 
+  indgen_f_fn()
+indgen09 <- merge(indgen09_m, indgen09_f, by = c("south", "indgen")) %>% mutate(year = 2009)
+
+indgen <- bind_rows(indgen89, indgen99, indgen09) %>% 
+  left_join(femalen, by = c("year", "south")) %>% 
+  mutate(workerratio = N_m/N_f,
          Industry = case_when(indgen == 10 ~ 'Agriculture',
                               indgen == 20 ~ 'Mining and extraction',
                               indgen == 30 ~ 'Manufacturing',
@@ -201,91 +232,11 @@ indgen_sum <- merge(ind_m, ind_f, by = c("year", "indgen")) %>%
                               indgen == 120 ~ 'Private household services',
                               indgen == 130 ~ 'Other industry',
                               TRUE ~ NA_character_)) %>%
-  merge(female, by = "year") %>% 
-  mutate(f_comp = round((f_workers/total_f_workers)*100, 2),
-         m_comp = round((m_workers/total_m_workers)*100, 2))
+  mutate(f_comp = round((N_f/total_f)*100, 2),
+         m_comp = round((N_m/total_m)*100, 2))
 
-## by province 
-
-ind_m_prov <- phc %>% 
-  filter(year == 1989, female == 0 & !is.na(indgen) & indgen > 0) %>% 
-  select(geo1_vn1989, indgen, perwt) %>% 
-  group_by(geo1_vn1989, indgen) %>% 
-  count(indgen, geo1_vn1989, wt = perwt) %>% 
-  rename(m_workers = n)
-
-ind_f_prov <- phc %>% 
-  filter(year == 1989, female == 1 & !is.na(indgen) & indgen > 0) %>% 
-  select(geo1_vn1989, indgen, perwt) %>% 
-  group_by(geo1_vn1989, indgen) %>% 
-  count(indgen, geo1_vn1989, wt = perwt) %>% 
-  rename(f_workers = n)
-
-indgen_prov_sum <- merge(ind_m_prov, ind_f_prov, by = c("geo1_vn1989", "indgen")) %>% 
-  mutate(workerratio = m_workers/f_workers,
-         Industry = case_when(indgen == 10 ~ 'Agriculture',
-                              indgen == 20 ~ 'Mining and extraction',
-                              indgen == 30 ~ 'Manufacturing',
-                              indgen == 40 ~ 'Electricity, gas, water and waste management',
-                              indgen == 50 ~ 'Construction',
-                              indgen == 60 ~ 'Wholesale and retail trade',
-                              indgen == 70 ~ 'Hotels and restaurants',
-                              indgen == 80 ~ 'Transportation',
-                              indgen == 90 ~ 'Financial services and insurance',
-                              indgen == 100 ~ 'Public administration and defense',
-                              indgen == 110 ~ 'Services',
-                              indgen == 111 ~ 'Business services and real estate',
-                              indgen == 112 ~ 'Education',
-                              indgen == 113 ~ 'Health and social work',
-                              indgen == 114 ~ 'Other services',
-                              indgen == 120 ~ 'Private household services',
-                              indgen == 130 ~ 'Other industry',
-                              TRUE ~ NA_character_))
-
-indgen_prov_sum <- left_join(indgen_prov_sum, bombs_province89, by = "geo1_vn1989")
-
-## By north/south 
-
-ind_ratio_n <- phc %>% 
-  filter(geo1_vn1989 <= 26 | geo1_vn1999 <= 408 | geo1_vn2009 <= 44) %>% 
-  group_by(year, female, indgen) %>% 
-  count(indgen, female, wt = perwt) %>% 
-  pivot_wider(names_from = female, values_from = n) %>% 
-  rename(north_m = 3,
-         north_f = 4) %>% 
-  mutate(workerratio_n = north_m/north_f) %>% 
-  filter(indgen > 0 & !is.na(indgen))
-
-ind_ratio_s <- phc %>% 
-  filter(geo1_vn1989 > 26 | geo1_vn1999 > 408 | geo1_vn2009 > 44) %>% 
-  group_by(year, female, indgen) %>% 
-  count(indgen, female, wt = perwt) %>% 
-  pivot_wider(names_from = female, values_from = n) %>% 
-  rename(south_m = 3,
-         south_f = 4) %>% 
-  mutate(workerratio_s = south_m/south_f) %>% 
-  filter(indgen > 0 & !is.na(indgen))
-
-ind_ratio_ns <- merge(ind_ratio_n, ind_ratio_s, by = c("year", "indgen")) %>% 
-  mutate(Industry = case_when(indgen == 10 ~ 'Agriculture',
-                              indgen == 20 ~ 'Mining and extraction',
-                              indgen == 30 ~ 'Manufacturing',
-                              indgen == 40 ~ 'Electricity, gas, water and waste management',
-                              indgen == 50 ~ 'Construction',
-                              indgen == 60 ~ 'Wholesale and retail trade',
-                              indgen == 70 ~ 'Hotels and restaurants',
-                              indgen == 80 ~ 'Transportation',
-                              indgen == 90 ~ 'Financial services and insurance',
-                              indgen == 100 ~ 'Public administration and defense',
-                              indgen == 110 ~ 'Services',
-                              indgen == 111 ~ 'Business services and real estate',
-                              indgen == 112 ~ 'Education',
-                              indgen == 113 ~ 'Health and social work',
-                              indgen == 114 ~ 'Other services',
-                              indgen == 120 ~ 'Private household services',
-                              indgen == 130 ~ 'Other industry',
-                              TRUE ~ NA_character_)) %>% 
-  select(year, Industry, workerratio_n, workerratio_s)
+indgen_s <- indgen %>% filter(south == 1)
+indgen_n <- indgen %>% filter(south == 0)
 
 # Calculating the sex ratio and FLFP by age cohort in 1989, 1999 and 2009
 
