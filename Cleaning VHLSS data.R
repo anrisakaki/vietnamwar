@@ -53,7 +53,6 @@ ppn1012 <- ppn0019 %>%
          popdensity_12 = pop_12/area) %>% 
   rename(tinh = tinh_08)
 
-
 vhlss_emp_fn <- function(i){
   i %>% 
     mutate(
@@ -73,8 +72,7 @@ vhlss_emp_fn <- function(i){
       manu = ifelse(age < 17 | age > 64, NA, manu),
       inc = ifelse(is.na(work), NA, inc),
       hours = ifelse(is.na(work), NA, hours),
-      days = ifelse(is.na(work), NA, days),
-      ) %>% 
+      days = ifelse(is.na(work), NA, days)) %>% 
     group_by(hhid) %>% 
     mutate(widow_hh = ifelse(any(widowed == 1 & female == 1), 1, 0),
     widow_hh = ifelse(is.na(widow_hh), 0, widow_hh))
@@ -156,8 +154,6 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
          selfagri = ifelse(m4ac1b == 1, 1, 0),
          formal = ifelse(m4ac10b == 1, 1, 0),
          minority = ifelse(dantoc > 1, 1, 0),
-         south = ifelse(tinh > 407, 1, 0)) %>% 
-  mutate(hhid = cur_group_id(),
          south = ifelse(tinh > 407, 1, 0)) %>% 
   vhlss_emp_fn () %>% 
   select(tinh, huyen, xa, diaban, hoso, matv, ky, hhid, minority, hhhead, fhead, female, age, marital, married, widowed, single,
