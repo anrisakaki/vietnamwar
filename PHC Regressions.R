@@ -553,3 +553,43 @@ iplot(list(
 legend("bottomleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
        legend = c("1989", "1999", "2009"))
 dev.off()
+
+#############
+# MIGRATION #
+#############
+
+png("work_mig_phc_n.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst + geomig1_5,
+        subset(phc89, south == 0 & migration == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst + geomig1_5,
+        subset(phc99, south == 0 & migration == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst + geomig1_5,
+        subset(phc09, south == 0 & migration == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("topleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
+
+png("work_mig_phc_s.png")
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst + geomig1_5,
+        subset(phc89, south == 1 & migration == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst + geomig1_5,
+        subset(phc99, south == 1 & migration == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst + geomig1_5,
+        subset(phc09, south == 1 & migration == 1),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009)))
+legend("topleft", col = 1:3, pch = 16, bty = "n", cex = 0.9, 
+       legend = c("1989", "1999", "2009"))
+dev.off()
