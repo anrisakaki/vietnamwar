@@ -6,17 +6,15 @@
 
 ## Female 
 
-selfagri_agexbmr_02_s <- feols(selfagri ~ i(as.factor(age), log(tot_bmr_prov_ppn)) + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | urban + age + minority,
+self_agexbmr_02_s <- tidy(feols(self ~ i(as.factor(age), log(tot_bmr_prov_ppn)) + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | urban + age + minority,
                            subset(vhlss02, south == 1 & female == 1 & age < 65 & age > 15),
                            weights = ~wt75,
-                           vcov = ~tinh + age)
-selfagri_agexbmr_02_n <- feols(selfagri ~ i(as.factor(age), log(tot_bmr_prov_ppn)) + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | urban + age + minority,
+                           vcov = ~tinh + age)) %>% filter(grepl("log\\(tot_bmr_prov_ppn\\)", term))
+self_agexbmr_02_n <- tidy(feols(self ~ i(as.factor(age), log(tot_bmr_prov_ppn)) + educ + dist_nearest_base_prov + dist_nearest_hochi_prov | urban + age + minority,
                            subset(vhlss02, south == 0 & female == 1 & age < 65 & age > 15),
                            weights = ~wt75,
-                           vcov = ~tinh + age)
+                           vcov = ~tinh + age)) %>% filter(grepl("log\\(tot_bmr_prov_ppn\\)", term))
 
-selfagri_agexbmr_coef_02_s <- tidy(selfagri_agexbmr_02_s) %>% filter(grepl("log\\(tot_bmr_prov_ppn\\)", term))
-selfagri_agexbmr_coef_02_n <- tidy(selfagri_agexbmr_02_n) %>% filter(grepl("log\\(tot_bmr_prov_ppn\\)", term))
 selfagri_agexbmr_coef_02_s$age <- rep(seq(16, 64), each = nrow(selfagri_agexbmr_coef_02_s) / length(seq(16, 64)))
 selfagri_agexbmr_coef_02_n$age <- rep(seq(16, 64), each = nrow(selfagri_agexbmr_coef_02_n) / length(seq(16, 64)))
 
