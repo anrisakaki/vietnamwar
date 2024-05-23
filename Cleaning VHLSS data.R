@@ -120,7 +120,8 @@ vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
   rename(tinh = tinh02) %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
-         urban = ifelse(urban == 1, 1, 0)) %>% 
+         urban = ifelse(urban == 1, 1, 0),
+         year = 2002) %>% 
   left_join(province_bmr_sum02, by = "tinh") %>% 
   left_join(ppn02, by = "tinh")
   
@@ -163,7 +164,8 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
   mutate(inc = inc/mcpi/rcpi,
          urban = ifelse(urban == 1, 1, 0),
          tinh = ifelse(tinh == 105, 101, tinh),
-         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
+         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
+         year = 2004) %>% 
   left_join(province_bmr_sum, by = "tinh") %>% 
   left_join(ppn0408, by = "tinh")
 
@@ -211,7 +213,8 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
   mutate(inc = inc/mcpi/rcpi,
          urban = ifelse(urban == 1, 1, 0),
          tinh = ifelse(tinh == 105, 101, tinh),
-         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
+         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
+         year = 2006) %>% 
   left_join(province_bmr_sum, by = "tinh") %>% 
   left_join(ppn0408, by = "tinh")
 
@@ -252,7 +255,8 @@ vhlss08 <- list(m123a_08, m4a_08) %>%
          educ, work, wagework, selfemp, selfagri, self, agri, manu, industry, inc, hours, days, widow_hh, south, urban) %>% 
   left_join(wt08, by = c("tinh", "huyen", "xa")) %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
-         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
+         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
+         year = 2008) %>% 
   left_join(province_bmr_sum, by = "tinh") %>% 
   left_join(ppn0408, by = "tinh")
 
@@ -294,7 +298,8 @@ vhlss10 <- list(m1a_10, m2a_10, m4a1_10, m4a2_10, m4a3_10, m4a4_10) %>%
   distinct() %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
-         urban = ifelse(urban == 1, 1, 0))  %>% 
+         urban = ifelse(urban == 1, 1, 0),
+         year = 2010)  %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   left_join(ppn1012, by = "tinh")
 
@@ -336,7 +341,8 @@ vhlss12 <- list(m1a_12, m2a1_12) %>%
   left_join(wt12, by = c("tinh", "huyen", "xa")) %>% 
   distinct() %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
-         tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh))  %>% 
+         tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
+         year = 2012)  %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   left_join(ppn1012, by = "tinh") 
 
@@ -408,7 +414,10 @@ vhlss14 <- list(m1a_14, m2a_14, m4a_14) %>%
   group_by(hhid) %>% 
   mutate(widow_hh = ifelse(any(widowed == 1 & female == 1), 1, 0),
          widow_hh = ifelse(is.na(widow_hh), 0, widow_hh)) %>% 
-  mutate(south = ifelse(tinh > 44, 1, 0)) 
+  mutate(south = ifelse(tinh > 44, 1, 0),
+         year = 2014) 
+
+vhlss <- bind_rows(vhlss02, vhlss04, vhlss06, vhlss08, vhlss10, vhlss12)
 
 save(vhlss02, file = "vhlss02.Rda")
 save(vhlss04, file = "vhlss04.Rda")
