@@ -4,16 +4,20 @@ load("province_bmr_sum02.Rda")
 load("prov02_vhlss.Rda")
 load("prov04_vhlss.Rda")
 
-ppn0103 <- ppn0019 %>% 
+ppn002 <- ppn0019 %>% 
   group_by(tinh02) %>% 
   summarise(area = sum(Area),
             pop_01 = sum(X2001)*10000,
-            pop_02 = sum(X2002)*10000,
-            pop_03 = sum(X2003)*10000) %>% 
+            pop_02 = sum(X2002)*10000) %>% 
   mutate(popdensity_01 = pop_01/area,
-         popdensity_02 = pop_02/area,
-         popdensity_03 = pop_03/area) %>% 
+         popdensity_02 = pop_02/area) %>% 
   rename(tinh = tinh02)
+
+ppn03 <- ppn0019 %>% 
+  group_by(tinh) %>% 
+  summarise(area = sum(Area),
+            pop_03 = sum(X2003)*10000) %>% 
+  mutate(popdensity_03 = pop_03/area)
 
 ppn0419 <- ppn0019 %>% 
   group_by(tinh_08) %>% 
@@ -51,6 +55,7 @@ ppn0419 <- ppn0019 %>%
          popdensity_18 = pop_18/area) %>% 
   rename(tinh = tinh_08)
 
+sexratio01 <- prov02_vhlss %>% select(tinh, sex_ratio)
 sexratio03 <- prov04_vhlss %>% select(tinh, sex_ratio)
 
 dn_fn <- function(i) {
@@ -71,7 +76,7 @@ dn_fn <- function(i) {
 
 dn01 <- ec_list[[2]] %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
-         tinh = ifelse(tinh == 302, 301, tinh),
+         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
          ldc21 = ifelse(is.na(ldc21), 0, ldc21),
          ldc22 = ifelse(is.na(ldc22), 0, ldc22),
          nworkers = ldc11 - ldc21,
@@ -86,11 +91,11 @@ dn01 <- ec_list[[2]] %>%
          manu = ifelse(nganh_kd > 1429 & nganh_kd < 4010, 1, 0),
          year = 2001) %>% 
   left_join(sexratio01, by = "tinh") %>% 
-  left_join(ppn0103, by = "tinh")
+  left_join(ppn002, by = "tinh")
 
 dn02 <- ec_list[[3]] %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
-         tinh = ifelse(tinh == 302, 301, tinh)) %>% 
+         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
   rename(nworkers = ld33,
          fworkers = ld34,
          tot_workers = ld13,
@@ -103,11 +108,11 @@ dn02 <- ec_list[[3]] %>%
          manu = ifelse(nganh_kd > 1429 & nganh_kd < 4010, 1, 0),
          year = 2002) %>% 
   left_join(sexratio01, by = "tinh") %>% 
-  left_join(ppn0103, by = "tinh")
+  left_join(ppn002, by = "tinh")
 
 dn03 <- ec_list[[4]] %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
-         tinh = ifelse(tinh == 302, 301, tinh)) %>% 
+         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
   rename(nworkers = ld33,
          fworkers = ld34,
          tot_workers = ld13,
@@ -120,7 +125,7 @@ dn03 <- ec_list[[4]] %>%
          year = 2003) %>% 
   left_join(province_bmr_sum, by = "tinh") %>% 
   left_join(sexratio03, by = "tinh") %>% 
-  left_join(ppn0103, by = "tinh")
+  left_join(ppn03, by = "tinh")
 
 dn04 <- ec_list[[5]] %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
@@ -135,7 +140,7 @@ dn04 <- ec_list[[5]] %>%
   mutate(south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd > 1429 & nganh_kd < 4010, 1, 0),
          year = 2004) %>% 
-  left_join(province_bmr_sum2, by = "tinh") 
+  left_join(province_bmr_sum2, by = "tinh")
 
 dn05 <- ec_list[[6]] %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
