@@ -299,10 +299,6 @@ legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9,
        legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
 dev.off()
 
-#############################################
-# PROBABILITY OF WORKING BY EDUCATION LEVEL #
-#############################################
-
 #######################################
 # PROBABILITY OF WORKING IN AGRI/MANU #
 #######################################
@@ -498,3 +494,34 @@ iplot(list(
 legend("bottomleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
        legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
 dev.off()
+
+#############################################
+# PROBABILITY OF WORKING BASED ON WIDOWHOOD #
+#############################################
+
+iplot(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_02) | minority + urban + marital,
+        subset(vhlss02, south == 0),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_04) | minority + urban + marital,
+        subset(vhlss04, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_06) | minority + urban + marital,
+        subset(vhlss06, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_08) | minority + urban + marital,
+        subset(vhlss08, south == 0),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_10) | minority + urban + marital,
+        subset(vhlss10, south == 0),
+        weights = ~wt9,
+        vcov = ~tinh),
+  feols(work ~ as.factor(female) + i(as.factor(female), widow_hh) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_12) | minority + urban + marital,
+        subset(vhlss12, south == 0),
+        weights = ~wt9,
+        vcov = ~tinh)
+))
