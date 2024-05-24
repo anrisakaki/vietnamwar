@@ -171,6 +171,9 @@ industry_02 <- merge(industry_f_02, industry_m_02, by = c("south", "industry")) 
                               industry == 75 ~ 'Public administration',
                               TRUE ~ NA_character_))
 
+ind02_s <- industry_02 %>% filter(south == 1)
+ind02_n <- industry_02 %>% filter(south == 0)
+
 save(prov02_vhlss, file = "prov02_vhlss.Rda")
 save(prov04_vhlss, file = "prov04_vhlss.Rda")
 save(prov06_vhlss, file = "prov06_vhlss.Rda")
