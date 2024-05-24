@@ -55,6 +55,7 @@ m2a1_12 <- read_dta(file = "Full VHLSS/2012/Muc2a1.dta")
 wt12 <- read_dta(file = "Full VHLSS/2012/wt2012new.dta")
 ho11_12 <- read_dta(file = "Full VHLSS/2012/ho11.dta")
 
+ho1_14 <- read_dta(file = "Full VHLSS/2014/ho1.dta")
 m1a_14 <- read_dta(file = "Full VHLSS/2014/Muc1A.dta")
 m2a_14 <- read_dta(file = "Full VHLSS/2014/Muc2A.dta")
 m4a_14 <- read_dta(file = "Full VHLSS/2014/Muc4a.dta")
