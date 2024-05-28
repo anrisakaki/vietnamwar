@@ -35,3 +35,39 @@ ind10 <- dn_ind_sexratio %>% filter(year == 2010) %>%
 # BY FIRM TYPE #
 ################
 
+firmtype_sum <- dn %>% 
+  group_by(year) %>% 
+  summarise(total = n(),
+            soe = sum(soe == 1, na.rm = T),
+            private = sum(private == 1, na.rm = T),
+            priv_w_state = sum(priv_w_state == 1, na.rm = T),
+            collective = sum(collective == 1, na.rm = T),
+            foe = sum(foe == 1, na.rm = T)) %>% 
+  mutate(soe_share = soe/total,
+         Private = private/total,
+         Private_w_Share = priv_w_state/total,
+         Collective = collective/total,
+         FOE = foe/total)
+
+firmtype_long <- firmtype_sum %>% 
+  select(year, Private, Private_w_Share, Collective, FOE) %>% 
+  pivot_longer(
+    cols = -year,
+    names_to = "FirmType",
+    values_to = "Share") %>% 
+  mutate(FirmType = ifelse(FirmType == "Private_w_Share", "Private w/ State Capital", FirmType))
+
+# Filter dn10 where soe == 1, select relevant columns, rename, and ensure unique rows
+soe10 <- dn10 %>% 
+  filter(soe == 1) %>% 
+  select(ma_thue, lhdn) %>% 
+  rename(lhdn10 = lhdn) %>% 
+  distinct() 
+
+soe11 <- dn11 %>% 
+  select(ma_thue, lhdn) %>% 
+  rename(lhdn11 = lhdn) %>% 
+  distinct() 
+
+# Perform a left join between dn10 and dn11 based on ma_thue
+test_merge <- list(soe10, soe11) %>% reduce(full_join, by = "ma_thue")
