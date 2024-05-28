@@ -1,3 +1,25 @@
+# Types of firms 
+
+ggplot(firmtype_long, aes(x = year, y = Share, color = FirmType)) +
+  geom_line(linewidth = 1) +
+  labs(
+    title = "",
+    x = "Year",
+    y = "Share",
+    color = "Firm Type"
+  ) +
+  theme_minimal() +
+  guides(fill = "none") + 
+  scale_x_continuous(breaks=seq(2001,2018,1)) +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  scale_y_continuous(labels = scales::percent) 
+
 # Map of number of workers across districts 
 
 dn_dist_sf <- left_join(dn_dist, vnmap2, by = c("provname2018" = "NAME_1", "distname2018")) %>% st_as_sf()
@@ -89,20 +111,3 @@ ggplot(dplyr::filter(dn_prov, year == 2009 & south == 0), aes(x = log(tot_bmr), 
        y = "log(Ratio of Male to Female Workers) in 2000 \n(North)")
 ggsave("dn_prov_sexratio_09_n.jpeg", width = 7, height = 7)
 
-# Directors 
-
-ggplot(dplyr::filter(dn_dist, south == 0), aes(x = log(tot_bmr), y = log(dirratio*100))) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(Bombs, Missiles and Rockets)",
-       y = "log(Ratio of Male to Female Directors) in 2016")
