@@ -384,7 +384,7 @@ legend("bottomleft", col = 1:6, pch = 16, bty = "n", cex = 0.9,
        legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
 dev.off()
 
-png("selfagri_vhlss_n.png")
+png("agri_vhlss_n.png")
 iplot(list(
   feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_02) | minority + urban + marital,
         subset(vhlss02, south == 0 & work == 1),
