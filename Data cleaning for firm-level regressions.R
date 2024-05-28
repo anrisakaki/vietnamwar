@@ -1,6 +1,7 @@
 load("district_bmr_sum.Rda")
 load("province_bmr_sum.Rda")
 load("province_bmr_sum02.Rda")
+load("province_bmr_sum2.Rda")
 load("prov02_vhlss.Rda")
 load("prov04_vhlss.Rda")
 
@@ -60,7 +61,8 @@ sexratio03 <- prov04_vhlss %>% select(tinh, sex_ratio)
 
 dn_fn <- function(i) {
   i %>% 
-    mutate(nganh_kd = as.numeric(substr(nganh_kd, 1, 4)),
+    mutate(tinh = as.numeric(tinh),
+           nganh_kd = as.numeric(substr(nganh_kd, 1, 4)),
            nganh_kd2 = case_when(
              nchar(nganh_kd) > 3 ~ as.numeric(substr(nganh_kd, 1, 2)),
              nchar(nganh_kd) == 3 ~ as.numeric(substr(nganh_kd, 1, 1)),
@@ -79,44 +81,25 @@ dn_fn <- function(i) {
     left_join(ppn0419, by = "tinh")
 }
 
-dn01 <- ec_list[[2]] %>% 
-  mutate(tinh = ifelse(tinh == 105, 101, tinh),
-         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
-         ldc21 = ifelse(is.na(ldc21), 0, ldc21),
-         ldc22 = ifelse(is.na(ldc22), 0, ldc22),
-         nworkers = ldc11 - ldc21,
-         fworkers = ldc12 - ldc22) %>% 
-  rename(tot_workers = ld13,
-         tot_fworkers = ld14) %>% 
-  dn_fn() %>%
-  mutate(formal_f = tot_fworkers/tot_workers,
-         formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn == 1 | lhdn == 2, 1, 0),
-         priv_w_state = ifelse(lhdn == 8 | lhdn == 11, 1, 0),
-         private = ifelse(lhdn == 4 | lhdn == 6 | lhdn == 7 | lhdn == 9 | lhdn == 12, 1, 0),
-         collective = ifelse(lhdn == 5, 1, 0),
-         foe = ifelse(lhdn == 10, 1, 0),
-         south = ifelse(tinh > 407, 1, 0),
-         manu = ifelse(nganh_kd2 > 14 & nganh_kd2 < 38, 1, 0),
-         year = 2001) %>% 
-  left_join(province_bmr_sum02, by = "tinh") %>%
-  left_join(sexratio01, by = "tinh") %>% 
-  left_join(ppn002, by = "tinh")
+# Private = Private enterprise | JSC w no state capital 
+# SOE = Enterprise with 100% state capital 
+# FOE = 100% foreign capital 
 
+# Private limited companies are predominantly classified as JSC w state capital in 2001 
 dn02 <- ec_list[[3]] %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
-  rename(nworkers = ld33,
-         fworkers = ld34,
-         tot_workers = ld13,
-         tot_fworkers = ld14) %>% 
+  rename(nworkers = ld31,
+         fworkers = ld32,
+         tot_workers = ld11,
+         tot_fworkers = ld12) %>% 
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 6 | lhdn == 7, 1, 0),
-         priv_w_state = ifelse(lhdn > 8 & lhdn < 12 | lhdn == 13, 1, 0),
-         private = ifelse(lhdn == 4 | lhdn == 8, 1, 0),
-         collective = ifelse(lhdn == 5, 1, 0),
+         soe = ifelse(lhdn < 3 | lhdn == 6 | lhdn == 7, 1, 0),
+         collective = ifelse(lhdn == 3, 1, 0),
+         private = ifelse(lhdn == 4, 1, 0),
+         priv_w_state = ifelse(lhdn == 8, 1, 0),
          foe = ifelse(lhdn == 12, 1, 0),
          south = ifelse(tinh > 407, 1, 0),
          manu = ifelse(nganh_kd2 > 14 & nganh_kd2 < 38, 1, 0),
@@ -128,17 +111,17 @@ dn02 <- ec_list[[3]] %>%
 dn03 <- ec_list[[4]] %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
-  rename(nworkers = ld33,
-         fworkers = ld34,
-         tot_workers = ld13,
-         tot_fworkers = ld14) %>%  
+  rename(nworkers = ld31,
+         fworkers = ld32,
+         tot_workers = ld11,
+         tot_fworkers = ld12) %>%  
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn < 6, 1, 0),
-         private = ifelse(lhdn == 7 | lhdn == 9 | lhdn == 10 | lhdn == 14, 1, 0),
-         priv_w_state = ifelse(lhdn == 11 | lhdn == 13, 1, 0),
+         soe = ifelse(lhdn < 3, 1, 0),
          collective = ifelse(lhdn == 6, 1, 0),
+         private = ifelse(lhdn == 7 | lhdn == 10, 1, 0),
+         priv_w_state = ifelse(lhdn == 9, 1, 0),
          foe = ifelse(lhdn == 12, 1, 0),
          south = ifelse(tinh > 407, 1, 0),
          manu = ifelse(nganh_kd2 > 14 & nganh_kd2 < 38, 1, 0),
@@ -154,41 +137,42 @@ dn04 <- ec_list[[5]] %>%
            nganh_kd < 101000 ~ as.numeric(substr(nganh_kd, 1, 3)),
            TRUE ~ as.numeric(nganh_kd)  
          )) %>% 
-  rename(nworkers = ld33,
-         fworkers = ld34,
-         tot_workers = ld13,
-         tot_fworkers = ld14,) %>% 
+  rename(nworkers = ld31,
+         fworkers = ld32,
+         tot_workers = ld11,
+         tot_fworkers = ld12,) %>% 
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
          south = ifelse(tinh > 44, 1, 0),
-         soe = ifelse(lhdn > 0 & lhdn < 6, 1, 0),
-         private = ifelse(lhdn == 7 | lhdn == 9 | lhdn == 10, 1, 0),
-         priv_w_state = ifelse(lhdn == 11 | lhdn == 13, 1, 0),
+         soe = ifelse(lhdn < 5, 1, 0),
          collective = ifelse(lhdn == 6, 1, 0),
+         private = ifelse(lhdn == 7 | lhdn == 10, 1, 0),
+         priv_w_state = ifelse(lhdn == 9, 1, 0),
          foe = ifelse(lhdn == 12, 1, 0),
          manu = ifelse(nganh_kd2 > 14 & nganh_kd2 < 38, 1, 0),
          year = 2004) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn05 <- ec_list[[6]] %>% 
-  mutate(tinh = ifelse(tinh == 28, 1, tinh),
+  mutate(tinh = as.numeric(tinh),
+         tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
            nganh_kd < 101000 ~ as.numeric(substr(nganh_kd, 1, 3)),
            TRUE ~ as.numeric(nganh_kd)  
          )) %>% 
-  rename(nworkers = ld33,
-         fworkers = ld34,
-         tot_workers = ld13,
-         tot_fworkers = ld14) %>% 
+  rename(nworkers = ld31,
+         fworkers = ld32,
+         tot_workers = ld11,
+         tot_fworkers = ld12) %>% 
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn < 6, 1, 0),
-         private = ifelse(lhdn == 7 | lhdn == 10 | lhdn == 14, 1, 0),
-         priv_w_state = ifelse(lhdn == 9 | lhdn == 11 | lhdn == 13, 1, 0),
+         soe = ifelse(lhdn < 5, 1, 0),
          collective = ifelse(lhdn == 6, 1, 0),
+         private = ifelse(lhdn == 7 | lhdn == 10, 1, 0),
+         priv_w_state = ifelse(lhdn == 9, 1, 0),
          foe = ifelse(lhdn == 12, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 14 & nganh_kd2 < 38, 1, 0),
@@ -202,17 +186,17 @@ dn06 <- ec_list[[7]] %>%
            nganh_kd < 10101 ~ as.numeric(substr(nganh_kd, 1, 3)),
            TRUE ~ as.numeric(nganh_kd)  
          )) %>%  
-  rename(nworkers = ld23,
-         fworkers = ld24,
-         tot_workers = ld13,
-         tot_fworkers = ld14) %>% 
+  rename(nworkers = ld21,
+         fworkers = ld22,
+         tot_workers = ld11,
+         tot_fworkers = ld12) %>% 
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn < 6, 1, 0),
-         private = ifelse(lhdn == 7 | lhdn == 10 | lhdn == 14, 1, 0),
-         priv_w_state = ifelse(lhdn == 9 | lhdn == 11 | lhdn == 13, 1, 0),
+         soe = ifelse(lhdn < 5, 1, 0),
          collective = ifelse(lhdn == 6, 1, 0),
+         private = ifelse(lhdn == 7 | lhdn == 10, 1, 0),
+         priv_w_state = ifelse(lhdn == 9, 1, 0),
          foe = ifelse(lhdn == 12, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
@@ -226,17 +210,17 @@ dn07 <- ec_list[[8]] %>%
            nganh_kd < 10101 ~ as.numeric(substr(nganh_kd, 1, 3)),
            TRUE ~ as.numeric(nganh_kd)  
          )) %>% 
-  rename(nworkers = ld23,
-         fworkers = ld24,
-         tot_workers = ld13,
-         tot_fworkers = ld14) %>% 
+  rename(nworkers = ld21,
+         fworkers = ld22,
+         tot_workers = ld11,
+         tot_fworkers = ld12) %>% 
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn < 6, 1, 0),
-         private = ifelse(lhdn == 7 | lhdn == 10 | lhdn == 14, 1, 0),
-         priv_w_state = ifelse(lhdn == 9 | lhdn == 11 | lhdn == 13, 1, 0),
+         soe = ifelse(lhdn < 5, 1, 0),
          collective = ifelse(lhdn == 6, 1, 0),
+         private = ifelse(lhdn == 7 | lhdn == 10, 1, 0),
+         priv_w_state = ifelse(lhdn == 9, 1, 0),
          foe = ifelse(lhdn == 12, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
@@ -250,18 +234,18 @@ dn08 <- ec_list[[9]] %>%
            nganh_kd < 10101 ~ as.numeric(substr(nganh_kd, 1, 3)),
            TRUE ~ as.numeric(nganh_kd)  
          )) %>% 
-  rename(nworkers = ld23,
-         fworkers = ld24,
-         tot_workers = ld13,
-         tot_fworkers = ld14) %>% 
+  rename(nworkers = ld21,
+         fworkers = ld22,
+         tot_workers = ld11,
+         tot_fworkers = ld12) %>% 
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
-         soe = ifelse(lhdn < 6, 1, 0),
-         private = ifelse(lhdn == 7 | lhdn == 10 | lhdn == 14, 1, 0),
-         priv_w_state = ifelse(lhdn == 9 | lhdn == 11 | lhdn == 13, 1, 0),
+         soe = ifelse(lhdn < 5, 1, 0),
          collective = ifelse(lhdn == 6, 1, 0),
+         private = ifelse(lhdn == 7 | lhdn == 10, 1, 0),
+         priv_w_state = ifelse(lhdn == 9, 1, 0),
          foe = ifelse(lhdn == 12, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          year = 2008) %>% 
@@ -274,20 +258,20 @@ dn09 <- ec_list[[10]] %>%
            nganh_kd < 10101 ~ as.numeric(substr(nganh_kd, 1, 3)),
            TRUE ~ as.numeric(nganh_kd)  
          )) %>% 
-  rename(nworkers = ld23,
-         fworkers = ld24,
-         tot_workers = ld13,
-         tot_fworkers = ld14) %>% 
+  rename(nworkers = ld21,
+         fworkers = ld22,
+         tot_workers = ld11,
+         tot_fworkers = ld12) %>% 
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
+         soe = ifelse(lhdn < 5, 1, 0),
+         collective = ifelse(lhdn == 6, 1, 0),
+         private = ifelse(lhdn == 7 | lhdn == 10, 1, 0),
+         priv_w_state = ifelse(lhdn == 9, 1, 0),
+         foe = ifelse(lhdn == 12, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
-         soe = ifelse(lhdn < 6, 1, 0),
-         private = ifelse(lhdn == 7 | lhdn == 10 | lhdn == 14, 1, 0),
-         priv_w_state = ifelse(lhdn == 9 | lhdn == 11 | lhdn == 13, 1, 0),
-         collective = ifelse(lhdn == 6, 1, 0),
-         foe = ifelse(lhdn == 12, 1, 0),
          year = 2009) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
@@ -298,17 +282,17 @@ dn10 <- ec_list[[11]] %>%
            nganh_kd < 10101 ~ as.numeric(substr(nganh_kd, 1, 3)),
            TRUE ~ as.numeric(nganh_kd)  
          )) %>% 
-  rename(nworkers = ld23,
-         fworkers = ld24,
-         tot_workers = ld13,
-         tot_fworkers = ld14) %>% 
+  rename(nworkers = ld21,
+         fworkers = ld22,
+         tot_workers = ld11,
+         tot_fworkers = ld12) %>% 
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn < 6, 1, 0),
-         private = ifelse(lhdn == 7 | lhdn == 10 | lhdn == 14, 1, 0),
-         priv_w_state = ifelse(lhdn == 9 | lhdn == 11 | lhdn == 13, 1, 0),
+         soe = ifelse(lhdn < 5, 1, 0),
          collective = ifelse(lhdn == 6, 1, 0),
+         private = ifelse(lhdn == 7 | lhdn == 10, 1, 0),
+         priv_w_state = ifelse(lhdn == 9, 1, 0),
          foe = ifelse(lhdn == 12, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
@@ -324,15 +308,15 @@ dn11 <- ec_list[[12]] %>%
          )) %>% 
   rename(nworkers = ld21,
          fworkers = ld22,
-         tot_workers = ld11,
-         tot_fworkers = ld12) %>% 
+         tot_workers = tsld,
+         tot_fworkers = tsldnu) %>% 
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn < 6, 1, 0),
-         private = ifelse(lhdn == 7 | lhdn == 10 | lhdn == 14, 1, 0),
-         priv_w_state = ifelse(lhdn == 9 | lhdn == 11 | lhdn == 13, 1, 0),
+         soe = ifelse(lhdn < 5, 1, 0),
          collective = ifelse(lhdn == 6, 1, 0),
+         private = ifelse(lhdn == 7 | lhdn == 10, 1, 0),
+         priv_w_state = ifelse(lhdn == 9, 1, 0),
          foe = ifelse(lhdn == 12, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
@@ -353,10 +337,10 @@ dn12 <- ec_list[[13]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn < 5, 1, 0),
-         private = ifelse(lhdn == 6 | lhdn == 9 | lhdn == 13, 1, 0),
-         priv_w_state = ifelse(lhdn == 8 | lhdn == 10 | lhdn == 12, 1, 0),
+         soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
+         private = ifelse(lhdn == 6 | lhdn == 9, 1, 0),
+         priv_w_state = ifelse(lhdn == 8, 1, 0),
          foe = ifelse(lhdn == 11, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
@@ -377,10 +361,10 @@ dn13 <- ec_list[[14]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn < 5, 1, 0),
-         private = ifelse(lhdn == 6 | lhdn == 9 | lhdn == 13, 1, 0),
-         priv_w_state = ifelse(lhdn == 8 | lhdn == 10 | lhdn == 12, 1, 0),
+         soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
+         private = ifelse(lhdn == 6 | lhdn == 9, 1, 0),
+         priv_w_state = ifelse(lhdn == 8, 1, 0),
          foe = ifelse(lhdn == 11, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
@@ -401,10 +385,10 @@ dn14 <- ec_list[[15]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn < 5, 1, 0),
-         private = ifelse(lhdn == 6 | lhdn == 9 | lhdn == 13, 1, 0),
-         priv_w_state = ifelse(lhdn == 8 | lhdn == 10 | lhdn == 12, 1, 0),
+         soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
+         private = ifelse(lhdn == 6 | lhdn == 9, 1, 0),
+         priv_w_state = ifelse(lhdn == 8, 1, 0),
          foe = ifelse(lhdn == 11, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
@@ -425,10 +409,10 @@ dn15 <- ec_list[[16]] %>%
   dn_fn() %>% 
   mutate(formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
-         soe = ifelse(lhdn < 5, 1, 0),
-         private = ifelse(lhdn == 6 | lhdn == 9 | lhdn == 13, 1, 0),
-         priv_w_state = ifelse(lhdn == 8 | lhdn == 10 | lhdn == 12, 1, 0),
+         soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
+         private = ifelse(lhdn == 6 | lhdn == 9, 1, 0),
+         priv_w_state = ifelse(lhdn == 8, 1, 0),
          foe = ifelse(lhdn == 11, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
@@ -464,10 +448,10 @@ dn16 <- ec_list[[17]] %>%
          female_dir = ifelse(female_dir == 0 & gioitinh == 0 | quoctich != "VN", NA, female_dir)) %>% 
   select(tinh, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f, gioitinh, quoctich, female_dir, dir_yob, dir_ethnicity) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
-  mutate(soe = ifelse(lhdn < 5, 1, 0),
-         private = ifelse(lhdn == 6 | lhdn == 9 | lhdn == 13, 1, 0),
-         priv_w_state = ifelse(lhdn == 8 | lhdn == 10 | lhdn == 12, 1, 0),
+  mutate(soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
+         private = ifelse(lhdn == 6 | lhdn == 9, 1, 0),
+         priv_w_state = ifelse(lhdn == 8, 1, 0),
          foe = ifelse(lhdn == 11, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
@@ -499,10 +483,10 @@ dn17 <- ec_list[[18]] %>%
          tot_workerratio = ifelse(tot_fworkers == 0, tot_workers, tot_workerratio)) %>% 
   select(tinh, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>%
-  mutate(soe = ifelse(lhdn < 5, 1, 0),
-         private = ifelse(lhdn == 6 | lhdn == 9 | lhdn == 13, 1, 0),
-         priv_w_state = ifelse(lhdn == 8 | lhdn == 10 | lhdn == 12, 1, 0),
+  mutate(soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
+         private = ifelse(lhdn == 6 | lhdn == 9, 1, 0),
+         priv_w_state = ifelse(lhdn == 8, 1, 0),
          foe = ifelse(lhdn == 11, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
@@ -534,10 +518,10 @@ dn18 <- ec_list[[19]] %>%
          share_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, share_f)) %>% 
   select(tinh, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
-  mutate(soe = ifelse(lhdn < 5, 1, 0),
-         private = ifelse(lhdn == 6 | lhdn == 9 | lhdn == 13, 1, 0),
-         priv_w_state = ifelse(lhdn == 8 | lhdn == 10 | lhdn == 12, 1, 0),
+  mutate(soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
+         private = ifelse(lhdn == 6 | lhdn == 9, 1, 0),
+         priv_w_state = ifelse(lhdn == 8, 1, 0),
          foe = ifelse(lhdn == 11, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
