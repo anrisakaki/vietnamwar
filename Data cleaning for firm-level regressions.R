@@ -130,8 +130,8 @@ dn03 <- ec_list[[4]] %>%
   left_join(ppn03, by = "tinh")
 
 dn04 <- ec_list[[5]] %>% 
-  mutate(tinh = ifelse(tinh == 105, 101, tinh),
-         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
+  mutate(tinh = ifelse(tinh == 28, 1, tinh),
+         tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
            nganh_kd < 101000 ~ as.numeric(substr(nganh_kd, 1, 3)),
            TRUE ~ as.numeric(nganh_kd)  
