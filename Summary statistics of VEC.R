@@ -56,18 +56,3 @@ firmtype_long <- firmtype_sum %>%
     names_to = "FirmType",
     values_to = "Share") %>% 
   mutate(FirmType = ifelse(FirmType == "Private_w_Share", "Private w/ State Capital", FirmType))
-
-# Filter dn10 where soe == 1, select relevant columns, rename, and ensure unique rows
-soe10 <- dn10 %>% 
-  filter(soe == 1) %>% 
-  select(ma_thue, lhdn) %>% 
-  rename(lhdn10 = lhdn) %>% 
-  distinct() 
-
-soe11 <- dn11 %>% 
-  select(ma_thue, lhdn) %>% 
-  rename(lhdn11 = lhdn) %>% 
-  distinct() 
-
-# Perform a left join between dn10 and dn11 based on ma_thue
-test_merge <- list(soe10, soe11) %>% reduce(full_join, by = "ma_thue")
