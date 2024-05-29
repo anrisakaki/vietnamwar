@@ -337,3 +337,15 @@ dn_formal_fe_prov_cas <- (list(
 dn_workerratio_coef_prov_cas <- lapply(dn_formal_fe_prov_cas, tidy)
 dn_indfe_formal_prov_coef_cas <- do.call(rbind, dn_workerratio_coef_prov_cas) %>% filter(term == "log(killed_tot_prov_ppn)")
 dn_indfe_formal_prov_coef_cas$year <- rep(seq(2002, 2015), each = nrow(dn_indfe_formal_prov_coef_cas) / length(seq(2002, 2015)))
+
+###################
+# FEMALE DIRECTOR #
+###################
+
+etable(feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov | lhdn + nganh_kd + dir_ethnicity + dir_yob,
+             subset(dn16, south == 1),
+             vcov = ~tinh))
+
+etable(feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov | lhdn + nganh_kd + dir_ethnicity + dir_yob,
+             subset(dn16, south == 0),
+             vcov = ~tinh))
