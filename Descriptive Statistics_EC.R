@@ -10,7 +10,7 @@ ggplot(firmtype_long, aes(x = year, y = Share, color = FirmType)) +
   ) +
   theme_minimal() +
   guides(fill = "none") + 
-  scale_x_continuous(breaks=seq(2001,2018,1)) +
+  scale_x_continuous(breaks=seq(2002,2018,1)) +
   theme(axis.line = element_line(color='black'),
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
