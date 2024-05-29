@@ -61,7 +61,7 @@ sexratio03 <- prov04_vhlss %>% select(tinh, sex_ratio)
 
 dn_fn <- function(i) {
   i %>% 
-    mutate(tinh = as.numeric(tinh),
+    mutate(across(c(tinh, huyen, xa), as.numeric),
            nganh_kd = as.numeric(substr(nganh_kd, 1, 4)),
            nganh_kd2 = case_when(
              nchar(nganh_kd) > 3 ~ as.numeric(substr(nganh_kd, 1, 2)),
@@ -69,9 +69,8 @@ dn_fn <- function(i) {
              TRUE ~ as.numeric(nganh_kd)  
            ),
            workerratio = (nworkers-fworkers)/fworkers,
-           share_f = fworkers/nworkers,
+           share_f = tot_fworkers/tot_workers,
            tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
-           across(c(tinh, huyen, xa), as.numeric),
            workerratio = ifelse(nworkers == 0 | fworkers == 0, NA, workerratio),
            tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio),
            share_f = ifelse(fworkers == 0 | is.na(fworkers), 0, share_f)) %>% 
