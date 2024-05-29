@@ -121,111 +121,6 @@ dn_indfe_prov_coef_s$group <- "South"
 dn_indfe_prov_coef_ns <- rbind(dn_indfe_prov_coef_n, dn_indfe_prov_coef_s)
 
 #################################
-# Firm level FE - FORMAL WORKERS #
-##################################
-
-# By south 
-
-dn_formal_fe_prov_n <- (list(
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + log(popdensity_02) | lhdn + nganh_kd,
-        subset(dn02, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio + log(popdensity_03)  | lhdn + nganh_kd,
-        subset(dn03, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio05 + log(popdensity_04) | lhdn + nganh_kd,
-        subset(dn04, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio05 + log(popdensity_05) | lhdn + nganh_kd,
-        subset(dn05, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio05 + log(popdensity_06) | lhdn + nganh_kd,
-        subset(dn06, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio07 + log(popdensity_07) | lhdn + nganh_kd,
-        subset(dn07, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio08 + log(popdensity_08) | lhdn + nganh_kd,
-        subset(dn08, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio09 + log(popdensity_09) | lhdn + nganh_kd,
-        subset(dn09, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio10 + log(popdensity_10) | lhdn + nganh_kd,
-        subset(dn10, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio11 + log(popdensity_11) | lhdn + nganh_kd,
-        subset(dn11, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio12 + log(popdensity_12) | lhdn + nganh_kd,
-        subset(dn12, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio13 + log(popdensity_13) | lhdn + nganh_kd,
-        subset(dn13, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio14  + log(popdensity_14) | lhdn + nganh_kd,
-        subset(dn14, south == 0),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio15  + log(popdensity_15) | lhdn + nganh_kd,
-        subset(dn15, south == 0),
-        vcov = ~tinh)))
-
-dn_formal_fe_prov_s <- (list(
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio  + log(popdensity_02) | lhdn + nganh_kd,
-        subset(dn02, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sex_ratio  + log(popdensity_03) | lhdn + nganh_kd,
-        subset(dn03, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio05  + log(popdensity_04) | lhdn + nganh_kd,
-        subset(dn04, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio05  + log(popdensity_05) | lhdn + nganh_kd,
-        subset(dn05, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio05  + log(popdensity_06) | lhdn + nganh_kd,
-        subset(dn06, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio07  + log(popdensity_07) | lhdn + nganh_kd,
-        subset(dn07, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio08  + log(popdensity_08) | lhdn + nganh_kd,
-        subset(dn08, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio09  + log(popdensity_09) | lhdn + nganh_kd,
-        subset(dn09, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio10  + log(popdensity_10) | lhdn + nganh_kd,
-        subset(dn10, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio11  + log(popdensity_11) | lhdn + nganh_kd,
-        subset(dn11, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio12  + log(popdensity_12) | lhdn + nganh_kd,
-        subset(dn12, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio13  + log(popdensity_13) | lhdn + nganh_kd,
-        subset(dn13, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio14  + log(popdensity_14) | lhdn + nganh_kd,
-        subset(dn14, south == 1),
-        vcov = ~tinh),
-  feols(workerratio ~ log(tot_bmr_prov_ppn) + sexratio15  + log(popdensity_15) | lhdn + nganh_kd,
-        subset(dn15, south == 1),
-        vcov = ~tinh)))
-
-dn_formal_fe_coef_prov_n <- lapply(dn_formal_fe_prov_n, tidy)
-dn_formal_fe_coef_prov_s <- lapply(dn_formal_fe_prov_s, tidy)
-dn_formal_fe_coef_prov_n <- do.call(rbind, dn_formal_fe_coef_prov_n) %>% filter(term == "log(tot_bmr_prov_ppn)")
-dn_formal_fe_coef_prov_s <- do.call(rbind, dn_formal_fe_coef_prov_s) %>% filter(term == "log(tot_bmr_prov_ppn)")
-dn_formal_fe_coef_prov_n$year <- rep(seq(2002, 2015), each = nrow(dn_formal_fe_coef_prov_n) / length(seq(2002, 2015)))
-dn_formal_fe_coef_prov_s$year <- rep(seq(2002, 2015), each = nrow(dn_formal_fe_coef_prov_s) / length(seq(2002, 2015)))
-
-dn_formal_fe_coef_prov_n$group <- "North"
-dn_formal_fe_coef_prov_s$group <- "South"
-dn_formal_fe_coef_prov_ns <- rbind(dn_formal_fe_coef_prov_n, dn_formal_fe_coef_prov_s)
-
-#################################
 # Casualties - FE - ALL WORKERS #
 #################################
 
@@ -286,66 +181,60 @@ dn_indfe_prov_coef_cas <- lapply(dn_indfe_prov_cas, tidy)
 dn_indfe_prov_coef_cas <- do.call(rbind, dn_indfe_prov_coef_cas) %>% filter(term == "log(killed_tot_prov_ppn)")
 dn_indfe_prov_coef_cas$year <- rep(seq(2002, 2018), each = nrow(dn_indfe_prov_coef_cas) / length(seq(2002, 2018)))
 
-####################################
-# Casualties - FE - FORMAL WORKERS #
-####################################
-
-dn_formal_fe_prov_cas <- (list(
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sex_ratio + log(popdensity_02) | lhdn + nganh_kd,
-        dn02,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sex_ratio + log(popdensity_03) | lhdn + nganh_kd,
-        dn03,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio05 + log(popdensity_04) | lhdn + nganh_kd,
-        dn04,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio05 + log(popdensity_05) | lhdn + nganh_kd,
-        dn05,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio05 + log(popdensity_06) | lhdn + nganh_kd,
-        dn06,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio07 + log(popdensity_07) | lhdn + nganh_kd,
-        dn07,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio08 + log(popdensity_08) | lhdn + nganh_kd,
-        dn08,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio09 + log(popdensity_09) | lhdn + nganh_kd,
-        dn09,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio10 + log(popdensity_10) | lhdn + nganh_kd,
-        dn10,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio11 + log(popdensity_11) | lhdn + nganh_kd,
-        dn11,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio12 + log(popdensity_12) | lhdn + nganh_kd,
-        dn12,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio13 + log(popdensity_13) | lhdn + nganh_kd,
-        dn13,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio14 + log(popdensity_14) | lhdn + nganh_kd,
-        dn14,
-        vcov = ~tinh),
-  feols(workerratio ~ log(killed_tot_prov_ppn) + sexratio15 + log(popdensity_15) | lhdn + nganh_kd,
-        dn15,
-        vcov = ~tinh)))
-
-dn_workerratio_coef_prov_cas <- lapply(dn_formal_fe_prov_cas, tidy)
-dn_indfe_formal_prov_coef_cas <- do.call(rbind, dn_workerratio_coef_prov_cas) %>% filter(term == "log(killed_tot_prov_ppn)")
-dn_indfe_formal_prov_coef_cas$year <- rep(seq(2002, 2015), each = nrow(dn_indfe_formal_prov_coef_cas) / length(seq(2002, 2015)))
-
 ###################
 # FEMALE DIRECTOR #
 ###################
 
-etable(feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov | lhdn + nganh_kd + dir_ethnicity + dir_yob,
+etable(list(
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
+        subset(dn16, south == 0),
+        vcov = ~tinh),
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
              subset(dn16, south == 1),
-             vcov = ~tinh))
+             vcov = ~tinh)), tex = T)
 
-etable(feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov | lhdn + nganh_kd + dir_ethnicity + dir_yob,
-             subset(dn16, south == 0),
-             vcov = ~tinh))
+etable(list(
+  # Agriculture 
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 0 & nganh_kd2 < 5),
+        vcov = ~tinh),
+  # Manufacturing 
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 0 & manu == 1),
+        vcov = ~tinh),
+  # Construction 
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 0 & nganh_kd2 >= 41 & nganh_kd2 < 45),
+        vcov = ~tinh),
+  # Wholesale and retail 
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 0 & nganh_kd2 >= 45 & nganh_kd2 < 49),
+        vcov = ~tinh),
+  # Hospitality   
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 0 & nganh_kd2 >= 55 & nganh_kd2 < 58),
+        vcov = ~tinh)
+), tex = T)
+
+etable(list(
+  # Agriculture 
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 1 & nganh_kd2 < 5),
+        vcov = ~tinh),
+  # Manufacturing 
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 1 & manu == 1),
+        vcov = ~tinh),
+  # Construction 
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 1 & nganh_kd2 >= 41 & nganh_kd2 < 45),
+        vcov = ~tinh),
+  # Wholesale and retail 
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 1 & nganh_kd2 >= 45 & nganh_kd2 < 49),
+        vcov = ~tinh),
+  # Hospitality   
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 1 & nganh_kd2 >= 55 & nganh_kd2 < 58),
+        vcov = ~tinh)
+), tex = T)
