@@ -10,152 +10,45 @@ for (i in phc) {
   load(i)
 }
 
-sexratio_phc <- function(i){
+phc_sum <- function(i){
+  
   i %>% 
-    filter(!is.na(age)) %>% 
-    group_by(age, female) %>% 
-    summarise(total = sum(perwt)) %>% 
-    pivot_wider(names_from = female, values_from = total) %>% 
-    rename(m_total = 2,
-           f_total = 3) %>% 
-    mutate(sex_ratio = m_total/f_total)
+    summarise(tot_f = sum(perwt[female == 1], na.rm = T),
+              tot_m = sum(perwt[female == 0], na.rm = T),
+              tot_mlf = sum(perwt[female == 0 & age > 15 & age < 65], na.rm = T),
+              tot_flf = sum(perwt[female == 1 & age > 15 & age < 65], na.rm = T),
+              f_work = sum(perwt[female == 1 & work == 1], na.rm = T),
+              m_work = sum(perwt[female == 0 & work == 1], na.rm = T),
+              widowed_f = sum(perwt[female == 1 & widowed == 1], na.rm = T),
+              tot_bmr_prov = mean(tot_bmr_prov),
+              tot_bmr_prov_ppn = mean(tot_bmr_prov_ppn),
+              killed_tot_prov_ppn = mean(killed_tot_prov_ppn)) %>% 
+    mutate(flfp = f_work/tot_flf,
+           sexratio = tot_m/tot_f,
+           widow_share = widowed_f/tot_f)
+  
 }
 
 # Calculating sex ratio by age, and by north and south 
 
-## 1989
-
-bc_sexratio89 <- phc89 %>% 
-  sexratio_phc()
-
-bc_sexratio89_s <- phc89 %>% 
-  filter(!is.na(age) & geo1_vn1989 > 26) %>% 
-  sexratio_phc() %>% 
-  mutate(sex_ratio_south = m_total/f_total)
-
-bc_sexratio89_n <- phc89 %>% 
-  filter(!is.na(age) & geo1_vn1989 <= 26) %>% 
-  sexratio_phc() %>% 
-  mutate(sex_ratio_north = m_total/f_total)
-
-bc_sexratio89 <- list(bc_sexratio89, bc_sexratio89_n, bc_sexratio89_s) %>% 
-  reduce(full_join, by = "age") %>% 
-  select(age, sex_ratio, sex_ratio_north, sex_ratio_south)
-
-bc_sexratio89_long <- bc_sexratio89 %>% 
-  rename(North = sex_ratio_north,
-         South = sex_ratio_south) %>% 
-  pivot_longer(!age, names_to = "group",
-               values_to = "sex_ratio") %>% 
-  filter(group != "sex_ratio")
-
-# Calculating the sex ratio and LFP of men and women by age cohort in 1989 
-prov_89_f <- phc89 %>% 
-  filter(female == 1 & age > 15 & age < 65) %>% 
+sum89 <- phc89 %>% 
   group_by(geo1_vn1989) %>% 
-  summarise(total_f = sum(perwt),
-            widowed_f = sum(widowed * perwt) / sum(perwt),
-            work_f = sum(work * perwt))
+  phc_sum() %>% 
+  mutate(south = ifelse(geo1_vn1989 > 26, 1, 0))
 
-prov_89_m <- phc89 %>% 
-  filter(female == 0 & age > 15 & age < 65) %>% 
-  group_by(geo1_vn1989) %>% 
-  summarise(total_m = sum(perwt),
-            work_m = sum(work * perwt))
-
-prov89_age3064_f <- phc89 %>% 
-  filter(age > 29 & age < 65 & female == 1) %>% 
-  group_by(geo1_vn1989) %>% 
-  summarise(age3064_f = sum(perwt),
-            age3064_widowed_f = sum(widowed * perwt) / sum(perwt),
-            age3064_work_f = sum(work * perwt))
-
-prov89_age3064_m <- phc89 %>% 
-  filter(age > 29 & age < 65 & female == 0) %>% 
-  group_by(geo1_vn1989) %>% 
-  summarise(age3064_m = sum(perwt),
-            age3064_work_m = sum(work * perwt))
-
-sexratio_prov_89 <- list(prov_89_f, prov_89_m, prov89_age3064_f, prov89_age3064_m, bombs_province89) %>% 
-  reduce(full_join, by = "geo1_vn1989") %>% 
-  mutate(sexratio = total_m/total_f,
-         sexratio3064 = age3064_m/age3064_f,
-         workratio = (work_m/work_f),
-         workratio3064 = age3064_work_m/age3064_work_f)
-
-# Calculating the sex ratio and LFP of men and women by age cohort in 1999 
-prov_99_f <- phc99 %>% 
-  filter(female == 1 & age > 15 & age < 65) %>% 
+sum99 <- phc99 %>% 
   group_by(geo1_vn1999) %>% 
-  summarise(total_f = sum(perwt),
-            widowed_f = sum(widowed * perwt) / sum(perwt),
-            work_f = sum(work * perwt))
+  phc_sum() %>% 
+  mutate(south = ifelse(geo1_vn1999 > 405, 1, 0)) 
 
-prov_99_m <- phc99 %>% 
-  filter(female == 0 & age > 15 & age < 65) %>% 
-  group_by(geo1_vn1999) %>% 
-  summarise(total_m = sum(perwt),
-            work_m = sum(work * perwt))
-
-prov99_age4064_f <- phc99 %>% 
-  filter(age > 39 & age < 65 & female == 1) %>% 
-  group_by(geo1_vn1999) %>% 
-  summarise(age4064_f = sum(perwt),
-            age4064_widowed_f = sum(widowed * perwt) / sum(perwt),
-            age4064_work_f = sum(work * perwt))
-
-prov99_age4064_m <- phc99 %>% 
-  filter(age > 39 & age < 65 & female == 0) %>% 
-  group_by(geo1_vn1999) %>% 
-  summarise(age4064_m = sum(perwt),
-            age4064_work_m = sum(work * perwt))
-
-sexratio_prov_99 <- list(prov_99_f, prov_99_m, prov99_age4064_f, prov99_age4064_m, bombs_province99) %>% 
-  reduce(full_join, by = "geo1_vn1999") %>% 
-  mutate(sexratio = total_m/total_f,
-         sexratio4064 = age4064_m/age4064_f,
-         workratio = (work_m/work_f),
-         workratio4064 = age4064_work_m/age4064_work_f)
-
-# Calculating the sex ratio and LFP of men and women by age cohort in 2009
-prov_09_f <- phc09 %>% 
-  filter(female == 1 & age > 15 & age < 65) %>% 
+sum09 <- phc09 %>% 
   group_by(geo1_vn2009) %>% 
-  summarise(total_f = sum(perwt),
-            widowed_f = sum(widowed * perwt) / sum(perwt),
-            work_f = sum(work * perwt))
+  phc_sum() %>% 
+  mutate(south = ifelse(geo1_vn2009 > 44, 1, 0))
 
-prov_09_m <- phc09 %>% 
-  filter(female == 0 & age > 15 & age < 65) %>% 
-  group_by(geo1_vn2009) %>% 
-  summarise(total_m = sum(perwt),
-            work_m = sum(work * perwt))
-
-prov09_age5064_f <- phc09 %>% 
-  filter(age > 49 & age < 65 & female == 1) %>% 
-  group_by(geo1_vn2009) %>% 
-  summarise(age5064_f = sum(perwt),
-            age5064_widowed_f = sum(widowed * perwt) / sum(perwt),
-            age5064_work_f = sum(work * perwt))
-
-prov09_age5064_m <- phc09 %>% 
-  filter(age > 49 & age < 65 & female == 0) %>% 
-  group_by(geo1_vn2009) %>% 
-  summarise(age5064_m = sum(perwt),
-            age5064_work_m = sum(work * perwt))
-
-sexratio_prov_09 <- list(prov_09_f, prov_09_m, prov09_age5064_f, prov09_age5064_m, bombs_province09) %>% 
-  reduce(full_join, by = "geo1_vn2009") %>% 
-  mutate(sexratio = total_m/total_f,
-         sexratio5064 = age5064_m/age5064_f,
-         workratio = (work_m/work_f),
-         workratio5064 = age5064_work_m/age5064_work_f)
-
-# Saving data
-
-save(sexratio_prov_89, file = "sexratio_prov_89.Rda")
-save(sexratio_prov_99, file = "sexratio_prov_99.Rda")
-save(sexratio_prov_09, file = "sexratio_prov_09.Rda")
+save(sum89, file = "sexratio_prov_89.Rda")
+save(sum99, file = "sexratio_prov_99.Rda")
+save(sum09, file = "sexratio_prov_09.Rda")
 
 # Calculating male the female ratio in each industry 
 
