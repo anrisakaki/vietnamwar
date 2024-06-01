@@ -191,7 +191,13 @@ etable(list(
         vcov = ~tinh),
   feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
              subset(dn16, south == 1),
-             vcov = ~tinh)), tex = T)
+             vcov = ~tinh),
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
+        subset(dn16, south == 0 & tinh != 1),
+        vcov = ~tinh),
+  feols(female_dir ~ log(tot_bmr_prov_ppn) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
+        subset(dn16, south == 1 & tinh != 79 & tinh != 48))), tex = T)
+
 
 etable(list(
   # Agriculture 
