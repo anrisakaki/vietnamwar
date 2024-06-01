@@ -525,4 +525,32 @@ dn18 <- ec_list[[19]] %>%
   left_join(sexratios, by = "tinh") %>% 
   left_join(ppn0419, by = "tinh")
 
+fdir_sum <- dn16 %>% 
+  group_by(south, female_dir) %>% 
+  summarise(mean_nworkers = mean(tot_workers, na.rm = T),
+            sd_nworkers = sd(tot_workers, na.rm = T),
+            mean_sharef = mean(share_f, na.rm = T),
+            sd_sharef = sd(share_f, na.rm = T),
+            mean_workerratio = mean(tot_workerratio, na.rm = T),
+            sd_workerratio = sd(tot_workerratio, na.rm = T)) %>% 
+  filter(!is.na(female_dir))
+
+fshare_indsum <- dn16 %>% 
+  group_by(nganh_kd2) %>% 
+  summarise(nfirms = n(),
+            nfirms_f = sum(female_dir == 1, na.rm = T)) %>% 
+  mutate(share_f = round((nfirms_f / nfirms) * 100, 2)) %>% 
+  select(nganh_kd2, nfirms, share_f) %>% 
+  mutate(nganh_kd2 = as.character(nganh_kd2))
+
+dn16 %>% 
+  filter(female_dir == 1) %>% 
+  summarise(n = n())
+
+share_fdir_indsum <- dn16 %>% 
+  filter(female_dir == 1) %>% 
+  group_by(nganh_kd2) %>% 
+  summarise(n = n()) %>% 
+  mutate(share = round((n/135751)*100, 2))
+
 dn <- bind_rows(dn02, dn03, dn04, dn05, dn06, dn07, dn08, dn09, dn10, dn11, dn12, dn13, dn14, dn15, dn16, dn17, dn18)
