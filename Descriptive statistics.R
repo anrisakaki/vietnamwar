@@ -419,6 +419,112 @@ ggsave("bmr_flfp_09_s.jpeg", width = 7, height = 7)
 # BMR VS FLFP #
 ###############
 
+# 1989
+ggplot(dplyr::filter(sum89, south == 0), aes(x = sexratio*100, y = flfp*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "Sex Ratio",
+       y = "FLFP")
+ggsave("sexratio_flfp_89_n.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sum89, south == 1), aes(x = sexratio*100, y = flfp*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "Sex Ratio",
+       y = "FLFP")
+ggsave("sexratio_flfp_89_s.jpeg", width = 7, height = 7)
+
+# 1999
+ggplot(dplyr::filter(sum99, south == 0), aes(x = sexratio*100, y = flfp*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "Sex Ratio",
+       y = "FLFP")
+ggsave("sexratio_flfp_99_n.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sum99, south == 1), aes(x = sexratio*100, y = flfp*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "Sex Ratio",
+       y = "FLFP")
+ggsave("sexratio_flfp_99_s.jpeg", width = 7, height = 7)
+
+# 2009
+
+ggplot(dplyr::filter(sum09, south == 0), aes(x = sexratio*100, y = flfp*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "Sex Ratio",
+       y = "FLFP")
+ggsave("sexratio_flfp_09_n.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sum09, south == 1), aes(x = sexratio*100, y = flfp*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "Sex Ratio",
+       y = "FLFP")
+ggsave("sexratio_flfp_09_s.jpeg", width = 7, height = 7)
+
 ############################################
 # MALE AND FEMALE LABOUR FORCE COMPOSITION #
 ############################################
