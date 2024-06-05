@@ -143,8 +143,6 @@ provarea <- read.csv("province_area.csv")
 
 vn_old <- read_sf("Chloropleth Maps/vnm_huyen.shp")
 
-test <- read_sf("dia-gioi-hanh-chinh/Ranh_GioiVN2000.shp")
-
 # Consistent District Boundaries 
 
 mccaig_boundaries <- read_dta("Consistent 2019 to 1999 wards with 1999 districts.dta")
