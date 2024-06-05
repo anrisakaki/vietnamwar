@@ -249,14 +249,7 @@ district_bmr_sf <- district_bmr %>%
   group_by(NAME_1, VARNAME_1, VARNAME_2, distname2018) %>% 
   summarise(
     tot_bmr = sum(NUMWEAPONSDELIVERED, na.rm = T),
-    tot_bmr_lb = sum(WEIGHTDELIVERED, na.rm = T),
-    civilian_bmr = sum(NUMWEAPONSDELIVERED[civilian == 1], na.rm = T),
-    civilian_bmr_lb = sum(WEIGHTDELIVERED[civilian == 1], na.rm = T),
-    agri_bmr = sum(NUMWEAPONSDELIVERED[agriculture == 1], na.rm = T),
-    agri_bmr_lb = sum(WEIGHTDELIVERED[agriculture == 1], na.rm = T),
-    industry_bmr = sum(NUMWEAPONSDELIVERED[industry == 1], na.rm = T),
-    industry_bmr_lb = sum(WEIGHTDELIVERED[industry == 1], na.rm = T),
-  ) %>% 
+    tot_bmr_lb = sum(WEIGHTDELIVERED, na.rm = T)) %>% 
   sf::st_drop_geometry()
 
 district_bmr_sf <- left_join(district_bmr_sf, vnmap2, by = c("NAME_1", "VARNAME_2", "distname2018")) %>% 
