@@ -76,7 +76,7 @@ dhc_97 <- read_dta(file = "DHC/VNIR31FL.dta")
 
 # Population and Housing Census 
 
-phc <- read_dta(file = "ipumsi_00006.dta")
+phc <- read_dta(file = "ipumsi_00007.dta")
 
 # Enterprise Survey 
 
@@ -141,8 +141,8 @@ vnmap2_09 <- read_sf("Chloropleth Maps/VNShapefile/geo2_vn2009/geo2_vn2009.shp")
 
 provarea <- read.csv("province_area.csv")
 
-vn_old <- read_sf("Chloropleth Maps/vnm_huyen.shp")
-
+district_controls <-read_sf("District Controls/columbia_iscgm_vietnam_2007_bound.shp")
+  
 # Consistent District Boundaries 
 
 mccaig_boundaries <- read_dta("Consistent 2019 to 1999 wards with 1999 districts.dta")
