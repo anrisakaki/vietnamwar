@@ -1,152 +1,241 @@
 load("province_bmr_sum.Rda")
+load("district_bmr_sum.Rda")
+
+bmr_sum_fn <- function(i){
+  i %>% 
+    group_by(tinh) %>% 
+    summarise(tot_bmr_prov = sum(tot_bmr_prov),
+              tot_bmr_lb_prov = sum(tot_bmr_lb_prov),
+              killed_tot_prov = sum(killed_tot_prov),
+              dist_nearest_base_prov = min(dist_nearest_base_prov),
+              dist_nearest_hochi_prov = min(dist_nearest_hochi_prov),
+              ppn60 = sum(ppn60)) %>% 
+    select(tinh, everything()) %>% 
+    mutate(tot_bmr_prov_ppn = tot_bmr_prov/ppn60,
+           tot_bmr_lb_prov_ppn = tot_bmr_lb_prov/ppn60,
+           killed_tot_prov_ppn = killed_tot_prov/ppn60)    
+}
+
+#############
+# IPUMS PHC #
+#############
+
+bombs_province89 <- province_bmr_sum %>%
+  ungroup() %>% 
+  mutate(tinh = recode(name_1,
+                              'Hậu Giang' = 43,
+                              'Hà Nội' = 1,
+                              'Hải Phòng' = 3,
+                              'Hải Dương' = 21,
+                              'Hưng Yên' = 21,
+                              'Nam Định' = 23,
+                              'Hà Nam' = 23,
+                              'Ninh Bình' = 23,
+                              'Thái Bình' = 22,
+                              'Hà Giang' = 11,
+                              'Cao Bằng' = 10,
+                              'Lào Cai' = 14,
+                              'Bắc Kạn' = 15,
+                              'Lạng Sơn' = 12,
+                              'Tuyên Quang' = 11,
+                              'Yên Bái' = 14,
+                              'Thái Nguyên' = 15,
+                              'Phú Thọ' = 17,
+                              'Vĩnh Phúc' = 17,
+                              'Bắc Giang' = 18,
+                              'Bắc Ninh' = 18,
+                              'Quảng Ninh' = 19,
+                              'Lai Châu' = 13,
+                              'Hoà Bình' = 20,
+                              'Thanh Hóa' = 24,
+                              'Nghệ An'= 25,
+                              'Hà Tĩnh' = 25,
+                              'Quảng Bình' = 26,
+                              'Quảng Trị' = 49,
+                              'Thừa Thiên Huế' = 50,
+                              'Đà Nẵng' = 27,
+                              'Quảng Nam' = 27,
+                              'Quảng Ngãi' = 47,
+                              'Bình Định' = 28,
+                              'Phú Yên' = 48,
+                              'Khánh Hòa' = 29,
+                              'Kon Tum' = 31,
+                              'Gia Lai' = 31,
+                              'Đắk Lắk' = 32,
+                              'Đắk Nông' = 32,
+                              'Hồ Chí Minh' = 2,
+                              'Lâm Đồng' = 33,
+                              'Ninh Thuận' = 30,
+                              'Bình Phước' = 34,
+                              'Tây Ninh' = 35,
+                              'Bình Dương' = 34,
+                              'Đồng Nai' = 36,
+                              'Bình Thuận' = 30,
+                              'Bà Rịa - Vũng Tàu' = 46,
+                              'Long An' = 37,
+                              'Đồng Tháp' = 38,
+                              'An Giang' = 39,
+                              'Tiền Giang' = 40,
+                              'Vĩnh Long' = 42,
+                              'Bến Tre' = 41,
+                              'Kiên Giang' = 44,
+                              'Cần Thơ' = 43,
+                              'Trà Vinh' = 42,
+                              'Sóc Trăng' = 43,
+                              'Bạc Liêu' = 45,
+                              'Cà Mau' = 45,
+                              .default = NA_real_)) %>% 
+  bmr_sum_fn() %>% 
+  rename(geo1_vn1989 = tinh)
+
+bombs_province99 <- province_bmr_sum %>%
+  ungroup() %>% 
+  mutate(tinh = recode(name_1,
+                              'Hậu Giang' = 301,
+                              'Hà Nội' = 101,
+                              'Hải Phòng' = 103,
+                              'Hải Dương' = 107,
+                              'Hưng Yên' = 109,
+                              'Nam Định' = 113,
+                              'Hà Nam' = 111,
+                              'Ninh Bình' = 117,
+                              'Thái Bình' = 115,
+                              'Hà Giang' = 201,
+                              'Cao Bằng' = 203,
+                              'Lào Cai' = 205,
+                              'Bắc Kạn' = 207,
+                              'Lạng Sơn' = 209,
+                              'Tuyên Quang' = 211,
+                              'Yên Bái' = 213,
+                              'Thái Nguyên' = 215,
+                              'Phú Thọ' = 217,
+                              'Vĩnh Phúc' = 219,
+                              'Bắc Giang' = 221,
+                              'Bắc Ninh' = 223,
+                              'Quảng Ninh' = 225,
+                              'Lai Châu' = 301,
+                              'Hoà Bình' = 305,
+                              'Thanh Hóa' = 401,
+                              'Nghệ An'= 403,
+                              'Hà Tĩnh' = 405,
+                              'Quảng Bình' = 407,
+                              'Quảng Trị' = 409,
+                              'Thừa Thiên Huế' = 411,
+                              'Đà Nẵng' = 501,
+                              'Quảng Nam' = 507,
+                              'Quảng Ngãi' = 503,
+                              'Bình Định' = 505,
+                              'Phú Yên' = 509,
+                              'Khánh Hòa' = 511,
+                              'Kon Tum' = 601,
+                              'Gia Lai' = 603,
+                              'Đắk Lắk' = 605,
+                              'Đắk Nông' = 605,
+                              'Hồ Chí Minh' = 701,
+                              'Lâm Đồng' = 703,
+                              'Ninh Thuận' = 705,
+                              'Bình Phước' = 707,
+                              'Tây Ninh' = 709,
+                              'Bình Dương' = 711,
+                              'Đồng Nai' = 713,
+                              'Bình Thuận' = 715,
+                              'Bà Rịa - Vũng Tàu' = 717,
+                              'Long An' = 801,
+                              'Đồng Tháp' = 803,
+                              'An Giang' = 805,
+                              'Tiền Giang' = 807,
+                              'Vĩnh Long' = 809,
+                              'Bến Tre' = 811,
+                              'Kiên Giang' = 813,
+                              'Cần Thơ' = 815,
+                              'Trà Vinh' = 817,
+                              'Sóc Trăng' = 819,
+                              'Bạc Liêu' = 821,
+                              'Cà Mau' = 823,
+                              .default = NA_real_)) %>% 
+  bmr_sum_fn() %>% 
+  rename(geo1_vn1999 = tinh)
+
+bombs_province09 <- province_bmr_sum %>%
+  mutate(tinh = recode(name_1,
+                              'Đắk Nông' = 67,
+                              'Hậu Giang' = 93,
+                              'Hà Nội' = 1,
+                              'Hải Phòng' = 31,
+                              'Hải Dương' = 30,
+                              'Hưng Yên' = 33,
+                              'Nam Định' = 36,
+                              'Hà Nam' = 35,
+                              'Ninh Bình' = 37,
+                              'Thái Bình' = 34,
+                              'Hà Giang' = 2,
+                              'Cao Bằng' = 4,
+                              'Lào Cai' = 10,
+                              'Bắc Kạn' = 6,
+                              'Lạng Sơn' = 20,
+                              'Tuyên Quang' = 8,
+                              'Yên Bái' = 15,
+                              'Thái Nguyên' = 19,
+                              'Phú Thọ' = 25,
+                              'Vĩnh Phúc' = 26,
+                              'Bắc Giang' = 24,
+                              'Bắc Ninh' = 27,
+                              'Quảng Ninh' = 22,
+                              'Lai Châu' = 12,
+                              'Hoà Bình' = 17,
+                              'Thanh Hóa' = 38,
+                              'Nghệ An'= 40,
+                              'Hà Tĩnh' = 42,
+                              'Quảng Bình' = 44,
+                              'Quảng Trị' = 45,
+                              'Thừa Thiên Huế' = 46,
+                              'Đà Nẵng' = 48,
+                              'Quảng Nam' = 49,
+                              'Quảng Ngãi' = 51,
+                              'Bình Định' = 52,
+                              'Phú Yên' = 54,
+                              'Khánh Hòa' = 56,
+                              'Kon Tum' = 62,
+                              'Gia Lai' = 64,
+                              'Đắk Lắk' = 66,
+                              'Hồ Chí Minh' = 79,
+                              'Lâm Đồng' = 68,
+                              'Ninh Thuận' = 58,
+                              'Bình Phước' = 70,
+                              'Tây Ninh' = 72,
+                              'Bình Dương' = 74,
+                              'Đồng Nai' = 75,
+                              'Bình Thuận' = 60,
+                              'Bà Rịa - Vũng Tàu' = 77,
+                              'Long An' = 80,
+                              'Đồng Tháp' = 87,
+                              'An Giang' = 89,
+                              'Tiền Giang' = 82,
+                              'Vĩnh Long' = 86,
+                              'Bến Tre' = 83,
+                              'Kiên Giang' = 91,
+                              'Cần Thơ' = 92,
+                              'Trà Vinh' = 84,
+                              'Sóc Trăng' = 94,
+                              'Bạc Liêu' = 95,
+                              'Cà Mau' = 96,
+                              .default = NA_real_)) %>% 
+  bmr_sum_fn() %>% 
+  rename(geo1_vn2009 = tinh)
+
+save(bombs_province89, file = "bombs_province89.Rda")
+save(bombs_province99, file = "bombs_province99.Rda")
+save(bombs_province09, file = "bombs_province09.Rda")
+
+#################
+# VHLSS AND VES #
+#################
 
 province_bmr_sum02 <- province_bmr_sum %>% 
-  mutate(tinh02 = recode(name_1,
-                         'An Giang' = 805,
-                         'Bà Rịa - Vũng Tàu' = 717,
-                         'Bắc Giang' = 221,
-                         'Bắc Kạn' = 207,
-                         'Bạc Liêu' = 821,
-                         'Bắc Ninh' = 106,
-                         'Bến Tre' = 811,
-                         'Bình Định' = 507,
-                         'Bình Dương' = 711,
-                         'Bình Phước' = 707,
-                         'Bình Thuận' = 715,
-                         'Cà Mau' = 823,
-                         'Cần Thơ' = 815,
-                         'Hậu Giang' = 815,
-                         'Cao Bằng' = 203,
-                         'Đà Nẵng' = 501,
-                         'Đắk Lắk' = 605,
-                         'Đắk Nông' = 605,
-                         'Điện Biên' = 301,
-                         'Lai Châu' = 301,
-                         'Đồng Nai' = 713,
-                         'Đồng Tháp' = 803,
-                         'Gia Lai' = 603,
-                         'Hà Giang' = 201,
-                         'Hà Nam' = 111,
-                         'Hà Nội' = 101,
-                         'Hà Tĩnh' = 405,
-                         'Hải Dương' = 107,
-                         'Hải Phòng' = 103,
-                         'Hồ Chí Minh' = 701,
-                         'Hoà Bình' = 305,
-                         'Hưng Yên' = 109,
-                         'Khánh Hòa' = 511,
-                         'Kiên Giang' = 813,
-                         'Kon Tum' = 601,
-                         'Lâm Đồng' = 607,
-                         'Lạng Sơn' = 209,
-                         'Lào Cai' = 205,
-                         'Long An' = 801,
-                         'Nam Định' = 113,
-                         'Nghệ An' = 403,
-                         'Ninh Bình' = 117,
-                         'Ninh Thuận' = 705,
-                         'Phú Thọ' = 217,
-                         'Phú Yên' = 509,
-                         'Quảng Bình' = 407,
-                         'Quảng Nam' = 503,
-                         'Quảng Ngãi' = 505,
-                         'Quảng Ninh' = 225,
-                         'Quảng Trị' = 409,
-                         'Sóc Trăng' = 819,
-                         'Sơn La' = 303,
-                         'Tây Ninh' = 709,
-                         'Thái Bình' = 115,
-                         'Thái Nguyên' = 215,
-                         'Thanh Hóa' = 401,
-                         'Thừa Thiên Huế' = 411,
-                         'Tiền Giang' = 807,
-                         'Trà Vinh' = 817,
-                         'Tuyên Quang' = 211,
-                         'Vĩnh Long' = 809,
-                         'Vĩnh Phúc' = 104,
-                         'Yên Bái' = 213,
-                         .default = NA_real_)) %>% 
-  ungroup() %>% 
-  group_by(tinh02) %>% 
-  summarise(tot_bmr_prov = sum(tot_bmr),
-            tot_bmr_lb_prov = sum(tot_bmr_lb),
-            killed_tot_prov = sum(killed_tot, na.rm = T),
-            dist_nearest_base_prov = min(dist_nearest_base),
-            dist_nearest_hochi_prov = min(dist_nearest_hochi)) %>% 
-  mutate(killed_tot_prov = ifelse(killed_tot_prov == 0, NA, killed_tot_prov))
-
-province_bmr_sum <- province_bmr_sum %>% 
-  mutate(tinh = recode(name_1,
-                       'An Giang' = 805,
-                       'Bà Rịa - Vũng Tàu' = 717,
-                       'Bắc Giang' = 221,
-                       'Bắc Kạn' = 207,
-                       'Bạc Liêu' = 821,
-                       'Bắc Ninh' = 106,
-                       'Bến Tre' = 811,
-                       'Bình Định' = 507,
-                       'Bình Dương' = 711,
-                       'Bình Phước' = 707,
-                       'Bình Thuận' = 715,
-                       'Cà Mau' = 823,
-                       'Cần Thơ' = 815,
-                       'Hậu Giang' = 816,
-                       'Cao Bằng' = 203,
-                       'Đà Nẵng' = 501,
-                       'Đắk Lắk' = 605,
-                       'Đắk Nông' = 606,
-                       'Điện Biên' = 302,
-                       'Lai Châu' = 301,
-                       'Đồng Nai' = 713,
-                       'Đồng Tháp' = 803,
-                       'Gia Lai' = 603,
-                       'Hà Giang' = 201,
-                       'Hà Nam' = 111,
-                       'Hà Nội' = 101,
-                       'Hà Tĩnh' = 405,
-                       'Hải Dương' = 107,
-                       'Hải Phòng' = 103,
-                       'Hồ Chí Minh' = 701,
-                       'Hoà Bình' = 305,
-                       'Hưng Yên' = 109,
-                       'Khánh Hòa' = 511,
-                       'Kiên Giang' = 813,
-                       'Kon Tum' = 601,
-                       'Lâm Đồng' = 607,
-                       'Lạng Sơn' = 209,
-                       'Lào Cai' = 205,
-                       'Long An' = 801,
-                       'Nam Định' = 113,
-                       'Nghệ An' = 403,
-                       'Ninh Bình' = 117,
-                       'Ninh Thuận' = 705,
-                       'Phú Thọ' = 217,
-                       'Phú Yên' = 509,
-                       'Quảng Bình' = 407,
-                       'Quảng Nam' = 503,
-                       'Quảng Ngãi' = 505,
-                       'Quảng Ninh' = 225,
-                       'Quảng Trị' = 409,
-                       'Sóc Trăng' = 819,
-                       'Sơn La' = 303,
-                       'Tây Ninh' = 709,
-                       'Thái Bình' = 115,
-                       'Thái Nguyên' = 215,
-                       'Thanh Hóa' = 401,
-                       'Thừa Thiên Huế' = 411,
-                       'Tiền Giang' = 807,
-                       'Trà Vinh' = 817,
-                       'Tuyên Quang' = 211,
-                       'Vĩnh Long' = 809,
-                       'Vĩnh Phúc' = 104,
-                       'Yên Bái' = 213,
-                       .default = NA_real_)) %>% 
-  rename_with(~if_else(. %in% c("tinh", "varname_1", "name_1", "provincename", "south"), 
-                       ., paste0(., "_prov")), 
-              -c(tinh, varname_1, name_1, provincename, south)) %>%
-  select(-c(varname_1, provincename)) %>% 
-  select(tinh, everything())
-
+  mutate(tinh = ifelse(tinh == 816, 815, tinh),
+         tinh = ifelse(tinh == 606, 605, tinh),
+         tinh = ifelse(tinh == 302, 301, tinh)) %>% 
+  bmr_sum_fn()
 
 province_bmr_sum2 <- province_bmr_sum %>% 
   mutate(tinh = recode(name_1,
@@ -179,6 +268,7 @@ province_bmr_sum2 <- province_bmr_sum %>%
                        'Hà Tĩnh' = 42,
                        'Hải Dương' = 30,
                        'Hải Phòng' = 31,
+                       'Hậu Giang' = 93,
                        'Hồ Chí Minh' = 79,
                        'Hoà Bình' = 17,
                        'Hưng Yên' = 33,
@@ -214,84 +304,196 @@ province_bmr_sum2 <- province_bmr_sum %>%
                        'Vĩnh Phúc' = 26,
                        'Yên Bái' = 15,
                        .default = NA_real_)) %>% 
-  group_by(tinh) %>% 
-  summarise(tot_bmr_prov = sum(tot_bmr_prov),
-            tot_bmr_lb_prov = sum(tot_bmr_lb_prov),
-            killed_tot_prov = sum(killed_tot_prov, na.rm = T),
-            dist_nearest_base_prov = min(dist_nearest_base_prov),
-            dist_nearest_hochi_prov = min(dist_nearest_hochi_prov)) %>% 
-  mutate(killed_tot_prov = ifelse(killed_tot_prov == 0, NA, killed_tot_prov))
+  mutate(tinh = ifelse(tinh == 14, 12, tinh),
+         tinh = ifelse(tinh == 11, 12, tinh)) %>% 
+  bmr_sum_fn()
 
 save(province_bmr_sum02, file = "province_bmr_sum02.Rda")
 save(province_bmr_sum, file = "province_bmr_sum.Rda")
 save(province_bmr_sum2, file = "province_bmr_sum2.Rda")
 
-province_bmr_sum0002 <- province_bmr_sum02 %>% 
-  rename(tinh = tinh02)
+###########################################
+# CREATING CONSISTENT DISTRICT BOUNDARIES #
+###########################################
 
-province_bmr_sum0419 <- province_bmr_sum %>% 
-  mutate(tinh = recode(name_1,
-                       'An Giang' = 89,
-                       'Bà Rịa - Vũng Tàu' = 77,
-                       'Bắc Giang' = 24,
-                       'Bắc Kạn' = 6,
-                       'Bạc Liêu' = 95,
-                       'Bắc Ninh' = 27,
-                       'Bến Tre' = 83,
-                       'Bình Định' = 52,
-                       'Bình Dương' = 74,
-                       'Bình Phước' = 70,
-                       'Bình Thuận' = 60,
-                       'Cà Mau' = 96,
-                       'Cần Thơ' = 92,
-                       'Hậu Giang' = 93,
-                       'Cao Bằng' = 4,
-                       'Đà Nẵng' = 48,
-                       'Đắk Lắk' = 66,
-                       'Đắk Nông' = 67,
-                       'Điện Biên' = 11,
-                       'Lai Châu' = 12,
-                       'Đồng Nai' = 75,
-                       'Đồng Tháp' = 87,
-                       'Gia Lai' = 64,
-                       'Hà Giang' = 2,
-                       'Hà Nam' = 35,
-                       'Hà Nội' = 1,
-                       'Hà Tĩnh' = 42,
-                       'Hải Dương' = 30,
-                       'Hải Phòng' = 31,
-                       'Hồ Chí Minh' = 79,
-                       'Hoà Bình' = 17,
-                       'Hưng Yên' = 33,
-                       'Khánh Hòa' = 56,
-                       'Kiên Giang' = 91,
-                       'Kon Tum' = 62,
-                       'Lâm Đồng' = 68,
-                       'Lạng Sơn' = 20,
-                       'Lào Cai' = 10,
-                       'Long An' = 80,
-                       'Nam Định' = 36,
-                       'Nghệ An' = 40,
-                       'Ninh Bình' = 37,
-                       'Ninh Thuận' = 58,
-                       'Phú Thọ' = 25,
-                       'Phú Yên' = 54,
-                       'Quảng Bình' = 44,
-                       'Quảng Nam' = 49,
-                       'Quảng Ngãi' = 51,
-                       'Quảng Ninh' = 22,
-                       'Quảng Trị' = 45,
-                       'Sóc Trăng' = 94,
-                       'Sơn La' = 14,
-                       'Tây Ninh' = 72,
-                       'Thái Bình' = 34,
-                       'Thái Nguyên' = 19,
-                       'Thanh Hóa' = 38,
-                       'Thừa Thiên Huế' = 46,
-                       'Tiền Giang' = 82,
-                       'Trà Vinh' = 84,
-                       'Tuyên Quang' = 8,
-                       'Vĩnh Long' = 86,
-                       'Vĩnh Phúc' = 26,
-                       'Yên Bái' = 15,
-                       .default = NA_real_))
+dropward <- function(i){
+  
+  i %>% 
+    select(-starts_with("ward")) %>% 
+    distinct() %>% 
+    mutate(provname = str_replace(provname, "^(Tỉnh|Thành phố)\\s+", ""))
+}
+
+district_bmr_fn <- function(i){
+  
+  i %>% 
+    group_by(tinh, huyen) %>% 
+    summarise(tot_bmr = sum(tot_bmr),
+              tot_bmr_lb = sum(tot_bmr_lb),
+              nearest_base = min(nearest_base),
+              dist_nearest_hochi = min(dist_nearest_hochi),
+              killed_tot = sum(killed_tot)) %>% 
+    filter(!is.na(tinh))
+}
+
+geoid_list <- lapply(geoid_list, dropward)
+
+district_bmr_sum <- district_bmr_sum %>%
+  rename(provname = provname2018,
+         distname = distname2018)
+
+mccaig_dist <- mccaig_boundaries %>% select(provname2018, distname2018, prov2002, dist2002, prov2003, dist2003, prov2004, dist2004,
+                                            prov2005, dist2005, prov2006, dist2006, prov2007, dist2007, prov2008, dist2008,
+                                            prov2009, dist2009, prov2010, dist2010, prov2011, dist2011, prov2012, dist2012,
+                                            prov2013, dist2013, prov2014, dist2014, prov2015, dist2015, prov2016, dist2016, 
+                                            prov2017, dist2017, prov2018, dist2018) %>%
+  distinct() %>% 
+  rename(prov18 = prov2018,
+         dist18 = dist2018)
+
+mccaig_dist_vhlss <- mccaig_boundaries %>%
+  mutate(
+  ward2002vhlss = as.character(ward2002vhlss),  
+  ward2004vhlss = as.character(ward2004vhlss),
+  ward2006vhlss = as.character(ward2006vhlss),
+  ward2008vhlss = as.character(ward2008vhlss),
+  tinh02_vhlss = as.numeric(substr(ward2002vhlss, 1, 3)),  
+  huyen02_vhlss = as.numeric(substr(ward2002vhlss, 4, 5)),
+  tinh04_vhlss = as.numeric(substr(ward2004vhlss, 1, 3)),  
+  huyen04_vhlss = as.numeric(substr(ward2004vhlss, 4, 5)),
+  tinh06_vhlss = as.numeric(substr(ward2006vhlss, 1, 3)),  
+  huyen06_vhlss = as.numeric(substr(ward2006vhlss, 4, 5)),
+  tinh08_vhlss = as.numeric(substr(ward2008vhlss, 1, 3)),  
+  huyen08_vhlss = as.numeric(substr(ward2008vhlss, 4, 5))) %>% 
+  select(prov2018, dist2018, tinh02_vhlss, huyen02_vhlss, tinh04_vhlss, huyen04_vhlss,
+         tinh06_vhlss, huyen06_vhlss, tinh08_vhlss, huyen08_vhlss) %>% 
+  na.omit() %>% 
+  distinct() %>% 
+  rename(prov18 = prov2018,
+         dist18 = dist2018)
+
+district_bmr_sum <- list(geoid_list[[17]], district_bmr_sum) %>%
+  reduce(merge, by = c("provname", "distname")) %>% 
+  distinct() %>% 
+  select(prov18, dist18, everything()) %>% 
+  select(-c("varname_1", "varname_2")) 
+
+district_bmr_sum02 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2002,
+         huyen = dist2002) %>% 
+  district_bmr_fn()
+
+district_bmr_sum02_vhlss <- district_bmr_sum %>% 
+  merge(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
+  rename(tinh = tinh02_vhlss,
+         huyen = huyen02_vhlss) %>% 
+  district_bmr_fn()
+
+district_bmr_sum03 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2003,
+         huyen = dist2003) %>% 
+  district_bmr_fn()
+
+district_bmr_sum04 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2004,
+         huyen = dist2004) %>% 
+  district_bmr_fn()
+
+district_bmr_sum04_vhlss <- district_bmr_sum %>% 
+  merge(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
+  rename(tinh = tinh04_vhlss,
+         huyen = huyen04_vhlss) %>% 
+  district_bmr_fn()
+
+district_bmr_sum05 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2005,
+         huyen = dist2005) %>% 
+  district_bmr_fn()
+
+district_bmr_sum06 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2006,
+         huyen = dist2006) %>% 
+  district_bmr_fn()
+
+district_bmr_sum06_vhlss <- district_bmr_sum %>% 
+  merge(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
+  rename(tinh = tinh06_vhlss,
+         huyen = huyen06_vhlss) %>% 
+  district_bmr_fn()
+
+district_bmr_sum07 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2007,
+         huyen = dist2007) %>% 
+  district_bmr_fn()
+
+district_bmr_sum08 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2008,
+         huyen = dist2008) %>% 
+  district_bmr_fn()
+
+district_bmr_sum08_vhlss <- district_bmr_sum %>% 
+  merge(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
+  rename(tinh = tinh08_vhlss,
+         huyen = huyen08_vhlss) %>% 
+  district_bmr_fn()
+
+district_bmr_sum09 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2009,
+         huyen = dist2009) %>% 
+  district_bmr_fn()
+
+district_bmr_sum10 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2010,
+         huyen = dist2010) %>% 
+  district_bmr_fn()
+
+district_bmr_sum11 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2011,
+         huyen = dist2011) %>% 
+  district_bmr_fn()
+
+district_bmr_sum12 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2012,
+         huyen = dist2012) %>% 
+  district_bmr_fn
+
+district_bmr_sum13 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2013,
+         huyen = dist2013) %>% 
+  district_bmr_fn()
+
+district_bmr_sum14 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2014,
+         huyen = dist2014) %>% 
+  district_bmr_fn()
+
+district_bmr_sum15 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2015,
+         huyen = dist2015) %>% 
+  district_bmr_fn()
+
+district_bmr_sum16 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2016,
+         huyen = dist2016) %>% 
+  district_bmr_fn()
+
+district_bmr_sum17 <- district_bmr_sum %>% 
+  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  rename(tinh = prov2017,
+         huyen = dist2017) %>% 
+  district_bmr_fn()
