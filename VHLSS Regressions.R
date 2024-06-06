@@ -7,32 +7,33 @@ for (i in vhlss) {
 ##########################
 # PROBABILITY OF WORKING #
 ##########################
+
 png("work_vhlss_dist_s.png")
 iplot(list(
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_02) | minority + urban + marital,
         subset(vhlss02, south == 1),
         weights = ~wt75,
-        vcov = ~tinh),
+        vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_04) | minority + urban + marital,
         subset(vhlss04, south == 1),
         weights = ~wt45,
-        vcov = ~tinh),
+        vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_06) | minority + urban + marital,
         subset(vhlss06, south == 1),
         weights = ~wt45,
-        vcov = ~tinh),
+        vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_08) | minority + urban + marital,
         subset(vhlss08, south == 1),
         weights = ~wt9,
-        vcov = ~tinh),
+        vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_10) | minority + urban + marital,
         subset(vhlss10, south == 1),
         weights = ~wt9,
-        vcov = ~tinh),
+        vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_12) | minority + urban + marital,
         subset(vhlss12, south == 1),
         weights = ~wt9,
-        vcov = ~tinh)
+        vcov = ~tinh+huyen)
 ))
 legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
        legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
@@ -43,27 +44,27 @@ iplot(list(
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_02) | minority + urban + marital,
         subset(vhlss02, south == 0),
         weights = ~wt75,
-        vcov = ~tinh),
+        vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_04) | minority + urban + marital,
         subset(vhlss04, south == 0),
         weights = ~wt45,
-        vcov = ~tinh),
+        vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_06) | minority + urban + marital,
         subset(vhlss06, south == 0),
         weights = ~wt45,
-        vcov = ~tinh),
+        vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_08) | minority + urban + marital,
         subset(vhlss08, south == 0),
         weights = ~wt9,
-        vcov = ~tinh),
+        vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_10) | minority + urban + marital,
         subset(vhlss10, south == 0),
         weights = ~wt9,
-        vcov = ~tinh),
+        vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_12) | minority + urban + marital,
         subset(vhlss12, south == 0),
         weights = ~wt9,
-        vcov = ~tinh)
+        vcov = ~tinh+huyen)
 ))
 legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
        legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
@@ -131,127 +132,131 @@ legend("bottomleft", col = 1:6, pch = 16, bty = "n", cex = 0.9,
        legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
 dev.off()
 
-# Pre-War and Post-War
+###############################################
+# PROBABILITY OF WORKING - BY PERIOD OF BIRTH #
+###############################################
 
-png("work_prewar_vhlss_s.png")
+# District level
+
+png("work_prewar_dist_vhlss_s.png")
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_02) | minority + urban + marital,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_02) | minority + urban + marital,
         subset(vhlss02, south == 1 & age > (2002-1975)),
         weights = ~wt75,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_04) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_04) | minority + urban + marital,
         subset(vhlss04, south == 1 & age > (2004-1975)),
         weights = ~wt45,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_06) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_06) | minority + urban + marital,
         subset(vhlss06, south == 1 & age > (2006-1975)),
         weights = ~wt45,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_08) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_08) | minority + urban + marital,
         subset(vhlss08, south == 1 & age > (2008-1975)),
         weights = ~wt9,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_10) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_10) | minority + urban + marital,
         subset(vhlss10, south == 1 & age > (2010-1975)),
         weights = ~wt9,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_12)| minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_12)| minority + urban + marital,
         subset(vhlss12, south == 1 & age > (2012-1975)),
         weights = ~wt9,
-        vcov = ~tinh)
+        vcov = ~tinh+huyen)
 ))
 legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
        legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
 dev.off()
 
-png("work_postwar_vhlss_s.png")
+png("work_postwar_dist_vhlss_s.png")
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_02) | minority + urban + marital,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_02) | minority + urban + marital,
         subset(vhlss02, south == 1 & age <= (2002-1975)),
         weights = ~wt75,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_04) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_04) | minority + urban + marital,
         subset(vhlss04, south == 1 & age <= (2004-1975)),
         weights = ~wt45,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_06) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_06) | minority + urban + marital,
         subset(vhlss06, south == 1 & age <= (2006-1975)),
         weights = ~wt45,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_08) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_08) | minority + urban + marital,
         subset(vhlss08, south == 1 & age <= (2008-1950)),
         weights = ~wt9,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_10) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_10) | minority + urban + marital,
         subset(vhlss10, south == 1 & age <= (2010-1975)),
         weights = ~wt9,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_12)| minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_12)| minority + urban + marital,
         subset(vhlss12, south == 1 & age <= (2012-1975)),
         weights = ~wt9,
-        vcov = ~tinh)
+        vcov = ~tinh+huyen)
 ))
 legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
        legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
 dev.off()
 
-png("work_prewar_vhlss_n.png")
+png("work_prewar_dist_vhlss_n.png")
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_02) | minority + urban + marital,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_02) | minority + urban + marital,
         subset(vhlss02, south == 0 & age > (2002-1975)),
         weights = ~wt75,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_04) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_04) | minority + urban + marital,
         subset(vhlss04, south == 0 & age > (2004-1975)),
         weights = ~wt45,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_06) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_06) | minority + urban + marital,
         subset(vhlss06, south == 0 & age > (2006-1975)),
         weights = ~wt45,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_08) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_08) | minority + urban + marital,
         subset(vhlss08, south == 0 & age > (2008-1975)),
         weights = ~wt9,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_10) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_10) | minority + urban + marital,
         subset(vhlss10, south == 0 & age > (2010-1975)),
         weights = ~wt9,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_12)| minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_12)| minority + urban + marital,
         subset(vhlss12, south == 0 & age > (2012-1975)),
         weights = ~wt9,
-        vcov = ~tinh)
+        vcov = ~tinh+huyen)
 ))
 legend("bottomleft", col = 1:7, pch = 16, bty = "n", cex = 0.9, 
        legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
 dev.off()
 
-png("work_postwar_vhlss_n.png")
+png("work_postwar_dist_vhlss_n.png")
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_02) | minority + urban + marital,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_02) | minority + urban + marital,
         subset(vhlss02, south == 0 & age <= (2002-1975)),
         weights = ~wt75,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_04) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_04) | minority + urban + marital,
         subset(vhlss04, south == 0 & age <= (2004-1975)),
         weights = ~wt45,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_06) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_06) | minority + urban + marital,
         subset(vhlss06, south == 0 & age <= (2006-1975)),
         weights = ~wt45,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_08) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_08) | minority + urban + marital,
         subset(vhlss08, south == 0 & age <= (2008-1975)),
         weights = ~wt9,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_10) | minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_10) | minority + urban + marital,
         subset(vhlss10, south == 0 & age <= (2010-1975)),
         weights = ~wt9,
-        vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ + log(popdensity_12)| minority + urban + marital,
+        vcov = ~tinh+huyen),
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ + log(popdensity_12)| minority + urban + marital,
         subset(vhlss12, south == 0 & age <= (2012-1975)),
         weights = ~wt9,
-        vcov = ~tinh)
+        vcov = ~tinh+huyen)
 ))
 legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
        legend = c("2001", "2003", "2005", "2007", "2009", "2011"))
@@ -259,29 +264,29 @@ dev.off()
 
 # Casualties 
 
-png("work_vhlss_cas.png")
+png("work_vhlss_dist_cas.png")
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_02) | minority + urban + marital,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_02) | minority + urban + marital,
         subset(vhlss02),
         weights = ~wt75,
         vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_04) | minority + urban + marital,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_04) | minority + urban + marital,
         subset(vhlss04),
         weights = ~wt45,
         vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_06) | minority + urban + marital,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_06) | minority + urban + marital,
         subset(vhlss06),
         weights = ~wt45,
         vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_08) | minority + urban + marital,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_08) | minority + urban + marital,
         subset(vhlss08),
         weights = ~wt9,
         vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_10) | minority + urban + marital,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_10) | minority + urban + marital,
         subset(vhlss10),
         weights = ~wt9,
         vcov = ~tinh),
-  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot_prov_ppn)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_12) | minority + urban + marital,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(killed_tot)) + age + age^2 + educ + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensity_12) | minority + urban + marital,
         subset(vhlss12),
         weights = ~wt9,
         vcov = ~tinh)  
@@ -294,7 +299,7 @@ dev.off()
 
 png("work_widowed_vhlss_s.png")
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov)) + age + age^2 + educ | minority + urban,
+  feols(work ~ as.factor(female) + i(as.factor(female), log(tot_bmr)) + age + age^2 + educ | minority + urban,
         subset(vhlss02, south == 1 & widowed == 1),
         weights = ~wt75,
         vcov = ~tinh),
