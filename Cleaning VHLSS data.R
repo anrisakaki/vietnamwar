@@ -123,7 +123,9 @@ vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
          educ, work, wagework, selfemp, selfagri, self, agri, manu, food, industry, occupation, manager, inc, hours, days, widow_hh, south) %>% 
   left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui")) %>% 
   left_join(wt02, by = c("tinh02", "huyen02", "xa02")) %>% 
-  rename(tinh = tinh02) %>% 
+  rename(tinh = tinh02,
+         huyen = huyen02) %>% 
+  left_join(district_bmr_sum02_vhlss, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
          urban = ifelse(urban == 1, 1, 0),
@@ -170,6 +172,7 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
          educ, work, wagework, selfemp, selfagri, self, agri, manu, food, industry, occupation, manager, inc, hours, days, widow_hh, south) %>% 
   left_join(def04, by = c("tinh", "huyen", "xa", "hoso")) %>% 
   left_join(wt04, by = c("tinh", "huyen", "xa")) %>% 
+  left_join(district_bmr_sum04_vhlss, by = c("tinh", "huyen")) %>% 
   mutate(inc = inc/mcpi/rcpi,
          urban = ifelse(urban == 1, 1, 0),
          tinh = ifelse(tinh == 105, 101, tinh),
@@ -222,6 +225,7 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
          educ, work, wagework, selfemp, selfagri, self, agri, manu, food, industry, occupation, manager, inc, hours, days, widow_hh, south) %>% 
   left_join(def06, by = hhid06) %>% 
   left_join(wt06, by = c("tinh", "huyen", "xa")) %>% 
+  left_join(district_bmr_sum06_vhlss, by = c("tinh", "huyen")) %>% 
   mutate(inc = inc/mcpi/rcpi,
          urban = ifelse(urban == 1, 1, 0),
          tinh = ifelse(tinh == 105, 101, tinh),
@@ -269,6 +273,7 @@ vhlss08 <- list(m123a_08, m4a_08) %>%
   select(tinh, huyen, xa, diaban, hoso, matv, hhid, minority, hhhead, fhead, female, age, marital, married, widowed, single,
          educ, work, wagework, selfemp, selfagri, self, agri, manu, food, industry, occupation, manager, inc, hours, days, widow_hh, south, urban) %>% 
   left_join(wt08, by = c("tinh", "huyen", "xa")) %>% 
+  left_join(district_bmr_sum08_vhlss, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
          year = 2008) %>% 
@@ -314,6 +319,7 @@ vhlss10 <- list(m1a_10, m2a_10, m4a1_10, m4a2_10, m4a3_10, m4a4_10) %>%
   select(tinh, huyen, xa, diaban, hoso, matv, hhid, minority, hhhead, fhead, female, age, marital, married, widowed, single,
          educ, work, wagework, selfemp, selfagri, self, agri, manu, food, industry, occupation, manager, inc, hours, days, widow_hh, south) %>% 
   left_join(wt10, by = c("tinh", "huyen", "xa")) %>% 
+  left_join(district_bmr_sum10, by = c("tinh", "huyen")) %>% 
   distinct() %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
@@ -362,56 +368,11 @@ vhlss12 <- list(m1a_12, m2a1_12) %>%
   select(tinh, huyen, xa, diaban, hoso, matv, hhid, hhhead, minority, fhead, female, age, marital, married, widowed, single,
          educ, work, wagework, selfemp, selfagri, self, agri, manu, food, industry, occupation, manager, inc, hours, days, widow_hh, south, urban) %>% 
   left_join(wt12, by = c("tinh", "huyen", "xa")) %>% 
+  left_join(district_bmr_sum12, by = c("tinh", "huyen")) %>% 
   distinct() %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          year = 2012)  %>% 
-  left_join(province_bmr_sum2, by = "tinh") %>% 
-  left_join(ppn1012, by = "tinh") 
-
-########
-# 2014 #
-########
-
-vhlss14 <- list(m1a_14, m2a_14, m4a_14) %>% 
-  reduce(full_join, by = ivid06) %>% 
-  left_join(ho1_14, by = c("tinh", "huyen", "xa", "hoso", "diaban")) %>% 
-  group_by(tinh, huyen, xa, diaban, hoso) %>% 
-  mutate(hhid = cur_group_id())  %>% 
-  rename(age = m1ac5,
-         educ = m2ac1,
-         industry = m4ac4,
-         days = m4ac6,
-         hours = m4ac7,
-         inc = m4ac11,
-         birth_prov = m1ac11,
-         marital = m1ac8,
-         urban = ttnt) %>% 
-  mutate(migrant = ifelse(tinh != birth_prov, 1, 0), 
-         industry = ifelse(industry == 110, 1, industry),
-         female = ifelse(m1ac2 == 2, 1, 0),
-         married = ifelse(marital == 2, 1, 0),
-         widowed = ifelse(marital == 3, 1, 0),
-         single = ifelse(marital == 1, 1, 0),
-         hhhead = ifelse(m1ac3 == 1, 1, 0),
-         fhead = ifelse(female == 1 & hhhead == 1, 1, 0),
-         child = ifelse(m1ac3 == 3, 1, 0),
-         wagework = ifelse(m4ac1a == 1, 1, 0),
-         work = ifelse(m4ac2 == 1, 1, 0),
-         selfemp = ifelse(m4ac1c == 1, 1, 0),
-         selfagri = ifelse(m4ac1b == 1, 1, 0),
-         manu = ifelse(industry > 14 & industry < 40, 1, 0),
-         food = ifelse(industry == 10 | industry == 11, 1, 0),
-         south = ifelse(tinh > 44, 1, 0),
-         minority = ifelse(dantoc > 1, 1, 0),
-         urban = ifelse(urban == 1, 1, 0)) %>% 
-  vhlss_emp_fn () %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, hhid, hhhead, minority, birth_prov, migrant, fhead, female, age, marital, married, widowed, single,
-         educ, work, wagework, selfemp, selfagri, self, agri, manu, food, industry, inc, hours, days, widow_hh, south, urban) %>% 
-  distinct() %>% 
-  mutate(tinh = ifelse(tinh == 28, 1, tinh),
-         tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
-         year = 2014)  %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   left_join(ppn1012, by = "tinh") 
 
@@ -423,4 +384,3 @@ save(vhlss06, file = "vhlss06.Rda")
 save(vhlss08, file = "vhlss08.Rda")
 save(vhlss10, file = "vhlss10.Rda")
 save(vhlss12, file = "vhlss12.Rda")
-save(vhlss14, file = "vhlss14.Rda")
