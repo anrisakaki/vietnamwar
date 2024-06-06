@@ -73,9 +73,11 @@ dn_fn <- function(i) {
            tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
            workerratio = ifelse(nworkers == 0 | fworkers == 0, NA, workerratio),
            tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio),
-           share_f = ifelse(fworkers == 0 | is.na(fworkers), 0, share_f)) %>% 
-    select(tinh, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, nworkers, fworkers,
-           workerratio, tot_workerratio, share_f) %>% 
+           share_f = ifelse(fworkers == 0 | is.na(fworkers), 0, share_f),
+           tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+           tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb)) %>% 
+    select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, nworkers, fworkers,
+           workerratio, tot_workerratio, share_f, tot_bmr, tot_bmr_lb, nearest_base, dist_nearest_hochi, killed_tot) %>% 
     left_join(sexratios, by = "tinh") %>% 
     left_join(ppn0419, by = "tinh")
 }
@@ -86,6 +88,7 @@ dn_fn <- function(i) {
 
 # Private limited companies are predominantly classified as JSC w state capital in 2001 
 dn02 <- ec_list[[3]] %>% 
+  left_join(district_bmr_sum02, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
   rename(nworkers = ld33,
@@ -108,6 +111,7 @@ dn02 <- ec_list[[3]] %>%
   left_join(ppn002, by = "tinh")
 
 dn03 <- ec_list[[4]] %>% 
+  left_join(district_bmr_sum03, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh)) %>% 
   rename(nworkers = ld33,
@@ -130,6 +134,8 @@ dn03 <- ec_list[[4]] %>%
   left_join(ppn03, by = "tinh")
 
 dn04 <- ec_list[[5]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum05, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
@@ -154,8 +160,9 @@ dn04 <- ec_list[[5]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn05 <- ec_list[[6]] %>% 
-  mutate(tinh = as.numeric(tinh),
-         tinh = ifelse(tinh == 28, 1, tinh),
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum05, by = c("tinh", "huyen")) %>% 
+  mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
            nganh_kd < 101000 ~ as.numeric(substr(nganh_kd, 1, 3)),
@@ -179,6 +186,8 @@ dn05 <- ec_list[[6]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn06 <- ec_list[[7]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum06, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
@@ -203,6 +212,8 @@ dn06 <- ec_list[[7]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn07 <- ec_list[[8]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum07, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
@@ -227,6 +238,8 @@ dn07 <- ec_list[[8]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn08 <- ec_list[[9]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum08, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
@@ -251,6 +264,8 @@ dn08 <- ec_list[[9]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn09 <- ec_list[[10]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum09, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
@@ -275,6 +290,8 @@ dn09 <- ec_list[[10]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn10 <- ec_list[[11]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum10, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
@@ -299,6 +316,8 @@ dn10 <- ec_list[[11]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn11 <- ec_list[[12]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum11, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
@@ -323,6 +342,8 @@ dn11 <- ec_list[[12]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn12 <- ec_list[[13]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum12, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
@@ -347,6 +368,8 @@ dn12 <- ec_list[[13]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn13 <- ec_list[[14]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum13, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
@@ -371,6 +394,8 @@ dn13 <- ec_list[[14]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn14 <- ec_list[[15]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum14, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
@@ -395,6 +420,8 @@ dn14 <- ec_list[[15]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn15 <- ec_list[[16]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum15, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
@@ -419,6 +446,8 @@ dn15 <- ec_list[[16]] %>%
   left_join(province_bmr_sum2, by = "tinh")
 
 dn16 <- ec_list[[17]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum16, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = as.numeric(nganh_kd),
@@ -431,7 +460,9 @@ dn16 <- ec_list[[17]] %>%
            nchar(nganh_kd) > 3 ~ as.numeric(substr(nganh_kd, 1, 2)),
            nchar(nganh_kd) == 3 ~ as.numeric(substr(nganh_kd, 1, 1)),
            TRUE ~ as.numeric(nganh_kd)  
-         )) %>% 
+         ),
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb)) %>% 
   rename(tot_workers = ld11,
          tot_fworkers = ld21,
          dir_yob = namsinh,
@@ -444,7 +475,8 @@ dn16 <- ec_list[[17]] %>%
          across(c(tinh, huyen, xa), as.numeric),
          female_dir = ifelse(gioitinh == 2, 1, 0),
          female_dir = ifelse(female_dir == 0 & gioitinh == 0 | quoctich != "VN", NA, female_dir)) %>% 
-  select(tinh, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f, gioitinh, quoctich, female_dir, dir_yob, dir_ethnicity) %>% 
+  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f, gioitinh, quoctich, female_dir,
+         dir_yob, dir_ethnicity, tot_bmr, tot_bmr_lb, nearest_base, dist_nearest_hochi, killed_tot) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   mutate(soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
@@ -458,6 +490,8 @@ dn16 <- ec_list[[17]] %>%
   left_join(ppn0419, by = "tinh")
 
 dn17 <- ec_list[[18]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum17, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = as.numeric(nganh_kd),
@@ -470,7 +504,9 @@ dn17 <- ec_list[[18]] %>%
            nchar(nganh_kd) > 3 ~ as.numeric(substr(nganh_kd, 1, 2)),
            nchar(nganh_kd) == 3 ~ as.numeric(substr(nganh_kd, 1, 1)),
            TRUE ~ as.numeric(nganh_kd)  
-         )) %>% 
+         ),
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb)) %>% 
   rename(tot_workers = ld11,
          tot_fworkers = ld21) %>% 
   mutate(tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
@@ -478,7 +514,8 @@ dn17 <- ec_list[[18]] %>%
          share_f = tot_fworkers/tot_workers,
          share_f = ifelse(tot_fworkers == 0 | is.na(tot_fworkers), 0, share_f),
          across(tinh, as.numeric)) %>% 
-  select(tinh, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f) %>% 
+  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f,
+         tot_bmr, tot_bmr_lb, nearest_base, dist_nearest_hochi, killed_tot) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>%
   mutate(soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
@@ -492,6 +529,8 @@ dn17 <- ec_list[[18]] %>%
   left_join(ppn0419, by = "tinh")
 
 dn18 <- ec_list[[19]] %>% 
+  mutate(across(c(tinh, huyen), as.double)) %>% 
+  left_join(district_bmr_sum, by = c("tinh" = "prov18", "huyen" = "dist18")) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = as.numeric(nganh_kd),
@@ -504,7 +543,9 @@ dn18 <- ec_list[[19]] %>%
            nchar(nganh_kd) > 3 ~ as.numeric(substr(nganh_kd, 1, 2)),
            nchar(nganh_kd) == 3 ~ as.numeric(substr(nganh_kd, 1, 1)),
            TRUE ~ as.numeric(nganh_kd)  
-         )) %>%
+         ),
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb)) %>%
   rename(tot_workers = ld11,
          tot_fworkers = ld21) %>% 
   mutate(across(c(tinh, huyen, xa), as.numeric),
@@ -512,7 +553,8 @@ dn18 <- ec_list[[19]] %>%
          tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio),
          share_f = tot_fworkers/tot_workers,
          share_f = ifelse(tot_fworkers == 0 | is.na(tot_fworkers), 0, share_f)) %>% 
-  select(tinh, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f) %>% 
+  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f,
+         tot_bmr, tot_bmr_lb, nearest_base, dist_nearest_hochi, killed_tot) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   mutate(soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
