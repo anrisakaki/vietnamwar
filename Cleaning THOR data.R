@@ -239,8 +239,45 @@ vnmap2 <- vnmap2 %>%
     distname2018 == 'Quận Quận 7' ~ 'Quận 7',
     distname2018 == 'Quận Quận 8' ~ 'Quận 8',
     distname2018 == 'Quận Quận 9' ~ 'Quận 9',
+    distname2018 == "Huyện Tịnh Biên" & NAME_1 == "An Giang" ~ "Thị xã Tịnh Biên",
+    distname2018 == "Thị xã Dĩ An" & NAME_1 == "Bình Dương" ~ "Thành phố Dĩ An",
+    distname2018 == "Thị xã Thuận An" & NAME_1 == "Bình Dương" ~ "Thành phố Dĩ An",
+    distname2018 == "Thị xã Tân Uyên" & NAME_1 == "Bình Dương" ~ "Huyện Bắc Tân Uyên",
+    distname2018 == "Huyện Chơn Thành" & NAME_1 == "Bình Phước" ~ "Thị xã Chơn Thành",
+    distname2018 == "Thị xã Đồng Xoài" & NAME_1 == "Bình Phước" ~ "Thành phố Đồng Xoài",
+    distname2018 == "Huyện Hoài Nhơn" & NAME_1 == "Bình Định" ~ "Thị xã Hoài Nhơn",
+    distname2018 == "Thành phố Qui Nhơn" & NAME_1 == "Bình Định" ~ "Thành phố Quy Nhơn",
+    distname2018 == "Huyện Việt Yên" & NAME_1 == "Bắc Giang" ~ "Thị Xã Việt Yên",
+    distname2018 == "Huyện Quế Võ" & NAME_1 == "Bắc Ninh" ~ "Thị xã Quế Võ",
+    distname2018 == "Huyện Thuận Thành" & NAME_1 == "Bắc Ninh" ~ "Thị xã Thuận Thành",
+    distname2018 == "Thị xã Từ Sơn" & NAME_1 == "Bắc Ninh" ~ "Thành phố Từ Sơn",
+    distname2018 == "Huyện Duy Tiên" & NAME_1 == "Hà Nam" ~ "Thị xã Duy Tiên",
+    distname2018 == "Thị xã Kỳ Anh (Thị xã)" & NAME_1 == "Hà Tĩnh" ~ "Thị xã Kỳ Anh",
+    distname2018 == "Huyện Mỹ Hào" & NAME_1 == "Hưng Yên" ~ "Thị xã Mỹ Hào",
+    distname2018 == "Thị xã Chí Linh" & NAME_1 == "Hải Dương" ~ "Thành phố Chí Linh",
+    distname2018 == "Huyện Kinh Môn" & NAME_1 == "Hải Dương" ~ "Thị xã Kinh Môn",
+    distname2018 == "Thị xã Long Mỹ (Thị xã)" & NAME_1 == "Hậu Giang" ~ "Thị xã Long Mỹ",
+    distname2018 == "Thị xã Ngã Bảy" & NAME_1 == "Hậu Giang" ~ "Thành phố Ngã Bảy",
+    distname2018 == "Thị xã Hà Tiên" & NAME_1 == "Kiên Giang" ~ "Thành phố Hà Tiên",
+    distname2018 == "Huyện Phú Quốc" & NAME_1 == "Kiên Giang" ~ "Thành phố Phú Quốc",
+    distname2018 == "Huyện Đông Hòa" & NAME_1 == "Phú Yên" ~ "Thị xã Đông Hòa",
+    distname2018 == "Thành phố Thành Phố Đồng Hới" & NAME_1 == "Quảng Bình" ~ "Thành Phố Đồng Hới",
+    distname2018 == "Huyện Đức Phổ" & NAME_1 == "Quảng Ngãi" ~ "Thị xã Đức Phổ",
+    distname2018 == "Thị xã Phổ Yên" & NAME_1 == "Thái Nguyên" ~ "Thành phố Phổ Yên",
+    distname2018 == "Thị xã Cai Lậy (Thị xã)" & NAME_1 == "Tiền Giang" ~ "Thị xã Cai Lậy",
+    distname2018 == "Thị xã Duyên Hải (Thị xã)" & NAME_1 == "Trà Vinh" ~ "Thị xã Duyên Hải",
+    distname2018 == "Huyện Hòa Thành" & NAME_1 == "Tây Ninh" ~ "Thị xã Hòa Thành",
+    distname2018 == "Huyện Trảng Bàng" & NAME_1 == "Tây Ninh" ~ "Thị xã Trảng Bàng",
+    distname2018 == "Huyện Vũng Liêm" & NAME_1 == "Vĩnh Long" ~ "Huyện  Vũng Liêm",
+    distname2018 == "Thị xã Phúc Yên" & NAME_1 == "Vĩnh Phúc" ~ "Thành phố Phúc Yên",
+    distname2018 == "Thị xã Thị Xã Buôn Hồ" & NAME_1 == "Đắk Lắk" ~ "Thị Xã Buôn Hồ",
+    distname2018 == "Thị xã Gia Nghĩa" & NAME_1 == "Đắk Lắk" ~ "Thành phố Gia Nghĩa",
+    distname2018 == "Thị xã Long Khánh" & NAME_1 == "Đồng Nai" ~ "Thành phố Long Khánh",
+    distname2018 == "Thành phố Cao Lãnh (Thành phố)" & NAME_1 == "Đồng Tháp" ~ "Thành phố Cao Lãnh",
+    distname2018 == "Thị xã Hồng Ngự (Thị xã)" & NAME_1 == "Đồng Tháp" ~ "Thị xã Hồng Ngự",
     TRUE ~ distname2018
-  ))
+  ),
+  NAME_1 = ifelse(distname2018 == "Thành phố Gia Nghĩa" & NAME_1 == "Đắk Lắk", "Đắk Nông", NAME_1))
 
 district_bmr <- st_join(gdf, vnmap2)
 district_bmr <- st_join(district_bmr, vnmap1)
@@ -265,11 +302,11 @@ district_bmr_sf$dist_nearest_hochi <-
 
 district_bmr_sum <- district_bmr_sf %>% 
   sf::st_drop_geometry() %>% 
-  select(NAME_1, VARNAME_1, VARNAME_2, distname2018, tot_bmr, tot_bmr_lb, civilian_bmr, civilian_bmr_lb,
-         agri_bmr, agri_bmr_lb, industry_bmr, industry_bmr_lb, nearest_base, dist_nearest_hochi) %>% 
+  select(NAME_1, VARNAME_1, VARNAME_2, distname2018, tot_bmr, tot_bmr_lb, nearest_base, dist_nearest_hochi) %>% 
   rename_all(tolower) %>% 
   left_join(dist_casualties, by = c("varname_1", "distname2018")) %>% 
   rename(provname2018 = name_1) %>% 
-  filter(!is.na(provname2018))
+  filter(!is.na(provname2018)) %>% 
+  distinct()
 
 save(district_bmr_sum, file = "district_bmr_sum.Rda")
