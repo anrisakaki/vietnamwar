@@ -372,6 +372,12 @@ mccaig_dist_vhlss <- mccaig_boundaries %>%
   rename(prov18 = prov2018,
          dist18 = dist2018)
 
+mccaig_dist_phcs <- mccaig_boundaries %>%
+  select(prov2018, dist2018, prov2009, ward2009census) %>% 
+  distinct() %>% 
+  rename(prov18 = prov2018,
+         dist18 = dist2018)
+
 district_bmr_sum <- list(geoid_list[[17]], district_bmr_sum) %>%
   reduce(merge, by = c("provname", "distname")) %>% 
   distinct() %>% 
