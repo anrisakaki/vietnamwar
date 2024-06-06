@@ -56,3 +56,25 @@ firmtype_long <- firmtype_sum %>%
     names_to = "FirmType",
     values_to = "Share") %>% 
   mutate(FirmType = ifelse(FirmType == "Private_w_Share", "Private w/ State Capital", FirmType))
+
+####################################
+# BMR VS SHARE OF FEMALE DIRECTORS #
+####################################
+
+bmr_fdir <- dn16 %>% 
+  group_by(tinh, huyen, south) %>% 
+  summarise(
+    n_firms = n(),
+    n_fdir = sum(female_dir == 1, na.rm = T),
+    tot_bmr = mean(tot_bmr)
+  ) %>% 
+  mutate(share_fdir = (n_fdir/n_firms)*100)
+
+bmr_fdir_prov <- dn16 %>% 
+  group_by(tinh, south) %>% 
+  summarise(
+    n_firms = n(),
+    n_fdir = sum(female_dir == 1, na.rm = T),
+    tot_bmr = mean(tot_bmr_prov_ppn)
+  ) %>% 
+  mutate(share_fdir = (n_fdir/n_firms)*100)
