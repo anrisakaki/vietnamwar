@@ -502,8 +502,47 @@ district_bmr_sum17 <- district_bmr_sum %>%
 
 # PHC 
 
-phcdist <- phc_dist %>%
+district_bmr_phc <- district_bmr_sum %>% 
+  mutate(distname = str_replace(distname, "^(Huyện|Quận|Thị xã|Thị Xã|Thành phố|Thành Phố)\\s+", ""),
+         distname = case_when(
+           distname == '1' ~ 'Quận 1',
+           distname == '10' ~ 'Quận 10',
+           distname == '12' ~ 'Quận 12',
+           distname == '11' ~ 'Quận 11',
+           distname == '2' ~ 'Quận 2',
+           distname == '3' ~ 'Quận 3',
+           distname == '4' ~ 'Quận 4',
+           distname == '5' ~ 'Quận 5',
+           distname == '6' ~ 'Quận 6',
+           distname == '7' ~ 'Quận 7',
+           distname == '8' ~ 'Quận 8',
+           distname == '9' ~ 'Quận 9',
+           TRUE ~ distname))
+
+district_bmr_sum_phc <- phc_dist %>%
   mutate(
-    geo2_vn2009 = as.numeric(str_extract(distname, "^\\d+")),
-    distname = str_remove(distname, "^\\d+\\s*") 
-  )
+    geo2_vn2009 = as.double(str_trim(str_extract(distname, "^\\d+"))),
+    distname = str_trim(str_remove(distname, "^\\d+\\s*"))
+  ) %>% 
+  mutate(
+    provname = case_when(
+    provname == " Bình Định" ~ "Bình Định",
+    provname == " Đắk Nông" ~ "Đắk Nông",
+    provname == " Thừa Thiên Huế" ~ "Thừa Thiên Huế",
+    provname == " Vĩnh Phúc" ~ "Vĩnh Phúc",
+    provname == "Khánh Hoà" ~ "Khánh Hòa",
+    provname == "Thanh Hoá" ~ "Thanh Hóa",
+    TRUE ~ provname),
+    distname = case_when(
+      distname == "Mường ảng" ~ "Mường Ảng",
+      distname == "Đồng Phù" & provname == "Bình Phước" ~ "Đồng Phú",
+      distname == "Hoà Vang" & provname == "Đà Nẵng" ~ "Hòa Vang",
+      distname == "Chư Pưh" & provname == "Gia Lai" ~ "Chư Păh",
+      distname == "ứng Hòa" & provname == "Hà Nội" ~ "Ứng Hòa",
+      distname == "ứng Hòa" & provname == "Hà Nội" ~ "Ứng Hòa",
+      distname == "Hữũ Lung" & provname == "Lạng Sơn" ~ "Hữu Lũng",
+      distname == "ý Yên" & provname == "Nam Định" ~ "Ý Yên",
+      distname == "Bác ái" & provname == "Ninh Thuận" ~ "Bác Ái",
+      distname == "Đông Hoà" & provname == "Phú Yên" ~ "Đông Hòa",
+      TRUE ~ distname)) %>% 
+  left_join(district_bmr_phc, by = c("distname", "provname"))
