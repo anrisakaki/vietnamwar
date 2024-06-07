@@ -56,7 +56,8 @@ phc99 <- phc %>%
 
 phc09 <- phc %>% 
   filter(year == 2009) %>% 
-  mutate(geo1_vn2009 = ifelse(geo1_vn2009 == 11, 12, geo1_vn2009),
+  mutate(huyen = as.numeric(substr(geo2_vn2009, 3, 5)),
+         geo1_vn2009 = ifelse(geo1_vn2009 == 11, 12, geo1_vn2009),
          geo1_vn2009 = ifelse(geo1_vn2009 == 14, 12, geo1_vn2009)) %>%
   left_join(bombs_province09, by = "geo1_vn2009") %>% 
   mutate(south = ifelse(geo1_vn2009 > 44, 1, 0))%>% 
