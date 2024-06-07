@@ -76,7 +76,9 @@ dhc_97 <- read_dta(file = "DHC/VNIR31FL.dta")
 
 # Population and Housing Census 
 
-phc <- read_dta(file = "ipumsi_00007.dta")
+phc <- read_dta(file = "ipumsi_00008.dta")
+
+phc_dist <- read.csv("PHC District Codes.csv")
 
 # Enterprise Survey 
 
@@ -128,6 +130,8 @@ geoid_folder <- "C:/Users/Anri Sakakibara/OneDrive/PhD Political Economy/Vietnam
 geoid_files <- list.files(path = geoid_folder, pattern = "geo(.*)csv$")
 geoid_list <- lapply(geoid_files, function(file) read.csv(file.path(geoid_folder, file)))
 
+district09 <- read_sf("diaphanhuyen/Dia_phan_Huyen.shp")
+
 vnmap0 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_0.shp")
 vnmap1 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_1.shp")
 vnmap2 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_2.shp")
@@ -141,7 +145,7 @@ vnmap2_09 <- read_sf("Chloropleth Maps/VNShapefile/geo2_vn2009/geo2_vn2009.shp")
 
 provarea <- read.csv("province_area.csv")
 
-district_controls <-read_sf("District Controls/columbia_iscgm_vietnam_2007_bound.shp")
+soilquality <-read_sf("soil-map/tho_nhuong_english.shp")
   
 # Consistent District Boundaries 
 
