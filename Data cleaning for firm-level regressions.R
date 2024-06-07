@@ -82,6 +82,10 @@ dn_fn <- function(i) {
     left_join(ppn0419, by = "tinh")
 }
 
+ecgender_list <- lapply(ecgender_list, function(i) {
+  i %>% rename_with(tolower)
+})
+
 # Private = Private enterprise | JSC w no state capital 
 # SOE = Enterprise with 100% state capital 
 # FOE = 100% foreign capital 
