@@ -86,6 +86,9 @@ ec <- list.files("Enterprise Census", pattern = "^dn.*\\.dta$", full.names = TRU
 
 ec_list <- lapply(ec, read_dta)
 
+ec_gender <- list.files("Enterprise Census/Gender data", pattern = "^dn.*\\.dta$", full.names = TRUE)
+ecgender_list <- lapply(ec_gender, read_dta)
+
 # Population 
 
 prewar_ppn <- read.csv("prewar_ppn.csv")
