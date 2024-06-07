@@ -338,10 +338,6 @@ district_bmr_fn <- function(i){
 
 geoid_list <- lapply(geoid_list, dropward)
 
-district_bmr_sum <- district_bmr_sum %>%
-  rename(provname = provname2018,
-         distname = distname2018)
-
 mccaig_dist <- mccaig_boundaries %>% select(provname2018, distname2018, prov2002, dist2002, prov2003, dist2003, prov2004, dist2004,
                                             prov2005, dist2005, prov2006, dist2006, prov2007, dist2007, prov2008, dist2008,
                                             prov2009, dist2009, prov2010, dist2010, prov2011, dist2011, prov2012, dist2012,
@@ -503,3 +499,11 @@ district_bmr_sum17 <- district_bmr_sum %>%
   rename(tinh = prov2017,
          huyen = dist2017) %>% 
   district_bmr_fn()
+
+# PHC 
+
+phcdist <- phc_dist %>%
+  mutate(
+    geo2_vn2009 = as.numeric(str_extract(distname, "^\\d+")),
+    distname = str_remove(distname, "^\\d+\\s*") 
+  )
