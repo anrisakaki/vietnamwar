@@ -330,8 +330,6 @@ district_bmr_fn <- function(i){
     group_by(tinh, huyen) %>% 
     summarise(tot_bmr = sum(tot_bmr),
               tot_bmr_lb = sum(tot_bmr_lb),
-              nearest_base = min(nearest_base),
-              dist_nearest_hochi = min(dist_nearest_hochi),
               killed_tot = sum(killed_tot)) %>% 
     filter(!is.na(tinh))
 }
@@ -375,10 +373,24 @@ mccaig_dist_phcs <- mccaig_boundaries %>%
          dist18 = dist2018)
 
 district_bmr_sum <- list(geoid_list[[17]], district_bmr_sum) %>%
-  reduce(merge, by = c("provname", "distname")) %>% 
+  reduce(full_join, by = c("provname", "distname")) %>% 
   distinct() %>% 
   select(prov18, dist18, everything()) %>% 
-  select(-c("varname_1", "varname_2")) 
+  select(-c("varname_1", "varname_2")) %>% 
+  mutate(
+    prov18 = if_else(provname == "Hồ Chí Minh" & distname == "Quận 2", 79, prov18),
+    dist18 = if_else(provname == "Hồ Chí Minh" & distname == "Quận 2", 769, dist18),
+    prov18 = if_else(provname == "Đồng Tháp" & distname == "Thị xã Hồng Ngự", 87, prov18),
+    dist18 = if_else(provname == "Đồng Tháp" & distname == "Thị xã Hồng Ngự", 868, dist18),
+    prov18 = if_else(provname == "Đắk Nông" & distname == "Thị xã Gia Nghĩa", 67, prov18),
+    dist18 = if_else(provname == "Đắk Nông" & distname == "Thị xã Gia Nghĩa", 660, dist18),
+    prov18 = if_else(provname == "Bà Rịa - Vũng Tàu" & distname == "Huyện Tân Thành", 77, prov18),
+    dist18 = if_else(provname == "Bà Rịa - Vũng Tàu" & distname == "Huyện Tân Thành", 745, dist18),
+    prov18 = if_else(provname == "Thanh Hóa" & distname == "Huyện Tĩnh Gia", 38, prov18),
+    dist18 = if_else(provname == "Thanh Hóa" & distname == "Huyện Tĩnh Gia", 407, dist18),
+    tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+    tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb)
+  )
 
 district_bmr_sum02 <- district_bmr_sum %>% 
   merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
@@ -546,3 +558,5 @@ district_bmr_sum_phc <- phc_dist %>%
       distname == "Đông Hoà" & provname == "Phú Yên" ~ "Đông Hòa",
       TRUE ~ distname)) %>% 
   left_join(district_bmr_phc, by = c("distname", "provname"))
+
+save(district_bmr_sum, file = "district_bmr_sum.Rda")
