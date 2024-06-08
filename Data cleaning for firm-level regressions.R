@@ -86,11 +86,35 @@ ecgender_list <- lapply(ecgender_list, function(i) {
   i %>% rename_with(tolower)
 })
 
+busid <- c("tinh", "huyen", "ma_thue")
+
 # Private = Private enterprise | JSC w no state capital 
 # SOE = Enterprise with 100% state capital 
 # FOE = 100% foreign capital 
 
 # Private limited companies are predominantly classified as JSC w state capital in 2001 
+
+ecgender_list[[1]] <- ecgender_list[[1]] %>% 
+  mutate(tinh = ifelse(tinh == 105, 101, tinh),
+         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh))
+
+dn01 <- ec_list[[2]] %>% 
+  left_join(district_bmr_sum02, by = c("tinh", "huyen")) %>% 
+  mutate(tinh = ifelse(tinh == 105, 101, tinh),
+         ldc21 = ifelse(is.na(ldc21), 0, ldc21),
+         ldc22 = ifelse(is.na(ldc22), 0, ldc22),
+         nworkers = ldc11 - ldc21,
+         fworkers = ldc12 - ldc22) %>% 
+  rename(tot_workers = ld13,
+         tot_fworkers = ld14,
+         namsxkd = namtl) %>% 
+  dn_fn() %>% 
+  left_join(ecgender_list[[1]], by = busid) %>% 
+  mutate(south = ifelse(tinh > 407, 1, 0),
+         female_dir = ifelse(gtinh == 2, 1, 0),
+         female_dir = ifelse(female_dir == 0 & gtinh == 0 | qtich != 1110, NA, female_dir)) %>% 
+  left_join(province_bmr_sum02, by = "tinh")
+
 dn02 <- ec_list[[3]] %>% 
   left_join(district_bmr_sum02, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
