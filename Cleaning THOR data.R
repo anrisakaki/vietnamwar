@@ -287,26 +287,18 @@ district_bmr_sf <- district_bmr %>%
   summarise(
     tot_bmr = sum(NUMWEAPONSDELIVERED, na.rm = T),
     tot_bmr_lb = sum(WEIGHTDELIVERED, na.rm = T)) %>% 
-  sf::st_drop_geometry()
-
-district_bmr_sf <- left_join(district_bmr_sf, vnmap2, by = c("NAME_1", "VARNAME_2", "distname2018")) %>% 
+  sf::st_drop_geometry() %>% 
+  left_join(vnmap2, by = c("NAME_1", "VARNAME_2", "distname2018")) %>% 
   st_as_sf()
-
-nearest_base_dist <- st_nearest_feature(district_bmr_sf, bases)
-district_bmr_sf$nearest_base <-
-  as.numeric(st_distance(district_bmr_sf, bases[nearest_base_dist, ], by_element = TRUE)) / 1000
-
-nearest_trail_dist <- st_nearest_feature(district_bmr_sf, hcmtrail)
-district_bmr_sf$dist_nearest_hochi <-
-  as.numeric(st_distance(district_bmr_sf, hcmtrail[nearest_trail_dist, ], by_element = TRUE)) / 1000
 
 district_bmr_sum <- district_bmr_sf %>% 
   sf::st_drop_geometry() %>% 
-  select(NAME_1, VARNAME_1, VARNAME_2, distname2018, tot_bmr, tot_bmr_lb, nearest_base, dist_nearest_hochi) %>% 
+  select(NAME_1, VARNAME_1, VARNAME_2, distname2018, tot_bmr, tot_bmr_lb) %>% 
   rename_all(tolower) %>% 
   left_join(dist_casualties, by = c("varname_1", "distname2018")) %>% 
-  rename(provname2018 = name_1) %>% 
-  filter(!is.na(provname2018)) %>% 
+  rename(provname = name_1,
+         distname = distname2018) %>% 
+  filter(!is.na(provname)) %>% 
   distinct()
 
 save(district_bmr_sum, file = "district_bmr_sum.Rda")
