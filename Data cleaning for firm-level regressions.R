@@ -75,9 +75,10 @@ dn_fn <- function(i) {
            tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio),
            share_f = ifelse(fworkers == 0 | is.na(fworkers), 0, share_f),
            tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
-           tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb)) %>% 
+           tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb),
+           ma_thue = ifelse(ma_thue == "Cha cã"), NA, ma_thue) %>% 
     select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, nworkers, fworkers,
-           workerratio, tot_workerratio, share_f, tot_bmr, tot_bmr_lb, nearest_base, dist_nearest_hochi, killed_tot) %>% 
+           workerratio, tot_workerratio, share_f, tot_bmr, tot_bmr_lb, killed_tot) %>% 
     left_join(sexratios, by = "tinh") %>% 
     left_join(ppn0419, by = "tinh")
 }
@@ -86,7 +87,7 @@ ecgender_list <- lapply(ecgender_list, function(i) {
   i %>% rename_with(tolower)
 })
 
-busid <- c("tinh", "huyen", "ma_thue")
+busid <- c("tinh", "huyen", "xa", "ma_thue", "ma_thue2", "macs")
 
 # Private = Private enterprise | JSC w no state capital 
 # SOE = Enterprise with 100% state capital 
@@ -94,25 +95,42 @@ busid <- c("tinh", "huyen", "ma_thue")
 
 # Private limited companies are predominantly classified as JSC w state capital in 2001 
 
-ecgender_list[[1]] <- ecgender_list[[1]] %>% 
-  mutate(tinh = ifelse(tinh == 105, 101, tinh),
-         tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh))
-
 dn01 <- ec_list[[2]] %>% 
   left_join(district_bmr_sum02, by = c("tinh", "huyen")) %>% 
-  mutate(tinh = ifelse(tinh == 105, 101, tinh),
+  left_join(ecgender_list[[1]], by = busid) %>% 
+  rename(tot_workers = ld13,
+         tot_fworkers = ld14,
+         namsxkd = namtl,
+         dir_yob = nam_sinh,
+         dir_ethnicity = dtoc,
+         dir_educ = tdcm) %>% 
+  mutate(across(c(tinh, huyen, xa), as.numeric),
+         tinh = ifelse(tinh == 105, 101, tinh),
          ldc21 = ifelse(is.na(ldc21), 0, ldc21),
          ldc22 = ifelse(is.na(ldc22), 0, ldc22),
          nworkers = ldc11 - ldc21,
-         fworkers = ldc12 - ldc22) %>% 
-  rename(tot_workers = ld13,
-         tot_fworkers = ld14,
-         namsxkd = namtl) %>% 
-  dn_fn() %>% 
-  left_join(ecgender_list[[1]], by = busid) %>% 
-  mutate(south = ifelse(tinh > 407, 1, 0),
+         fworkers = ldc12 - ldc22,
+         nganh_kd = as.numeric(substr(nganh_kd, 1, 4)),
+         nganh_kd2 = case_when(
+           nchar(nganh_kd) > 3 ~ as.numeric(substr(nganh_kd, 1, 2)),
+           nchar(nganh_kd) == 3 ~ as.numeric(substr(nganh_kd, 1, 1)),
+           TRUE ~ as.numeric(nganh_kd)  
+         ),
+         workerratio = (nworkers-fworkers)/fworkers,
+         share_f = tot_fworkers/tot_workers,
+         tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
+         workerratio = ifelse(nworkers == 0 | fworkers == 0, NA, workerratio),
+         tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio),
+         share_f = ifelse(fworkers == 0 | is.na(fworkers), 0, share_f),
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb),
+         south = ifelse(tinh > 407, 1, 0),
          female_dir = ifelse(gtinh == 2, 1, 0),
          female_dir = ifelse(female_dir == 0 & gtinh == 0 | qtich != 1110, NA, female_dir)) %>% 
+  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, female_dir, dir_yob, dir_ethnicity, dir_educ, 
+         tot_workers, tot_fworkers, nworkers, fworkers, workerratio, tot_workerratio, share_f, tot_bmr, tot_bmr_lb, killed_tot, south) %>% 
+  left_join(sexratios, by = "tinh") %>% 
+  left_join(ppn0419, by = "tinh")
   left_join(province_bmr_sum02, by = "tinh")
 
 dn02 <- ec_list[[3]] %>% 
