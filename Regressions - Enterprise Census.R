@@ -363,18 +363,18 @@ dn_indfe_prov_coef_cas$year <- rep(seq(2002, 2018), each = nrow(dn_indfe_prov_co
 ###################
 
 etable(list(
-  feols(female_dir ~ log(tot_bmr) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
+  feols(female_dir ~ log(tot_bmr) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd + tinh,
         subset(dn16, south == 0),
         vcov = ~tinh+huyen),
-  feols(female_dir ~ log(tot_bmr) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
+  feols(female_dir ~ log(tot_bmr) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd + tinh,
         subset(dn16, south == 1),
         vcov = ~tinh+huyen),
-  feols(female_dir ~ log(tot_bmr) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
+  feols(female_dir ~ log(tot_bmr) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd + tinh,
         subset(dn16, south == 0 & tinh != 1),
         vcov = ~tinh+huyen),
-  feols(female_dir ~ log(tot_bmr) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
+  feols(female_dir ~ log(tot_bmr) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd + tinh,
         subset(dn16, south == 1 & tinh != 79 & tinh != 48),
-        vciov = ~tinh+huyen)), tex = T)
+        vcov = ~tinh+huyen)), tex = T)
 
 etable(list(
   feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
