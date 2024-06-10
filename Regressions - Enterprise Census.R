@@ -408,49 +408,94 @@ etable(list(
   feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
         subset(dn16, south == 1 & tinh != 79 & tinh != 48))), tex = T)
 
-
 etable(list(
   # Agriculture 
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
         subset(dn16, south == 0 & nganh_kd2 < 5),
         vcov = ~tinh),
   # Manufacturing 
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
         subset(dn16, south == 0 & manu == 1),
         vcov = ~tinh),
   # Construction 
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
         subset(dn16, south == 0 & nganh_kd2 >= 41 & nganh_kd2 < 45),
         vcov = ~tinh),
   # Wholesale and retail 
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
         subset(dn16, south == 0 & nganh_kd2 >= 45 & nganh_kd2 < 49),
         vcov = ~tinh),
   # Hospitality   
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
         subset(dn16, south == 0 & nganh_kd2 >= 55 & nganh_kd2 < 58),
         vcov = ~tinh)
 ), tex = T)
 
 etable(list(
   # Agriculture 
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+  feols(female_dir ~ log(tot_bmr) + dir_yob | nganh_kd + lhdn + dir_ethnicity + tinh,
         subset(dn16, south == 1 & nganh_kd2 < 5),
         vcov = ~tinh),
   # Manufacturing 
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+  feols(female_dir ~ log(tot_bmr) + dir_yob | nganh_kd + lhdn + dir_ethnicity + tinh,
         subset(dn16, south == 1 & manu == 1),
         vcov = ~tinh),
   # Construction 
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+  feols(female_dir ~ log(tot_bmr) + dir_yob | nganh_kd + lhdn + dir_ethnicity + tinh,
         subset(dn16, south == 1 & nganh_kd2 >= 41 & nganh_kd2 < 45),
         vcov = ~tinh),
   # Wholesale and retail 
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+  feols(female_dir ~ log(tot_bmr) + dir_yob | nganh_kd + lhdn + dir_ethnicity + tinh,
         subset(dn16, south == 1 & nganh_kd2 >= 45 & nganh_kd2 < 49),
         vcov = ~tinh),
   # Hospitality   
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + dist_nearest_base_prov + dist_nearest_hochi_prov + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+  feols(female_dir ~ log(tot_bmr) + dir_yob | nganh_kd + lhdn + dir_ethnicity + tinh,
+        subset(dn16, south == 1 & nganh_kd2 >= 55 & nganh_kd2 < 58),
+        vcov = ~tinh)
+), tex = T)
+
+etable(list(
+  # Agriculture 
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 0 & nganh_kd2 < 5),
+        vcov = ~tinh),
+  # Manufacturing 
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 0 & manu == 1),
+        vcov = ~tinh),
+  # Construction 
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 0 & nganh_kd2 >= 41 & nganh_kd2 < 45),
+        vcov = ~tinh),
+  # Wholesale and retail 
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 0 & nganh_kd2 >= 45 & nganh_kd2 < 49),
+        vcov = ~tinh),
+  # Hospitality   
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 0 & nganh_kd2 >= 55 & nganh_kd2 < 58),
+        vcov = ~tinh)
+), tex = T)
+
+etable(list(
+  # Agriculture 
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 1 & nganh_kd2 < 5),
+        vcov = ~tinh),
+  # Manufacturing 
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 1 & manu == 1),
+        vcov = ~tinh),
+  # Construction 
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 1 & nganh_kd2 >= 41 & nganh_kd2 < 45),
+        vcov = ~tinh),
+  # Wholesale and retail 
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
+        subset(dn16, south == 1 & nganh_kd2 >= 45 & nganh_kd2 < 49),
+        vcov = ~tinh),
+  # Hospitality   
+  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | nganh_kd + lhdn,
         subset(dn16, south == 1 & nganh_kd2 >= 55 & nganh_kd2 < 58),
         vcov = ~tinh)
 ), tex = T)
