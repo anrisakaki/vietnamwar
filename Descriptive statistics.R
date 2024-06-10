@@ -44,6 +44,18 @@ ggplot(district_bmr_sf) +
   ggtitle("")
 ggsave("district_bombs_sf.jpeg", width = 7, height = 7)
 
+ggplot(district_bmr_sf) + 
+  geom_sf(aes(fill = killed_tot)) +
+  scale_fill_gradient(name = "log(Casualties)", low = "green", high = "red", na.value = "grey") + 
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title.y=element_blank(),
+        axis.title.x=element_blank(),
+        panel.background = element_blank()) +
+  ggtitle("")
+ggsave("district_casualties_sf.jpeg", width = 7, height = 7)
+
 #####################
 # BMR VS CASUALTIES #
 #####################
