@@ -76,7 +76,7 @@ dn_fn <- function(i) {
            share_f = ifelse(fworkers == 0 | is.na(fworkers), 0, share_f),
            tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
            tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb),
-           ma_thue = ifelse(ma_thue == "Cha cã"), NA, ma_thue) %>% 
+           ma_thue = ifelse(ma_thue == "Cha cã", NA, ma_thue)) %>% 
     select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, nworkers, fworkers,
            workerratio, tot_workerratio, share_f, tot_bmr, tot_bmr_lb, killed_tot) %>% 
     left_join(sexratios, by = "tinh") %>% 
@@ -550,7 +550,7 @@ dn16 <- ec_list[[17]] %>%
          female_dir = ifelse(gioitinh == 2, 1, 0),
          female_dir = ifelse(female_dir == 0 & gioitinh == 0 | quoctich != "VN", NA, female_dir)) %>% 
   select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f, gioitinh, quoctich, female_dir,
-         dir_yob, dir_ethnicity, tot_bmr, tot_bmr_lb, nearest_base, dist_nearest_hochi, killed_tot) %>% 
+         dir_yob, dir_ethnicity, tot_bmr, tot_bmr_lb, killed_tot) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   mutate(soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
@@ -589,7 +589,7 @@ dn17 <- ec_list[[18]] %>%
          share_f = ifelse(tot_fworkers == 0 | is.na(tot_fworkers), 0, share_f),
          across(tinh, as.numeric)) %>% 
   select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f,
-         tot_bmr, tot_bmr_lb, nearest_base, dist_nearest_hochi, killed_tot) %>% 
+         tot_bmr, tot_bmr_lb, killed_tot) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>%
   mutate(soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
@@ -628,7 +628,7 @@ dn18 <- ec_list[[19]] %>%
          share_f = tot_fworkers/tot_workers,
          share_f = ifelse(tot_fworkers == 0 | is.na(tot_fworkers), 0, share_f)) %>% 
   select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f,
-         tot_bmr, tot_bmr_lb, nearest_base, dist_nearest_hochi, killed_tot) %>% 
+         tot_bmr, tot_bmr_lb, killed_tot) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   mutate(soe = ifelse(lhdn == 1 | lhdn == 2 | lhdn == 4, 1, 0),
          collective = ifelse(lhdn == 5, 1, 0),
