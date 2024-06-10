@@ -36,6 +36,24 @@ prov02_vhlss <- vhlss02 %>%
   prov_sum_fn () %>% 
   mutate(south = ifelse(tinh > 407, 1, 0))
 
+dist02_vhlss <- vhlss02 %>% 
+  filter(!is.na(female), age > 15 & age < 65) %>% 
+  group_by(tinh, huyen) %>% 
+  summarise(
+    m_total = sum(wt75 * (female == 0), na.rm = T),
+    f_total = sum(wt75 * (female == 1), na.rm = T),
+    m_workers = sum(wt75 * (female == 0 & work == 1), na.rm = T),
+    f_workers = sum(wt75 * (female == 1 & work == 1), na.rm = T),
+    fself_emp = sum(wt75 * (female == 1 & selfemp == 1), na.rm = T),
+    mself_emp = sum(wt75 * (female == 0 & selfemp == 1), na.rm = T),
+    mwagework = sum(wt75 * (female == 0 & wagework == 1), na.rm = T),
+    fwagework = sum(wt75 * (female == 1 & wagework == 1), na.rm = T),
+    fagri_work = sum(wt75 * (female == 1 & selfagri == 1), na.rm = T),
+    tot_bmr = mean(tot_bmr)
+  ) %>% 
+  prov_sum_fn () %>% 
+  mutate(south = ifelse(tinh > 407, 1, 0))
+
 prov04_vhlss <- vhlss04 %>% 
   filter(!is.na(female), age > 15 & age < 65) %>% 
   group_by(tinh) %>% 
