@@ -32,6 +32,18 @@ ggplot(province_bmr_sf) +
   ggtitle("")
 ggsave("province_casualties_sf.jpeg", width = 7, height = 7)
 
+ggplot(district_bmr_sf) + 
+  geom_sf(aes(fill = log(tot_bmr))) +
+  scale_fill_gradient(name = "log(Total Bombs, \nMissiles and Rockets)", low = "green", high = "red", na.value = "grey") + 
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title.y=element_blank(),
+        axis.title.x=element_blank(),
+        panel.background = element_blank()) +
+  ggtitle("")
+ggsave("district_bombs_sf.jpeg", width = 7, height = 7)
+
 #####################
 # BMR VS CASUALTIES #
 #####################
@@ -524,6 +536,42 @@ ggplot(dplyr::filter(sum09, south == 1), aes(x = sexratio*100, y = flfp*100)) +
   labs(x = "Sex Ratio",
        y = "FLFP")
 ggsave("sexratio_flfp_09_s.jpeg", width = 7, height = 7)
+
+########################################
+# BMR VS SHARE OF FEMALE FOUNDED FIRMS #
+########################################
+
+ggplot(dplyr::filter(bmr_fdir_prov, south == 1), aes(x = log(tot_bmr), y = share_fdir)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(BMR)",
+       y = "Share of female-founded firms")
+
+ggplot(dplyr::filter(bmr_fdir, south == 0), aes(x = log(tot_bmr), y = share_fdir)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(BMR)",
+       y = "Share of female-founded firms")
 
 ############################################
 # MALE AND FEMALE LABOUR FORCE COMPOSITION #
