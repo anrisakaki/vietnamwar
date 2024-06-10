@@ -390,10 +390,11 @@ district_bmr_sum <- list(geoid_list[[17]], district_bmr_sum) %>%
     dist18 = if_else(provname == "Thanh Hóa" & distname == "Huyện Tĩnh Gia", 407, dist18),
     tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
     tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb)
-  )
+  ) %>% 
+  filter(!is.na(prov18))
 
 district_bmr_sum02 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2002,
          huyen = dist2002) %>% 
   district_bmr_fn()
