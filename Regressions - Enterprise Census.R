@@ -375,7 +375,7 @@ etable(list(
 
 etable(list(
   feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + tinh + dir_ethnicity + dir_educ,
-        subset(dn01, south == 1),
+        subset(dn01, south == 1 & tinh != 701 & tinh != 501),
         vcov = ~tinh+huyen),
   feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + tinh+ dir_ethnicity + dir_educ,
         subset(dn11, south == 1 & tinh != 79 & tinh != 48),
@@ -385,28 +385,16 @@ etable(list(
         vcov = ~tinh+huyen)), tex = T)
 
 etable(list(
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + tinh + dir_ethnicity,
-        subset(dn16, south == 0),
+  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + tinh + dir_ethnicity + dir_educ,
+        subset(dn01, south == 0),
         vcov = ~tinh+huyen),
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + tinh + dir_ethnicity,
+  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + tinh + dir_ethnicity + dir_educ,
         subset(dn11, south == 0),
         vcov = ~tinh+huyen),
   feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + tinh + dir_ethnicity,
         subset(dn16, south == 0),
         vcov = ~tinh+huyen)), tex = T)
 
-etable(list(
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
-        subset(dn16, south == 0),
-        vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
-             subset(dn16, south == 1),
-             vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
-        subset(dn16, south == 0 & tinh != 1),
-        vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr_prov) + sexratio16 + log(popdensity_16) + as.factor(dir_ethnicity) + dir_yob | lhdn + nganh_kd,
-        subset(dn16, south == 1 & tinh != 79 & tinh != 48))), tex = T)
 
 etable(list(
   # Agriculture 
