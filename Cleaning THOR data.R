@@ -289,16 +289,13 @@ district_bmr_sf <- district_bmr %>%
     tot_bmr_lb = sum(WEIGHTDELIVERED, na.rm = T)) %>% 
   sf::st_drop_geometry() %>% 
   left_join(vnmap2, by = c("NAME_1", "VARNAME_2", "distname2018")) %>% 
+  left_join(dist_casualties, by = c("VARNAME_1" = "varname_1", "distname2018")) %>% 
   st_as_sf()
 
 district_bmr_sum <- district_bmr_sf %>% 
+  rename_all(tolower) %>%
   sf::st_drop_geometry() %>% 
-  select(NAME_1, VARNAME_1, VARNAME_2, distname2018, tot_bmr, tot_bmr_lb) %>% 
-  rename_all(tolower) %>% 
-  left_join(dist_casualties, by = c("varname_1", "distname2018")) %>% 
   rename(provname = name_1,
-         distname = distname2018) %>% 
-  filter(!is.na(provname)) %>% 
-  distinct()
+         distname = distname2018)
 
 save(district_bmr_sum, file = "district_bmr_sum.Rda")
