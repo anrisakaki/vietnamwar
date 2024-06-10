@@ -400,115 +400,115 @@ district_bmr_sum02 <- district_bmr_sum %>%
   district_bmr_fn()
 
 district_bmr_sum02_vhlss <- district_bmr_sum %>% 
-  merge(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
   rename(tinh = tinh02_vhlss,
          huyen = huyen02_vhlss) %>% 
   district_bmr_fn()
 
 district_bmr_sum03 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2003,
          huyen = dist2003) %>% 
   district_bmr_fn()
 
 district_bmr_sum04 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2004,
          huyen = dist2004) %>% 
   district_bmr_fn()
 
 district_bmr_sum04_vhlss <- district_bmr_sum %>% 
-  merge(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
   rename(tinh = tinh04_vhlss,
          huyen = huyen04_vhlss) %>% 
   district_bmr_fn()
 
 district_bmr_sum05 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2005,
          huyen = dist2005) %>% 
   district_bmr_fn()
 
 district_bmr_sum06 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2006,
          huyen = dist2006) %>% 
   district_bmr_fn()
 
 district_bmr_sum06_vhlss <- district_bmr_sum %>% 
-  merge(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
   rename(tinh = tinh06_vhlss,
          huyen = huyen06_vhlss) %>% 
   district_bmr_fn()
 
 district_bmr_sum07 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2007,
          huyen = dist2007) %>% 
   district_bmr_fn()
 
 district_bmr_sum08 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2008,
          huyen = dist2008) %>% 
   district_bmr_fn()
 
 district_bmr_sum08_vhlss <- district_bmr_sum %>% 
-  merge(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist_vhlss, by = c("prov18", "dist18")) %>% 
   rename(tinh = tinh08_vhlss,
          huyen = huyen08_vhlss) %>% 
   district_bmr_fn()
 
 district_bmr_sum09 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2009,
          huyen = dist2009) %>% 
   district_bmr_fn()
 
 district_bmr_sum10 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2010,
          huyen = dist2010) %>% 
   district_bmr_fn()
 
 district_bmr_sum11 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2011,
          huyen = dist2011) %>% 
   district_bmr_fn()
 
 district_bmr_sum12 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2012,
          huyen = dist2012) %>% 
   district_bmr_fn
 
 district_bmr_sum13 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2013,
          huyen = dist2013) %>% 
   district_bmr_fn()
 
 district_bmr_sum14 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2014,
          huyen = dist2014) %>% 
   district_bmr_fn()
 
 district_bmr_sum15 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2015,
          huyen = dist2015) %>% 
   district_bmr_fn()
 
 district_bmr_sum16 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2016,
          huyen = dist2016) %>% 
   district_bmr_fn()
 
 district_bmr_sum17 <- district_bmr_sum %>% 
-  merge(mccaig_dist, by = c("prov18", "dist18")) %>% 
+  full_join(mccaig_dist, by = c("prov18", "dist18")) %>% 
   rename(tinh = prov2017,
          huyen = dist2017) %>% 
   district_bmr_fn()
@@ -558,6 +558,6 @@ district_bmr_sum_phc <- phc_dist %>%
       distname == "Bác ái" & provname == "Ninh Thuận" ~ "Bác Ái",
       distname == "Đông Hoà" & provname == "Phú Yên" ~ "Đông Hòa",
       TRUE ~ distname)) %>% 
-  left_join(district_bmr_phc, by = c("distname", "provname"))
+  full_join(district_bmr_phc, by = c("distname", "provname"))
 
 save(district_bmr_sum, file = "district_bmr_sum.Rda")
