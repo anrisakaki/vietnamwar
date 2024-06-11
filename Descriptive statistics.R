@@ -60,7 +60,7 @@ ggsave("district_casualties_sf.jpeg", width = 7, height = 7)
 # BMR VS CASUALTIES #
 #####################
 
-ggplot(dplyr::filter(sum09, killed_tot_prov_ppn > 0), aes(x = log(tot_bmr_prov_ppn), y = log(killed_tot_prov_ppn))) +
+ggplot(dplyr::filter(sum09, killed_tot_prov_ppn > 0), aes(x = log(tot_bmr_prov), y = log(killed_tot_prov_ppn))) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -226,7 +226,7 @@ ggsave("bmr_sexratio_09_s.jpeg", width = 7, height = 7)
 ##########################
 
 # 1989
-ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov_ppn), y = widow_share*100)) +
+ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov), y = widow_share*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -243,7 +243,7 @@ ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov_ppn), y = wido
        y = "Share of Widowed Women")
 ggsave("bmr_widowed_f89_n.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov_ppn), y = widow_share*100)) +
+ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov), y = widow_share*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -261,7 +261,7 @@ ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov_ppn), y = wido
 ggsave("bmr_widowed_f89_s.jpeg", width = 7, height = 7)
 
 # 1999
-ggplot(dplyr::filter(sum99, south == 0), aes(x = log(tot_bmr_prov_ppn), y = widow_share*100)) +
+ggplot(dplyr::filter(sum99, south == 0), aes(x = log(tot_bmr_prov), y = widow_share*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -278,7 +278,7 @@ ggplot(dplyr::filter(sum99, south == 0), aes(x = log(tot_bmr_prov_ppn), y = wido
        y = "Share of Widowed Women")
 ggsave("bmr_widowed_f99_n.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(sum99, south == 1), aes(x = log(tot_bmr_prov_ppn), y = widow_share*100)) +
+ggplot(dplyr::filter(sum99, south == 1), aes(x = log(tot_bmr_prov), y = widow_share*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -296,7 +296,7 @@ ggplot(dplyr::filter(sum99, south == 1), aes(x = log(tot_bmr_prov_ppn), y = wido
 ggsave("bmr_widowed_f99_s.jpeg", width = 7, height = 7)
 
 # 2009
-ggplot(dplyr::filter(sum09, south == 0), aes(x = log(tot_bmr_prov_ppn), y = widow_share*100)) +
+ggplot(dplyr::filter(sum09, south == 0), aes(x = log(tot_bmr_prov), y = widow_share*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -313,7 +313,7 @@ ggplot(dplyr::filter(sum09, south == 0), aes(x = log(tot_bmr_prov_ppn), y = wido
        y = "Share of Widowed Women")
 ggsave("bmr_widowed_f09_n.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(sum09, south == 1), aes(x = log(tot_bmr_prov_ppn), y = widow_share*100)) +
+ggplot(dplyr::filter(sum09, south == 1), aes(x = log(tot_bmr_prov), y = widow_share*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -335,7 +335,7 @@ ggsave("bmr_widowed_f09_s.jpeg", width = 7, height = 7)
 ###############
 
 # 1989
-ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov_ppn), y = flfp*100)) +
+ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov), y = flfp*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -352,7 +352,7 @@ ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov_ppn), y = flfp
        y = "FLFP")
 ggsave("bmr_flfp_89_n.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov_ppn), y = flfp*100)) +
+ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov), y = flfp*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -370,7 +370,7 @@ ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov_ppn), y = flfp
 ggsave("bmr_flfp_89_s.jpeg", width = 7, height = 7)
 
 # 1999
-ggplot(dplyr::filter(sum99, south == 0), aes(x = log(tot_bmr_prov_ppn), y = flfp*100)) +
+ggplot(dplyr::filter(sum99, south == 0), aes(x = log(tot_bmr_prov), y = flfp*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -387,7 +387,7 @@ ggplot(dplyr::filter(sum99, south == 0), aes(x = log(tot_bmr_prov_ppn), y = flfp
        y = "FLFP")
 ggsave("bmr_flfp_99_n.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(sum99, south == 1), aes(x = log(tot_bmr_prov_ppn), y = flfp*100)) +
+ggplot(dplyr::filter(sum99, south == 1), aes(x = log(tot_bmr_prov), y = flfp*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -405,7 +405,7 @@ ggplot(dplyr::filter(sum99, south == 1), aes(x = log(tot_bmr_prov_ppn), y = flfp
 ggsave("bmr_flfp_99_s.jpeg", width = 7, height = 7)
 
 # 2009
-ggplot(dplyr::filter(sum09, south == 0), aes(x = log(tot_bmr_prov_ppn), y = flfp*100)) +
+ggplot(dplyr::filter(sum09, south == 0), aes(x = log(tot_bmr_prov), y = flfp*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -422,7 +422,7 @@ ggplot(dplyr::filter(sum09, south == 0), aes(x = log(tot_bmr_prov_ppn), y = flfp
        y = "FLFP")
 ggsave("bmr_flfp_09_n.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(sum09, south == 1), aes(x = log(tot_bmr_prov_ppn), y = flfp*100)) +
+ggplot(dplyr::filter(sum09, south == 1), aes(x = log(tot_bmr_prov), y = flfp*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
