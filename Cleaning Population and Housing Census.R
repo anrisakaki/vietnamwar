@@ -31,8 +31,6 @@ phc <- phc %>%
          south = ifelse(geo1_vn1999 > 405 & year == 1999, 1, 0),
          south = ifelse(geo1_vn2009 > 44, 1, 0))
 
-save(phc, file = "phc.Rda")
-
 # Separating by year 
 
 phc89 <- phc %>% 
