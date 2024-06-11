@@ -20,6 +20,7 @@ phc_sum <- function(i){
               f_work = sum(perwt[female == 1 & work == 1], na.rm = T),
               m_work = sum(perwt[female == 0 & work == 1], na.rm = T),
               widowed_f = sum(perwt[female == 1 & widowed == 1], na.rm = T),
+              tot_bmr = mean(tot_bmr),
               tot_bmr_prov = mean(tot_bmr_prov),
               tot_bmr_prov_ppn = mean(tot_bmr_prov_ppn),
               killed_tot_prov_ppn = mean(killed_tot_prov_ppn)) %>% 
@@ -45,6 +46,10 @@ sum09 <- phc09 %>%
   group_by(geo1_vn2009) %>% 
   phc_sum() %>% 
   mutate(south = ifelse(geo1_vn2009 > 44, 1, 0))
+
+sum_dist09 <- phc09 %>% 
+  group_by(geo2_vn2009) %>% 
+  phc_sum() 
 
 save(sum89, file = "sexratio_prov_89.Rda")
 save(sum99, file = "sexratio_prov_99.Rda")
