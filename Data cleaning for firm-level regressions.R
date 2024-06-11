@@ -257,21 +257,43 @@ dn06 <- ec_list[[7]] %>%
          year = 2006) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
+ecgender_list[[2]] <- ecgender_list[[2]] %>% 
+  mutate(across(c(tinh, huyen, xa), as.double))
+
 dn07 <- ec_list[[8]] %>% 
-  mutate(across(c(tinh, huyen), as.double)) %>% 
+  mutate(across(c(tinh, huyen, xa), as.double),
+         ma_thue = paste0(ma_thue, ma_thue2)) %>% 
+  left_join(ecgender_list[[2]], by = c("tinh", "huyen", "xa", "ma_thue", "macs")) %>% 
   left_join(district_bmr_sum07, by = c("tinh", "huyen")) %>% 
+  rename(nworkers = ld23,
+         fworkers = ld24,
+         tot_workers = ld13,
+         tot_fworkers = ld14,
+         dir_yob = namsinh,
+         dir_ethnicity = dantoc,
+         dir_educ = tdcm) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          nganh_kd = case_when(
            nganh_kd < 10101 ~ as.numeric(substr(nganh_kd, 1, 3)),
            TRUE ~ as.numeric(nganh_kd)  
-         )) %>% 
-  rename(nworkers = ld23,
-         fworkers = ld24,
-         tot_workers = ld13,
-         tot_fworkers = ld14) %>% 
-  dn_fn() %>% 
-  mutate(formal_f = tot_fworkers/tot_workers,
+         ),
+         nganh_kd = as.numeric(substr(nganh_kd, 1, 4)),
+         nganh_kd2 = case_when(
+           nchar(nganh_kd) > 3 ~ as.numeric(substr(nganh_kd, 1, 2)),
+           nchar(nganh_kd) == 3 ~ as.numeric(substr(nganh_kd, 1, 1)),
+           TRUE ~ as.numeric(nganh_kd)  
+         ),
+         workerratio = (nworkers-fworkers)/fworkers,
+         share_f = tot_fworkers/tot_workers,
+         tot_workerratio = (tot_workers - tot_fworkers) /tot_fworkers,
+         workerratio = ifelse(nworkers == 0 | fworkers == 0, NA, workerratio),
+         tot_workerratio = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, tot_workerratio),
+         share_f = ifelse(fworkers == 0 | is.na(fworkers), 0, share_f),
+         tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+         tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb),
+         ma_thue = ifelse(ma_thue == "Cha cã", NA, ma_thue),
+         formal_f = tot_fworkers/tot_workers,
          formal_f = ifelse(tot_workers == 0 | tot_fworkers == 0, NA, formal_f),
          soe = ifelse(lhdn < 5, 1, 0),
          collective = ifelse(lhdn == 6, 1, 0),
@@ -280,7 +302,13 @@ dn07 <- ec_list[[8]] %>%
          foe = ifelse(lhdn == 12, 1, 0),
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
+         female_dir = ifelse(namnu == 2, 1, 0),
+         female_dir = ifelse(female_dir == 0 & namnu == 0 | quoctich != "1110", NA, female_dir),
          year = 2007) %>% 
+  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f, namnu, quoctich, female_dir,
+         dir_yob, dir_ethnicity, dir_educ, tot_bmr, tot_bmr_lb, killed_tot, south) %>% 
+  left_join(sexratios, by = "tinh") %>% 
+  left_join(ppn0419, by = "tinh") %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
 dn08 <- ec_list[[9]] %>% 
@@ -361,14 +389,14 @@ dn10 <- ec_list[[11]] %>%
          year = 2010) %>% 
   left_join(province_bmr_sum2, by = "tinh")
 
-ecgender_list[[2]] <- ecgender_list[[2]] %>% 
+ecgender_list[[3]] <- ecgender_list[[3]] %>% 
   mutate(across(c(tinh, huyen, xa), as.double))
 
 dn11 <- ec_list[[12]] %>% 
   mutate(across(c(tinh, huyen, xa), as.double),
          ma_thue = paste0(ma_thue, ma_thue2)) %>% 
   left_join(district_bmr_sum11, by = c("tinh", "huyen")) %>% 
-  left_join(ecgender_list[[2]], by = c("tinh", "huyen", "xa", "ma_thue", "macs")) %>% 
+  left_join(ecgender_list[[3]], by = c("tinh", "huyen", "xa", "ma_thue", "macs")) %>% 
   rename(nworkers = ld21,
          fworkers = ld22,
          tot_workers = ld11,
