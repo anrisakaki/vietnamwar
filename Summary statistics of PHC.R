@@ -49,7 +49,8 @@ sum09 <- phc09 %>%
 
 sum_dist09 <- phc09 %>% 
   group_by(geo2_vn2009) %>% 
-  phc_sum() 
+  phc_sum() %>% 
+  mutate(south = ifelse(geo2_vn2009 > 44000, 1, 0))
 
 save(sum89, file = "sexratio_prov_89.Rda")
 save(sum99, file = "sexratio_prov_99.Rda")
