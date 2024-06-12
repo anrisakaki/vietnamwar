@@ -328,10 +328,13 @@ district_bmr_fn <- function(i){
   
   i %>% 
     group_by(tinh, huyen) %>% 
+    mutate(tot_bmr = ifelse(is.na(tot_bmr), 0, tot_bmr),
+           tot_bmr_lb = ifelse(is.na(tot_bmr_lb), 0, tot_bmr_lb),
+           killed_tot = ifelse(is.na(killed_tot), 0, killed_tot)) %>% 
     summarise(tot_bmr = sum(tot_bmr),
               tot_bmr_lb = sum(tot_bmr_lb),
               killed_tot = sum(killed_tot)) %>% 
-    filter(!is.na(tinh))
+    filter(!is.na(tinh)) 
 }
 
 geoid_list <- lapply(geoid_list, dropward)
