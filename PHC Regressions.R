@@ -190,15 +190,15 @@ dev.off()
 
 png("agri_phc_n.png")
 iplot(list(
-  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc89, work == 1 & south == 0 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc99, work == 1 & south == 0 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc09, work == 1 & south == 0 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn2009)))
@@ -208,15 +208,15 @@ dev.off()
 
 png("agri_phc_s.png")
 iplot(list(
-  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc89, work == 1 & south == 1 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc99, work == 1 & south == 1 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(agri ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc09, work == 1 & south == 1 & migration == 0),
         weights = ~perwt,
         vcov = ~geo1_vn2009)))
@@ -228,15 +228,15 @@ dev.off()
 
 png("manu_phc_n.png")
 iplot(list(
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc89, south == 0 & migration == 0 & work == 1),
         weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc99, south == 0 & migration == 0 & work == 1),
         weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc09, south == 0 & migration == 0 & work == 1),
         weights = ~perwt,
         vcov = ~geo1_vn2009)))
@@ -246,15 +246,15 @@ dev.off()
 
 png("manu_phc_s.png")
 iplot(list(
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc89, south == 1 & migration == 0 & work == 1),
         weights = ~perwt,
         vcov = ~geo1_vn1989),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc99, south == 1 & migration == 0 & work == 1),
         weights = ~perwt,
         vcov = ~geo1_vn1999),
-  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + dist_nearest_base_prov + dist_nearest_hochi_prov + log(popdensgeo1) | regnvn + urban + minority + marst,
+  feols(manu ~ as.factor(female) + i(as.factor(female), log(tot_bmr_prov_ppn)) + yrschool + nchild + age + age^2 + log(popdensgeo1) | regnvn + urban + minority + marst,
         subset(phc09, south == 1 & migration == 0 & work == 1),
         weights = ~perwt,
         vcov = ~geo1_vn2009)))
