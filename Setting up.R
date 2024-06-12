@@ -147,8 +147,6 @@ popcenter <-
 vnmap2_09 <- read_sf("Chloropleth Maps/VNShapefile/geo2_vn2009/geo2_vn2009.shp")
 
 provarea <- read.csv("province_area.csv")
-
-soilquality <-read_sf("soil-map/tho_nhuong_english.shp")
   
 # Consistent District Boundaries 
 
