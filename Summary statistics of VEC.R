@@ -61,20 +61,23 @@ firmtype_long <- firmtype_sum %>%
 # BMR VS SHARE OF FEMALE DIRECTORS #
 ####################################
 
-bmr_fdir <- dn16 %>% 
+fdir_sum <- function(i){
+  i %>% 
+    summarise(
+      n_firms = n(),
+      n_fdir = sum(female_dir == 1, na.rm = T),
+      tot_bmr = mean(tot_bmr, na.rm = T),
+      tot_bmr_prov = mean(tot_bmr_prov),
+      tot_bmr_prov_ppn = mean(tot_bmr_prov_ppn)
+    ) %>% 
+    mutate(share_fdir = (n_fdir/n_firms)*100)
+  
+}
+
+bmr_fdir16 <- dn16 %>% 
   group_by(tinh, huyen, south) %>% 
-  summarise(
-    n_firms = n(),
-    n_fdir = sum(female_dir == 1, na.rm = T),
-    tot_bmr = mean(tot_bmr)
-  ) %>% 
-  mutate(share_fdir = (n_fdir/n_firms)*100)
+  fdir_sum()
 
 bmr_fdir_prov <- dn16 %>% 
   group_by(tinh, south) %>% 
-  summarise(
-    n_firms = n(),
-    n_fdir = sum(female_dir == 1, na.rm = T),
-    tot_bmr = mean(tot_bmr_prov_ppn)
-  ) %>% 
-  mutate(share_fdir = (n_fdir/n_firms)*100)
+  fdir_sum()
