@@ -10,7 +10,7 @@ for (i in sex_ratios) {
 
 ggplot(province_bmr_sf) + 
   geom_sf(aes(fill = log(tot_bmr))) +
-  scale_fill_gradient(name = "log(Total Bombs, \nMissiles and Rockets)", low = "green", high = "red", na.value = "white") + 
+  scale_fill_gradient(name = "log(Bombs, \nMissiles and Rockets)", low = "green", high = "red", na.value = "white") + 
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks = element_blank(),
@@ -34,7 +34,7 @@ ggsave("province_casualties_sf.jpeg", width = 7, height = 7)
 
 ggplot(district_bmr_sf) + 
   geom_sf(aes(fill = log(tot_bmr))) +
-  scale_fill_gradient(name = "log(Total Bombs, \nMissiles and Rockets)", low = "green", high = "red", na.value = "grey") + 
+  scale_fill_gradient(name = "log(Bombs, \nMissiles and Rockets)", low = "green", high = "red", na.value = "grey") + 
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks = element_blank(),
@@ -45,7 +45,7 @@ ggplot(district_bmr_sf) +
 ggsave("district_bombs_sf.jpeg", width = 7, height = 7)
 
 ggplot(district_bmr_sf) + 
-  geom_sf(aes(fill = killed_tot)) +
+  geom_sf(aes(fill = log(killed_tot))) +
   scale_fill_gradient(name = "log(Casualties)", low = "green", high = "red", na.value = "grey") + 
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
@@ -73,7 +73,7 @@ ggplot(dplyr::filter(sum09, killed_tot_prov_ppn > 0), aes(x = log(tot_bmr_prov),
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "log(Casualties/Population)")
 ggsave("bombs_casualties.jpeg", width = 7, height = 7)
 
@@ -128,7 +128,7 @@ ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov), y = sexratio
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Sex Ratio")
 ggsave("bmr_sexratio_89_n.jpeg", width = 7, height = 7)
 
@@ -145,7 +145,7 @@ ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov), y = sexratio
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Sex Ratio")
 ggsave("bmr_sexratio_89_s.jpeg", width = 7, height = 7)
 
@@ -164,7 +164,7 @@ ggplot(dplyr::filter(sum99, south == 0), aes(x = log(tot_bmr_prov), y = sexratio
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Sex Ratio")
 ggsave("bmr_sexratio_99_n.jpeg", width = 7, height = 7)
 
@@ -181,7 +181,7 @@ ggplot(dplyr::filter(sum99, south == 1), aes(x = log(tot_bmr_prov), y = sexratio
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Sex Ratio")
 ggsave("bmr_sexratio_99_s.jpeg", width = 7, height = 7)
 
@@ -200,7 +200,7 @@ ggplot(dplyr::filter(sum09, south == 0), aes(x = log(tot_bmr_prov), y = sexratio
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Sex Ratio")
 ggsave("bmr_sexratio_09_n.jpeg", width = 7, height = 7)
 
@@ -217,9 +217,45 @@ ggplot(dplyr::filter(sum09, south == 1), aes(x = log(tot_bmr_prov), y = sexratio
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Sex Ratio")
 ggsave("bmr_sexratio_09_s.jpeg", width = 7, height = 7)
+
+## district 
+
+ggplot(dplyr::filter(sum_dist09, south == 0), aes(x = log(tot_bmr), y = (tot_m/tot_f)*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(BMR)",
+       y = "Sex Ratio")
+ggsave("bmr_sexratio_dist_09_n.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sum_dist09, south == 1), aes(x = log(tot_bmr), y = (tot_m/tot_f)*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(BMR)",
+       y = "Sex Ratio")
+ggsave("bmr_sexratio_dist_09_s.jpeg", width = 7, height = 7)
 
 ##########################
 # BMR VS SHARE OF WIDOWS #
@@ -239,7 +275,7 @@ ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov), y = widow_sh
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Share of Widowed Women")
 ggsave("bmr_widowed_f89_n.jpeg", width = 7, height = 7)
 
@@ -256,7 +292,7 @@ ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov), y = widow_sh
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Share of Widowed Women")
 ggsave("bmr_widowed_f89_s.jpeg", width = 7, height = 7)
 
@@ -274,7 +310,7 @@ ggplot(dplyr::filter(sum99, south == 0), aes(x = log(tot_bmr_prov), y = widow_sh
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Share of Widowed Women")
 ggsave("bmr_widowed_f99_n.jpeg", width = 7, height = 7)
 
@@ -291,7 +327,7 @@ ggplot(dplyr::filter(sum99, south == 1), aes(x = log(tot_bmr_prov), y = widow_sh
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Share of Widowed Women")
 ggsave("bmr_widowed_f99_s.jpeg", width = 7, height = 7)
 
@@ -309,7 +345,7 @@ ggplot(dplyr::filter(sum09, south == 0), aes(x = log(tot_bmr_prov), y = widow_sh
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Share of Widowed Women")
 ggsave("bmr_widowed_f09_n.jpeg", width = 7, height = 7)
 
@@ -326,9 +362,45 @@ ggplot(dplyr::filter(sum09, south == 1), aes(x = log(tot_bmr_prov), y = widow_sh
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "Share of Widowed Women")
 ggsave("bmr_widowed_f09_s.jpeg", width = 7, height = 7)
+
+## district 
+
+ggplot(dplyr::filter(sum_dist09, south == 0), aes(x = log(tot_bmr), y = widow_share*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(BMR)",
+       y = "Share of Widowed Women")
+ggsave("bmr_widowed_dist_f09_n.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sum_dist09, south == 1), aes(x = log(tot_bmr), y = widow_share*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(BMR)",
+       y = "Share of Widowed Women")
+ggsave("bmr_widowed_dist_f09_s.jpeg", width = 7, height = 7)
 
 ###############
 # BMR VS FLFP #
@@ -348,7 +420,7 @@ ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov), y = flfp*100
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "FLFP")
 ggsave("bmr_flfp_89_n.jpeg", width = 7, height = 7)
 
@@ -365,7 +437,7 @@ ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov), y = flfp*100
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "FLFP")
 ggsave("bmr_flfp_89_s.jpeg", width = 7, height = 7)
 
@@ -383,7 +455,7 @@ ggplot(dplyr::filter(sum99, south == 0), aes(x = log(tot_bmr_prov), y = flfp*100
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "FLFP")
 ggsave("bmr_flfp_99_n.jpeg", width = 7, height = 7)
 
@@ -400,7 +472,7 @@ ggplot(dplyr::filter(sum99, south == 1), aes(x = log(tot_bmr_prov), y = flfp*100
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "FLFP")
 ggsave("bmr_flfp_99_s.jpeg", width = 7, height = 7)
 
@@ -418,7 +490,7 @@ ggplot(dplyr::filter(sum09, south == 0), aes(x = log(tot_bmr_prov), y = flfp*100
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "FLFP")
 ggsave("bmr_flfp_09_n.jpeg", width = 7, height = 7)
 
@@ -435,13 +507,49 @@ ggplot(dplyr::filter(sum09, south == 1), aes(x = log(tot_bmr_prov), y = flfp*100
         panel.border = element_blank(),
         legend.title=element_blank(),
         text = element_text(size=10)) + 
-  labs(x = "log(BMR/Population)",
+  labs(x = "log(BMR)",
        y = "FLFP")
 ggsave("bmr_flfp_09_s.jpeg", width = 7, height = 7)
 
-###############
-# BMR VS FLFP #
-###############
+## district 
+
+ggplot(dplyr::filter(sum_dist09, south == 0), aes(x = log(tot_bmr), y = flfp*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(BMR)",
+       y = "FLFP")
+ggsave("bmr_flfp_dist_09_n.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(sum_dist09, south == 1), aes(x = log(tot_bmr), y = flfp*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(BMR)",
+       y = "FLFP")
+ggsave("bmr_flfp_dist_09_s.jpeg", width = 7, height = 7)
+
+#####################
+# SEX RATIO VS FLFP #
+#####################
 
 # 1989
 ggplot(dplyr::filter(sum89, south == 0), aes(x = sexratio*100, y = flfp*100)) +
@@ -552,6 +660,22 @@ ggsave("sexratio_flfp_09_s.jpeg", width = 7, height = 7)
 ########################################
 # BMR VS SHARE OF FEMALE FOUNDED FIRMS #
 ########################################
+ggplot(dplyr::filter(bmr_fdir_prov, south == 0), aes(x = log(tot_bmr), y = share_fdir)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(BMR)",
+       y = "Share of female-founded firms")
+ggsave("bmr_firms_prov_16_n.jpeg", width = 7, height = 7)
 
 ggplot(dplyr::filter(bmr_fdir_prov, south == 1), aes(x = log(tot_bmr), y = share_fdir)) +
   geom_point() +
@@ -568,8 +692,9 @@ ggplot(dplyr::filter(bmr_fdir_prov, south == 1), aes(x = log(tot_bmr), y = share
         text = element_text(size=10)) + 
   labs(x = "log(BMR)",
        y = "Share of female-founded firms")
+ggsave("bmr_firms_prov_16_s.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(bmr_fdir, south == 0), aes(x = log(tot_bmr), y = share_fdir)) +
+ggplot(dplyr::filter(bmr_fdir16, south == 0), aes(x = log(tot_bmr), y = share_fdir)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -584,6 +709,24 @@ ggplot(dplyr::filter(bmr_fdir, south == 0), aes(x = log(tot_bmr), y = share_fdir
         text = element_text(size=10)) + 
   labs(x = "log(BMR)",
        y = "Share of female-founded firms")
+ggsave("bmr_firms_16_n.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(bmr_fdir16, south == 1), aes(x = log(tot_bmr), y = share_fdir)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(BMR)",
+       y = "Share of female-founded firms")
+ggsave("bmr_firms_16_s.jpeg", width = 7, height = 7)
 
 ############################################
 # MALE AND FEMALE LABOUR FORCE COMPOSITION #
