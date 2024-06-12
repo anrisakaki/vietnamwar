@@ -222,7 +222,6 @@ targets_sum <- province_bmr %>%
 
 
 # Bombing intensity by district 
-
 vnmap2 <- vnmap2 %>% 
   mutate(distname2018 = paste(TYPE_2, NAME_2, sep = " ")) %>% 
   mutate(distname2018 = case_when(
