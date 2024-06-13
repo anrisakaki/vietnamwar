@@ -122,8 +122,9 @@ dn01 <- ec_list[[2]] %>%
          share_f = ifelse(fworkers == 0 | is.na(fworkers), 0, share_f),
          south = ifelse(tinh > 407, 1, 0),
          female_dir = ifelse(gtinh == 2, 1, 0),
-         female_dir = ifelse(female_dir == 0 & gtinh == 0 | qtich != 1110, NA, female_dir)) %>% 
-  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, female_dir, dir_yob, dir_ethnicity, dir_educ, 
+         female_dir = ifelse(female_dir == 0 & gtinh == 0 | qtich != 1110, NA, female_dir),
+         manu = ifelse(nganh_kd2 > 14 & nganh_kd2 < 38, 1, 0),) %>% 
+  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, manu, female_dir, dir_yob, dir_ethnicity, dir_educ, 
          tot_workers, tot_fworkers, nworkers, fworkers, workerratio, tot_workerratio, share_f, tot_bmr, tot_bmr_lb, killed_tot, south) %>% 
   left_join(sexratios, by = "tinh") %>% 
   left_join(ppn0419, by = "tinh") %>% 
@@ -269,7 +270,7 @@ dn07 <- ec_list[[8]] %>%
          female_dir = ifelse(namnu == 2, 1, 0),
          female_dir = ifelse(female_dir == 0 & namnu == 0 | quoctich != "1110", NA, female_dir),
          year = 2007) %>% 
-  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f, namnu, quoctich, female_dir,
+  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, manu, tot_workers, tot_fworkers, tot_workerratio, share_f, namnu, quoctich, female_dir,
          dir_yob, dir_ethnicity, dir_educ, tot_bmr, tot_bmr_lb, killed_tot, south) %>% 
   left_join(sexratios, by = "tinh") %>% 
   left_join(ppn0419, by = "tinh") %>% 
@@ -380,7 +381,7 @@ dn11 <- ec_list[[12]] %>%
          female_dir = ifelse(gioitinh == 2, 1, 0),
          female_dir = ifelse(female_dir == 0 & gioitinh == 0 | quoctich != "1110", NA, female_dir),
          year = 2011) %>% 
-  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f, gioitinh, quoctich, female_dir,
+  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, manu, tot_workers, tot_fworkers, tot_workerratio, share_f, gioitinh, quoctich, female_dir,
          dir_yob, dir_ethnicity, dir_educ, tot_bmr, tot_bmr_lb, killed_tot, south) %>% 
   left_join(sexratios, by = "tinh") %>% 
   left_join(ppn0419, by = "tinh") %>% 
@@ -501,7 +502,7 @@ dn16 <- ec_list[[17]] %>%
          south = ifelse(tinh > 44, 1, 0),
          manu = ifelse(nganh_kd2 > 9 & nganh_kd2 < 35, 1, 0),
          year = 2016) %>% 
-  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, tot_workers, tot_fworkers, tot_workerratio, share_f, gioitinh, quoctich, female_dir,
+  select(tinh, huyen, ma_thue, nganh_kd, nganh_kd2, lhdn, manu, tot_workers, tot_fworkers, tot_workerratio, share_f, gioitinh, quoctich, female_dir,
          dir_yob, dir_ethnicity, tot_bmr, tot_bmr_lb, killed_tot, south, manu) %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   left_join(sexratios, by = "tinh") %>% 
