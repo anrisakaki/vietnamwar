@@ -96,7 +96,7 @@ ind_workerratio_01_s <- list(
         vcov = ~tinh+huyen)
 )
 
-sectors <- c("Agriculture", "F&B", "Textiles", "Apparel", "Leather", 
+sectors <- c("Agriculture", "Food & Beverages", "Textiles", "Apparel", "Leather", 
              "Construction", "Wholesale trade", "Retail trade", "Hotels and restaurants", "Financial intermediation", "Business support")
 
 ind_workerratio_01_n <- lapply(ind_workerratio_01_n, tidy)
@@ -110,6 +110,125 @@ ind_workerratio_01_n$sector <- rep(sectors, each = 1)
 ind_workerratio_01_s$sector <- rep(sectors, each = 1) 
 
 ind_workerratio_01_ns <- bind_rows(ind_workerratio_01_n, ind_workerratio_01_s)
+
+# Apparel 
+
+apparel_indfe_n <- (list(
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn02, south == 0 & nganh_kd2 == 18),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn03, south == 0 & nganh_kd2 == 18),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn04, south == 0 & nganh_kd2 == 18),
+        vcov = ~tinh+huyen), 
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn05, south == 0 & nganh_kd2 == 18),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn06, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn07, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn08, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn09, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn10, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn11, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn12, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn13, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn14, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn15, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn16, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn17, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn18, south == 0 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen)))
+
+apparel_indfe_s <- (list(
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn02, south == 1 & nganh_kd2 == 18),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn03, south == 1 & nganh_kd2 == 18),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn04, south == 1 & nganh_kd2 == 18),
+        vcov = ~tinh+huyen), 
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn05, south == 1 & nganh_kd2 == 18),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn06, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn07, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn08, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn09, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn10, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn11, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn12, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn13, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn14, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn15, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn16, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn17, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | nganh_kd + lhdn + tinh,
+        subset(dn18, south == 1 & nganh_kd2 == 14),
+        vcov = ~tinh+huyen)))
+
+apparel_indfe_n <- lapply(apparel_indfe_n, tidy)
+apparel_indfe_s <- lapply(apparel_indfe_s, tidy)
+apparel_indfe_n <- do.call(rbind, apparel_indfe_n) %>% filter(term == "log(tot_bmr)")
+apparel_indfe_s <- do.call(rbind, apparel_indfe_s) %>% filter(term == "log(tot_bmr)")
+apparel_indfe_n$year <- rep(seq(2002, 2018), each = nrow(apparel_indfe_n) / length(seq(2002, 2018)))
+apparel_indfe_s$year <- rep(seq(2002, 2018), each = nrow(apparel_indfe_s) / length(seq(2002, 2018)))
+
+apparel_indfe_n$group <- "North"
+apparel_indfe_s$group <- "South"
+apparel_indfe_ns <- rbind(apparel_indfe_n, apparel_indfe_s)
 
 ###########################################################
 # BMR VS SEX RATIO OF WORKERS, BY SECTOR - PROVINCE LEVEL #
