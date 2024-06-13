@@ -2,7 +2,7 @@ load("province_bmr_sum02.Rda")
 load("province_bmr_sum.Rda")
 load("province_bmr_sum2.Rda")
 
-ivid02 <- c("tinh","xa", "hoso", "matv", "tinh02", "huyen02", "xa02", "diaban02", "hoso02", "matv02", "qui", "phieu")
+ivid02 <- c("tinh", "xa", "hoso", "tinh02", "huyen02", "xa02", "diaban02", "hoso02", "matv02", "qui", "phieu")
 ivid04 <- c("tinh", "huyen", "diaban", "xa", "hoso", "matv", "ky")
 ivid06 <- c("tinh", "huyen", "diaban", "xa", "hoso", "matv")
 
@@ -64,18 +64,18 @@ vhlss_emp_fn <- function(i){
       selfagri = ifelse(is.na(selfagri) & work == 1, 0, selfagri),
       selfemp = ifelse(is.na(selfemp) & work == 1, 0, selfemp),
       self = ifelse(selfagri == 1 | selfemp == 1, 1, 0),
+      hhbus = ifelse(is.na(hhbus), 0, hhbus),
       wagework = ifelse(is.na(wagework) & work == 1, 0, wagework),
-      food = ifelse(is.na(food) & work == 1, 0, food),
       manu = ifelse(is.na(manu) & work == 1, 0, manu),
       manager = ifelse(is.na(manager) & work == 1, 0, manager),
       agri = ifelse(age < 17 | age > 64, NA, agri),
       selfagri = ifelse(age < 17 | age > 64, NA, selfagri),
       selfemp = ifelse(age < 17 | age > 64, NA, selfemp),
       self = ifelse(age < 17 | age > 64, NA, self),
+      hhbus = ifelse(age < 17 | age > 64, NA, hhbus),
       wagework = ifelse(age < 17 | age > 64, NA, wagework),
       manu = ifelse(age < 17 | age > 64, NA, manu),
       manager = ifelse(age < 17 | age > 64, NA, manager),
-      food = ifelse(age < 17 | age > 64, NA, food),
       inc = ifelse(is.na(work), NA, inc),
       hours = ifelse(is.na(work), NA, hours),
       days = ifelse(is.na(work), NA, days)) %>% 
@@ -88,7 +88,13 @@ vhlss_emp_fn <- function(i){
 # 2002 # 
 ########
 
-vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
+m5c_02 <- m5c_02 %>%
+  rename(matv02 = m5c1c3t1) %>%
+  filter(m5cc1 == 1) %>% 
+  select(tinh, xa, hoso, tinh02, huyen02, xa02, diaban02, hoso02, matv02, qui, phieu) %>% 
+  mutate(hhbus = 1)
+
+vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02, m5c_02) %>%
   map(~mutate(.x, matv02 = as.numeric(str_sub(as.character(matv02), -2)))) %>%
   reduce(full_join, by = ivid02) %>% 
   left_join(m9_02, by = hhid02) %>% 
@@ -111,7 +117,6 @@ vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
          wagework = ifelse(m3c1a == 1, 1, 0),
          work = ifelse(m3c2 == 1, 1, 0),
          manu = ifelse(industry > 14 & industry < 40, 1, 0),
-         food = ifelse(industry == 15, 1, 0),
          selfagri = ifelse(m3c1b == 1, 1, 0),
          selfemp = ifelse(m3c1c == 1, 1, 0),
          inc = m5ac6 + m5ac7e,
@@ -120,7 +125,7 @@ vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
          manager = ifelse(occupation == 11 | occupation == 33, 1, 0)) %>% 
   vhlss_emp_fn () %>% 
   select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, hhid, qui, phieu, minority, hhhead, fhead, female, age, marital, married, widowed, single,
-         educ, work, wagework, selfemp, selfagri, self, agri, manu, food, industry, occupation, manager, inc, hours, days, widow_hh, south) %>% 
+         educ, work, wagework, selfemp, selfagri, self, hhbus, agri, manu, industry, occupation, manager, inc, hours, days, widow_hh, south) %>% 
   left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui")) %>% 
   left_join(wt02, by = c("tinh02", "huyen02", "xa02")) %>% 
   rename(tinh = tinh02,
