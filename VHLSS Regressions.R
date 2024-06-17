@@ -119,6 +119,10 @@ etable(list(
         weights = ~wt45,
         vcov = ~tinh+huyen),
   feols(female  ~ log(tot_bmr) | tinh,
+        subset(hhbus08, south == 1),
+        weights = ~wt9,
+        vcov = ~tinh+huyen),
+  feols(female  ~ log(tot_bmr) | tinh,
         subset(hhbus02, south == 0),
         weights = ~wt75,
         vcov = ~tinh+huyen),
@@ -129,23 +133,39 @@ etable(list(
   feols(female  ~ log(tot_bmr) | tinh,
         subset(hhbus06, south == 0),
         weights = ~wt45,
+        vcov = ~tinh+huyen),
+  feols(female  ~ log(tot_bmr) | tinh,
+        subset(hhbus08, south == 0),
+        weights = ~wt9,
         vcov = ~tinh+huyen)
 ))
 
 etable(list(
   feols(female  ~ log(tot_bmr_prov),
         subset(hhbus02, south == 1),
-        vcov = ~tinh+huyen),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov),
+        subset(hhbus04, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
   feols(female  ~ log(tot_bmr_prov),
         subset(hhbus06, south == 1),
-        vcov = ~tinh+huyen),
+        weights = ~wt45,
+        vcov = ~tinh),
   feols(female  ~ log(tot_bmr_prov),
         subset(hhbus02, south == 0),
-        vcov = ~tinh+huyen),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov),
+        subset(hhbus04, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh),
   feols(female  ~ log(tot_bmr_prov),
         subset(hhbus06, south == 0),
-        vcov = ~tinh+huyen)
-))
+        weights = ~wt45,
+        vcov = ~tinh)
+), tex = T)
 
 ######################################
 # PROBABILITY OF WORKING - BY SECTOR #
