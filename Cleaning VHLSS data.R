@@ -137,7 +137,7 @@ m5c_02 <- m5c_02 %>%
 hhbus02 <- list(m1_02, m5c_02) %>% 
   map(~mutate(.x, matv02 = as.numeric(str_sub(as.character(matv02), -2)))) %>%
   reduce(merge, by = ivid02) %>% 
-  select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, qui, m1c2, hhbus) %>% 
+  select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, qui, m1c2) %>% 
   left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui")) %>% 
   left_join(wt02, by = c("tinh02", "huyen02", "xa02")) %>% 
   rename(tinh = tinh02,
@@ -147,7 +147,7 @@ hhbus02 <- list(m1_02, m5c_02) %>%
          tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
          urban = ifelse(urban == 1, 1, 0),
-         south = ifelse(tinh02 > 407, 1, 0),
+         south = ifelse(tinh > 407, 1, 0),
          year = 2002) %>% 
   left_join(province_bmr_sum02, by = "tinh") 
 
