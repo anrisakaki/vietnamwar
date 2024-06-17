@@ -77,10 +77,10 @@ ggsave("dn_indfe_prov_coef_cas.jpeg", width = 7, height = 7)
 #############
 # BY SECTOR #
 #############
-ind_workerratio_01_ns$sector <- factor(ind_workerratio_01_ns$sector, levels = rev(sort(unique(ind_workerratio_01_ns$sector))))
-ind_workerratio_prov_01_ns$sector <- factor(ind_workerratio_prov_01_ns$sector, levels = rev(sort(unique(ind_workerratio_prov_01_ns$sector))))
+ind_workerratio_06_ns$sector <- factor(ind_workerratio_06_ns$sector, levels = rev(sort(unique(ind_workerratio_06_ns$sector))))
+ind_workerratio_prov_06_ns$sector <- factor(ind_workerratio_prov_06_ns$sector, levels = rev(sort(unique(ind_workerratio_prov_06_ns$sector))))
 
-ggplot(ind_workerratio_01_ns, aes(y = sector, x = estimate, color = group)) +  
+ggplot(ind_workerratio_06_ns, aes(y = sector, x = estimate, color = group)) +  
   geom_point(position = position_dodge(width = 0.9), size = 3) +
   geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error),  
                 position = position_dodge(width = 0.9), width = 0.25) +
@@ -98,7 +98,7 @@ ggplot(ind_workerratio_01_ns, aes(y = sector, x = estimate, color = group)) +
         text = element_text(size = 10)) + 
   theme(axis.text.y = element_text(angle = 0, hjust = 1))  
 
-ggplot(ind_workerratio_prov_01_ns, aes(y = sector, x = estimate, color = group)) +  
+ggplot(ind_workerratio_prov_06_ns, aes(y = sector, x = estimate, color = group)) +  
   geom_point(position = position_dodge(width = 0.9), size = 3) +
   geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error),  
                 position = position_dodge(width = 0.9), width = 0.25) +
