@@ -660,24 +660,8 @@ ggsave("sexratio_flfp_09_s.jpeg", width = 7, height = 7)
 ########################################
 # BMR VS SHARE OF FEMALE FOUNDED FIRMS #
 ########################################
-ggplot(dplyr::filter(bmr_fdir_prov, south == 0), aes(x = log(tot_bmr), y = share_fdir)) +
-  geom_point() +
-  geom_smooth(method = "lm",
-              se = F) +
-  theme_minimal() +
-  guides(fill = "none") +  
-  theme(axis.line = element_line(color='black'),
-        plot.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        legend.title=element_blank(),
-        text = element_text(size=10)) + 
-  labs(x = "log(BMR)",
-       y = "Share of female-founded firms")
-ggsave("bmr_firms_prov_16_n.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(bmr_fdir_prov, south == 1), aes(x = log(tot_bmr), y = share_fdir)) +
+ggplot(dplyr::filter(dist02_vhlss, south == 0), aes(x = log(tot_bmr), y = (fshare_hhbus)*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -691,10 +675,9 @@ ggplot(dplyr::filter(bmr_fdir_prov, south == 1), aes(x = log(tot_bmr), y = share
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   labs(x = "log(BMR)",
-       y = "Share of female-founded firms")
-ggsave("bmr_firms_prov_16_s.jpeg", width = 7, height = 7)
+       y = "Share of female-managed businesses")
 
-ggplot(dplyr::filter(bmr_fdir16, south == 0), aes(x = log(tot_bmr), y = share_fdir)) +
+ggplot(dplyr::filter(dist02_vhlss, south == 1), aes(x = log(tot_bmr), y = (fshare_hhbus)*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -708,10 +691,9 @@ ggplot(dplyr::filter(bmr_fdir16, south == 0), aes(x = log(tot_bmr), y = share_fd
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   labs(x = "log(BMR)",
-       y = "Share of female-founded firms")
-ggsave("bmr_firms_16_n.jpeg", width = 7, height = 7)
+       y = "Share of female-managed businesses")
 
-ggplot(dplyr::filter(bmr_fdir16, south == 1), aes(x = log(tot_bmr), y = share_fdir)) +
+ggplot(dplyr::filter(prov08_vhlss, south == 0), aes(x = log(tot_bmr_prov), y = (fshare_hhbus)*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -725,8 +707,25 @@ ggplot(dplyr::filter(bmr_fdir16, south == 1), aes(x = log(tot_bmr), y = share_fd
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   labs(x = "log(BMR)",
-       y = "Share of female-founded firms")
-ggsave("bmr_firms_16_s.jpeg", width = 7, height = 7)
+       y = "Share of female-managed businesses")
+ggsave("bmr_fshare_hhbus_prov_16_n.jpeg", width = 7, height = 7)
+
+ggplot(dplyr::filter(prov08_vhlss, south == 1), aes(x = log(tot_bmr_prov), y = (fshare_hhbus)*100)) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = F) +
+  theme_minimal() +
+  guides(fill = "none") +  
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=10)) + 
+  labs(x = "log(BMR)",
+       y = "Share of female-managed businesses")
+ggsave("bmr_fshare_hhbus_prov_16_s.jpeg", width = 7, height = 7)
 
 ############################################
 # MALE AND FEMALE LABOUR FORCE COMPOSITION #
