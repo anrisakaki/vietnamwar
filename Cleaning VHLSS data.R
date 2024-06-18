@@ -275,14 +275,14 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
   left_join(ppn0408, by = "tinh")
 
 m4c_06 <- m4c_06 %>% 
-  mutate()
-  rename(matv = m4c1c3) %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv)
+  rename(matv = m4c1c3)
 
-hhbus06 <- list(m1a_06, m4c_06) %>% 
+hhbus06 <- list(m1a_06, m4a_06, m4c_06) %>% 
   map(~mutate(.x, diaban = as.numeric(diaban))) %>%
   reduce(merge, by = ivid06) %>% 
-  select(tinh, huyen, xa, diaban, hoso, m1ac2) %>% 
+  rename(age = m1ac5) %>% 
+  filter(m4ac5 == m4c1c2) %>% 
+  select(tinh, huyen, xa, diaban, hoso, m1ac2, age) %>% 
   left_join(def06, by = hhid06) %>% 
   left_join(wt06, by = c("tinh", "huyen", "xa")) %>% 
   left_join(district_bmr_sum06_vhlss, by = c("tinh", "huyen")) %>% 
@@ -405,6 +405,22 @@ vhlss10 <- list(m1a_10, m2a_10, m4a1_10, m4a2_10, m4a3_10, m4a4_10) %>%
          year = 2010)  %>% 
   left_join(province_bmr_sum2, by = "tinh") %>% 
   left_join(ppn1012, by = "tinh")
+
+hhbus10 <- list(m1a_10, m4a1_10) %>% 
+  reduce(merge, by = ivid06) %>% 
+  merge(m4c_10, by = c("tinh", "huyen", "xa", "diaban", "hoso")) %>% 
+  rename(age = m1ac5) %>% 
+  mutate(female = ifelse(m1ac2 == 2, 1, 0)) %>% 
+  filter(m4c1c2 == m4ac4) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, female, age) %>% 
+  left_join(wt10, by = c("tinh", "huyen", "xa")) %>% 
+  left_join(district_bmr_sum10, by = c("tinh", "huyen")) %>% 
+  distinct() %>% 
+  mutate(tinh = ifelse(tinh == 28, 1, tinh),
+         tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
+         urban = ifelse(urban == 1, 1, 0),
+         year = 2010)  %>% 
+  left_join(province_bmr_sum2, by = "tinh") 
 
 ########
 # 2012 #
