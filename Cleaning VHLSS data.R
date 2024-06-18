@@ -130,18 +130,15 @@ vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
   left_join(province_bmr_sum02, by = "tinh") %>% 
   left_join(ppn02, by = "tinh")
 
-m5c_02 <- m5c_02 %>% 
-  rename(matv02 = m5c1c3t1) %>%
-  filter(m5cc1 == 1)
-
 hhbus02 <- list(m1_02, m2_02, m3_02, m5a_02, m5c_02) %>%
   map(~mutate(.x, matv02 = as.numeric(str_sub(as.character(matv02), -2)))) %>%
   reduce(full_join, by = ivid02) %>% 
   filter(m5c1c2t1 == m3c7) %>% 
-  rename(age = m1c5,
+  rename(industry = m5c1c2t1,
+         age = m1c5,
          educ = m2c1,
-         marital = m1c6) %>% 
-  select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, qui, m1c2, age, educ, marital) %>% 
+         dir_yob = m1c4_3) %>% 
+  select(tinh02, huyen02, xa02, diaban02, hoso02, matv02, qui, m1c2, dir_yob, age, educ, industry) %>% 
   left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui")) %>% 
   left_join(wt02, by = c("tinh02", "huyen02", "xa02")) %>% 
   rename(tinh = tinh02,
@@ -210,12 +207,16 @@ hhbus04 <- list(m123a_04, m4a_04) %>%
   reduce(merge, by = ivid04) %>% 
   merge(m4c1_04, by = c("tinh", "huyen", "xa", "diaban", "hoso", "ky")) %>% 
   filter(m4ac5 == industry & m4ac1c == 1) %>% 
-  select(tinh, huyen, xa, diaban, hoso, matv, ky, m1ac2) %>% 
+  rename(dir_yob = m1ac4b,
+         age = m1ac5,
+         educ = m2c1,
+         certificate = m4c1c8) %>% 
+  mutate(female = ifelse(m1ac2 == 2, 1, 0)) %>% 
+  select(tinh, huyen, xa, diaban, hoso, matv, ky, female, dir_yob, age, educ, industry) %>% 
   distinct() %>% 
   left_join(wt04, by = c("tinh", "huyen", "xa")) %>% 
   left_join(district_bmr_sum04_vhlss, by = c("tinh", "huyen")) %>% 
-  mutate(female = ifelse(m1ac2 == 2, 1, 0),
-         tinh = ifelse(tinh == 105, 101, tinh),
+  mutate(tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
          south = ifelse(tinh > 407, 1, 0),
          year = 2004) %>% 
@@ -280,9 +281,11 @@ m4c_06 <- m4c_06 %>%
 hhbus06 <- list(m1a_06, m4a_06, m4c_06) %>% 
   map(~mutate(.x, diaban = as.numeric(diaban))) %>%
   reduce(merge, by = ivid06) %>% 
-  rename(age = m1ac5) %>% 
-  filter(m4ac5 == m4c1c2) %>% 
-  select(tinh, huyen, xa, diaban, hoso, m1ac2, age) %>% 
+  rename(age = m1ac5,
+         dir_yob = m1ac4b,
+         industry = m4ac5) %>% 
+  filter(industry == m4c1c2) %>% 
+  select(tinh, huyen, xa, diaban, hoso, m1ac2, dir_yob, age, industry) %>% 
   left_join(def06, by = hhid06) %>% 
   left_join(wt06, by = c("tinh", "huyen", "xa")) %>% 
   left_join(district_bmr_sum06_vhlss, by = c("tinh", "huyen")) %>% 
