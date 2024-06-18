@@ -119,6 +119,123 @@ dn_indfe_coef_n$group <- "North"
 dn_indfe_coef_s$group <- "South"
 dn_indfe_coef_ns <- rbind(dn_indfe_coef_n, dn_indfe_coef_s)
 
+dn_ols_n <- (list(
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn02, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn03, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn04, south == 0),
+        vcov = ~tinh+huyen), 
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn05, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn06, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn07, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn08, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn09, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn10, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn11, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn12, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn13, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn14, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn15, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn16, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn17, south == 0),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn18, south == 0),
+        vcov = ~tinh+huyen)))
+
+dn_ols_s <- (list(
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn02, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn03, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn04, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn05, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn06, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn07, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn08, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn09, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn10, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn11, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn12, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn13, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn14, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn15, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn16, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn,
+        subset(dn17, south == 1),
+        vcov = ~tinh+huyen),
+  feols(tot_workerratio ~ log(tot_bmr) | tinh + lhdn ,
+        subset(dn18, south == 1),
+        vcov = ~tinh+huyen)))
+
+dn_ols_coef_n <- lapply(dn_ols_n, tidy)
+dn_ols_coef_s <- lapply(dn_ols_s, tidy)
+dn_ols_coef_n <- do.call(rbind, dn_ols_coef_n) %>% filter(term == "log(tot_bmr)")
+dn_ols_coef_s <- do.call(rbind, dn_ols_coef_s) %>% filter(term == "log(tot_bmr)")
+dn_ols_coef_n$year <- rep(seq(2002, 2018), each = nrow(dn_ols_coef_n) / length(seq(2002, 2018)))
+dn_ols_coef_s$year <- rep(seq(2002, 2018), each = nrow(dn_ols_coef_s) / length(seq(2002, 2018)))
+
+dn_ols_coef_n$group <- "North"
+dn_ols_coef_s$group <- "South"
+dn_ols_coef_ns <- rbind(dn_ols_coef_n, dn_ols_coef_s)
+
 ###############################
 # Firm level FE - BY PROVINCE #
 ###############################
@@ -357,49 +474,3 @@ dn_indfe_prov_cas <- (list(
 dn_indfe_prov_coef_cas <- lapply(dn_indfe_prov_cas, tidy) 
 dn_indfe_prov_coef_cas <- do.call(rbind, dn_indfe_prov_coef_cas) %>% filter(term == "log(killed_tot_prov)")
 dn_indfe_prov_coef_cas$year <- rep(seq(2002, 2018), each = nrow(dn_indfe_prov_coef_cas) / length(seq(2002, 2018)))
-
-###################
-# FEMALE DIRECTOR #
-###################
-
-etable(list(
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + dir_educ + tinh,
-        subset(dn01, south == 1),
-        vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + dir_educ + tinh,
-        subset(dn07, south == 1),
-        vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + dir_educ + tinh,
-        subset(dn11, south == 1),
-        vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + tinh,
-        subset(dn16, south == 1),
-        vcov = ~tinh)), tex = T)
-
-etable(list(
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + dir_educ + tinh,
-        subset(dn01, south == 0),
-        vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + dir_educ + tinh,
-        subset(dn07, south == 0),
-        vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + dir_educ + tinh,
-        subset(dn11, south == 0),
-        vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + tinh,
-        subset(dn16, south == 0),
-        vcov = ~tinh)), tex = T)
-
-etable(list(
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + dir_educ + tinh,
-        subset(dn01, south == 1 & manu == 1),
-        vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + dir_educ + tinh,
-        subset(dn07, south == 1 & manu == 1),
-        vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + dir_educ + tinh,
-        subset(dn11, south == 1 & manu == 1),
-        vcov = ~tinh),
-  feols(female_dir ~ log(tot_bmr) + dir_yob | lhdn + nganh_kd + dir_ethnicity + tinh,
-        subset(dn16, south == 1 & manu == 1),
-        vcov = ~tinh)), tex = T)
