@@ -130,6 +130,9 @@ vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
   left_join(province_bmr_sum02, by = "tinh") %>% 
   left_join(ppn02, by = "tinh")
 
+m5c_02 <- m5c_02 %>% 
+  rename(matv02 = m5c1c3t1)
+
 hhbus02 <- list(m1_02, m2_02, m3_02, m5a_02, m5c_02) %>%
   map(~mutate(.x, matv02 = as.numeric(str_sub(as.character(matv02), -2)))) %>%
   reduce(full_join, by = ivid02) %>% 
