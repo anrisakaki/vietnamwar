@@ -1,6 +1,6 @@
-###############################################
-# PROBABILITY OF BEING MANAGER OF HH BUSINESS #
-###############################################
+################################################################
+# PROBABILITY OF BEING MANAGER OF HH BUSINESS - DISTRICT LEVEL #
+################################################################
 
 etable(list(
   feols(female  ~ log(tot_bmr) | tinh,
@@ -30,57 +30,123 @@ etable(list(
 ), tex = T)
 
 etable(list(
-  feols(female  ~ log(tot_bmr) | tinh + industry,
-        subset(hhbus02, south == 0 & tinh != 101),
+  feols(female  ~ log(tot_bmr) | industry + tinh,
+        subset(hhbus02, south == 0),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr) | industry + tinh,
+        subset(hhbus04, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr) | industry + tinh,
+        subset(hhbus06, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr) | industry + tinh,
+        subset(hhbus02, south == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr) | industry + tinh,
+        subset(hhbus04, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr) | industry + tinh,
+        subset(hhbus06, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh)
+), tex = T)
+
+#############################################################################
+# PROBABILITY OF BEING MANAGER OF HH BUSINESS - DISTRICT LEVEL - CASUALTIES #
+#############################################################################
+
+etable(list(
+  feols(female  ~ log(killed_tot) | tinh,
+        subset(hhbus02, south == 1),
         weights = ~wt75,
         vcov = ~tinh+huyen),
-  feols(female  ~ log(tot_bmr) | tinh + industry,
-        subset(hhbus04, south == 0 & tinh != 101),
+  feols(female  ~ log(killed_tot) | tinh,
+        subset(hhbus04, south == 1),
         weights = ~wt45,
         vcov = ~tinh+huyen),
-  feols(female  ~ log(tot_bmr) | tinh + industry,
-        subset(hhbus06, south == 0 & tinh != 101),
-        weights = ~wt45,
-        vcov = ~tinh+huyen),
-  feols(female  ~ log(tot_bmr) | tinh + industry,
-        subset(hhbus02, south == 1 & tinh != 701),
-        weights = ~wt75,
-        vcov = ~tinh+huyen),
-  feols(female  ~ log(tot_bmr) | tinh + industry,
-        subset(hhbus04, south == 1 & tinh != 701),
-        weights = ~wt45,
-        vcov = ~tinh+huyen),
-  feols(female  ~ log(tot_bmr) | tinh + industry,
-        subset(hhbus06, south == 1 & tinh != 701),
+  feols(female  ~ log(killed_tot) | tinh,
+        subset(hhbus06, south == 1),
         weights = ~wt45,
         vcov = ~tinh+huyen)
 ), tex = T)
 
 etable(list(
-  feols(female  ~ log(tot_bmr) | tinh,
-        subset(hhbus02, south == 0 & tinh != 101),
+  feols(female  ~ log(killed_tot) | industry + tinh,
+        subset(hhbus02, south == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(female  ~ log(killed_tot) | industry + tinh,
+        subset(hhbus04, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(female  ~ log(killed_tot) | industry + tinh,
+        subset(hhbus06, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh)
+), tex = T)
+
+
+################################################################
+# PROBABILITY OF BEING MANAGER OF HH BUSINESS - PROVINCE LEVEL #
+################################################################
+
+etable(list(
+  feols(female  ~ log(tot_bmr_prov),
+        subset(hhbus02, south == 0),
         weights = ~wt75,
         vcov = ~tinh+huyen),
-  feols(female  ~ log(tot_bmr) | tinh,
-        subset(hhbus04, south == 0 & tinh!= 101),
+  feols(female  ~ log(tot_bmr_prov),
+        subset(hhbus04, south == 0),
         weights = ~wt45,
         vcov = ~tinh+huyen),
-  feols(female  ~ log(tot_bmr) | tinh,
-        subset(hhbus06, south == 0 & tinh!= 101),
+  feols(female  ~ log(tot_bmr_prov),
+        subset(hhbus06, south == 0),
         weights = ~wt45,
         vcov = ~tinh+huyen),
-  feols(female  ~ log(tot_bmr) | tinh,
-        subset(hhbus02, south == 1 & tinh != 701),
+  feols(female  ~ log(tot_bmr_prov),
+        subset(hhbus02, south == 1),
         weights = ~wt75,
         vcov = ~tinh+huyen),
-  feols(female  ~ log(tot_bmr) | tinh,
-        subset(hhbus04, south == 1 & tinh != 701),
+  feols(female  ~ log(tot_bmr_prov),
+        subset(hhbus04, south == 1),
         weights = ~wt45,
         vcov = ~tinh+huyen),
-  feols(female  ~ log(tot_bmr) | tinh,
-        subset(hhbus06, south == 1 & tinh != 701),
+  feols(female  ~ log(tot_bmr_prov),
+        subset(hhbus06, south == 1),
         weights = ~wt45,
         vcov = ~tinh+huyen)
+), tex = T)
+
+etable(list(
+  feols(female  ~ log(tot_bmr_prov) | industry,
+        subset(hhbus02, south == 0),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov) | industry,
+        subset(hhbus04, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov) | industry,
+        subset(hhbus06, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov) | industry,
+        subset(hhbus02, south == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov) | industry,
+        subset(hhbus04, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov) | industry,
+        subset(hhbus06, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh)
 ), tex = T)
 
 ###########################################################
