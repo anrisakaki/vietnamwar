@@ -149,6 +149,61 @@ etable(list(
         vcov = ~tinh)
 ), tex = T)
 
+etable(list(
+  feols(female  ~ log(tot_bmr_prov_ppn),
+        subset(hhbus02, south == 0),
+        weights = ~wt75,
+        vcov = ~tinh+huyen),
+  feols(female  ~ log(tot_bmr_prov_ppn),
+        subset(hhbus04, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh+huyen),
+  feols(female  ~ log(tot_bmr_prov_ppn),
+        subset(hhbus06, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh+huyen),
+  feols(female  ~ log(tot_bmr_prov_ppn),
+        subset(hhbus02, south == 1),
+        weights = ~wt75,
+        vcov = ~tinh+huyen),
+  feols(female  ~ log(tot_bmr_prov_ppn),
+        subset(hhbus04, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh+huyen),
+  feols(female  ~ log(tot_bmr_prov_ppn),
+        subset(hhbus06, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh+huyen)
+), tex = T)
+
+etable(list(
+  feols(female  ~ log(tot_bmr_prov_ppn) | industry,
+        subset(hhbus02, south == 0),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov_ppn) | industry,
+        subset(hhbus04, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov_ppn) | industry,
+        subset(hhbus06, south == 0),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov_ppn) | industry,
+        subset(hhbus02, south == 1),
+        weights = ~wt75,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov_ppn) | industry,
+        subset(hhbus04, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh),
+  feols(female  ~ log(tot_bmr_prov_ppn) | industry,
+        subset(hhbus06, south == 1),
+        weights = ~wt45,
+        vcov = ~tinh)
+), tex = T)
+
+
 ###########################################################
 # PROBABILITY OF BEING MANAGER OF HH BUSINESS - BY SECTOR #
 ###########################################################
