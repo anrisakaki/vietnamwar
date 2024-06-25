@@ -20,7 +20,6 @@ phc_sum <- function(i){
               f_work = sum(perwt[female == 1 & work == 1], na.rm = T),
               m_work = sum(perwt[female == 0 & work == 1], na.rm = T),
               widowed_f = sum(perwt[female == 1 & widowed == 1], na.rm = T),
-              tot_bmr = mean(tot_bmr),
               tot_bmr_prov = mean(tot_bmr_prov),
               tot_bmr_prov_ppn = mean(tot_bmr_prov_ppn),
               killed_tot_prov_ppn = mean(killed_tot_prov_ppn)) %>% 
@@ -49,7 +48,20 @@ sum09 <- phc09 %>%
 
 sum_dist09 <- phc09 %>% 
   group_by(geo2_vn2009) %>% 
-  phc_sum() %>% 
+  summarise(tot_f = sum(perwt[female == 1], na.rm = T),
+            tot_m = sum(perwt[female == 0], na.rm = T),
+            tot_mlf = sum(perwt[female == 0 & age > 15 & age < 65], na.rm = T),
+            tot_flf = sum(perwt[female == 1 & age > 15 & age < 65], na.rm = T),
+            f_work = sum(perwt[female == 1 & work == 1], na.rm = T),
+            m_work = sum(perwt[female == 0 & work == 1], na.rm = T),
+            widowed_f = sum(perwt[female == 1 & widowed == 1], na.rm = T),
+            tot_bmr = mean(tot_bmr),
+            tot_bmr_prov = mean(tot_bmr_prov),
+            tot_bmr_prov_ppn = mean(tot_bmr_prov_ppn),
+            killed_tot_prov_ppn = mean(killed_tot_prov_ppn)) %>% 
+  mutate(flfp = f_work/tot_flf,
+         sexratio = tot_m/tot_f,
+         widow_share = widowed_f/tot_f) %>% 
   mutate(south = ifelse(geo2_vn2009 > 44000, 1, 0))
 
 save(sum89, file = "sexratio_prov_89.Rda")
