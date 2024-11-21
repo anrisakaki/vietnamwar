@@ -127,9 +127,10 @@ cl_provcodes <- read.csv("AAD/cl_69.csv")
 
 zones <- read.csv("AAD/Zone Codes.csv")
 
-# Young Lives 
+# LFS
 
-yl_anthro <- read_dta("YL/stata/stata13/vietnam_r5/vnyc_anthro_anon/vn_r5_ychh_youngerchildanthroandppvt.dta")
+lfs_folder <- list.files("LFS", pattern = "^LFS.*\\.dta$", full.names = TRUE)
+lfs_list <- lapply(lfs_folder, read_dta)
 
 # Map 
 geoid_folder <- "C:/Users/Anri Sakakibara/OneDrive/PhD Political Economy/Vietnam War/geoid"
