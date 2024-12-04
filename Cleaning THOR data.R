@@ -33,7 +33,7 @@ thor <- thor %>%
          MFUNC_DESC_CLASS == "KINETIC") %>% 
   mutate(
     civilian = case_when(
-      TGTTYPE %in% c("AGRICULTURAL AREA", "CIV POPULATN CENTR", "VILLAGE", "HUTS", "ISLAND", "BUILDINGS") ~ 1,
+      TGTTYPE %in% c("CIV POPULATN CENTR", "VILLAGE", "HUTS", "ISLAND", "BUILDINGS") ~ 1,
       grepl("PERSONNEL", TGTTYPE, ignore.case = TRUE) ~ 1,
       TRUE ~ 0 
     ),    
@@ -71,155 +71,6 @@ south <- bombs_province_miguel %>%
                             'Hai Phong (City)' = 'Hai Phong',
                             'Ho Chi Minh (City)' = 'Ho Chi Minh',
                             'Thuathien-Hue' = 'Thua Thien Hue'))
-
-# Spatial Join 
-
-province_bmr <- st_join(gdf, vnmap1)
-
-colnames(province_bmr) <- tolower(colnames(province_bmr))
-
-province_names <- province_bmr %>% 
-  sf::st_drop_geometry() %>% 
-  select(name_1, varname_1) %>% 
-  distinct() %>% 
-  filter(!is.na(varname_1))
-
-province_bmr_sum <- province_bmr %>% 
-  ungroup() %>% 
-  filter(!is.na(varname_1)) %>% 
-  group_by(varname_1, name_1) %>% 
-  summarise(tot_bmr = sum(numweaponsdelivered),
-            tot_bmr_lb = sum(weightdelivered),
-            tot_agri = sum(numweaponsdelivered[agriculture == 1]),
-            tot_agri_lb = sum(weightdelivered[agriculture == 1]),
-            tot_industry = sum(numweaponsdelivered[industry == 1]),
-            tot_industry_lb = sum(weightdelivered[industry == 1]),
-            ) %>% 
-  ungroup() %>% 
-  sf::st_drop_geometry() %>% 
-  left_join(prov_casualties, by = "varname_1")
-
-vnmap1 <- vnmap1 %>% rename(name_1 = NAME_1)
-
-province_bmr_sf <- left_join(province_bmr_sum, vnmap1, by = "name_1") %>% st_as_sf()
-
-bases <- st_transform(bases, crs = 4326)
-hcmtrail <- st_transform(hcmtrail, crs = 4326)
-
-nearest_base <- st_nearest_feature(province_bmr_sf, bases)
-province_bmr_sf$dist_nearest_base <-
-  as.numeric(st_distance(province_bmr_sf, bases[nearest_base, ], by_element = TRUE)) / 1000
-
-nearest_trail <- st_nearest_feature(province_bmr_sf, hcmtrail)
-province_bmr_sf$dist_nearest_hochi <-
-  as.numeric(st_distance(province_bmr_sf, hcmtrail[nearest_trail, ], by_element = TRUE)) / 1000
-
-distance_info <- province_bmr_sf %>% 
-  select(varname_1, dist_nearest_base, dist_nearest_hochi)
-distance_info <- sf::st_drop_geometry(distance_info)
-
-prov_controls <- ppn60 %>%
-  filter(!is.na(tinh)) %>% 
-  select(tinh, ppn60)
-
-province_bmr_sum <- province_bmr_sum %>% 
-  left_join(distance_info, by = "varname_1") %>%
-  filter(!is.na(tot_bmr)) %>% 
-  ungroup() %>% 
-  select(-varname_1) %>%
-  mutate(name_1 = recode(name_1,
-                         'Điện Biên' = 'Lai Châu',
-                         'Sơn La' = 'Lai Châu',
-                         .default = name_1)) %>% 
-  mutate(tinh = recode(name_1,
-                       'An Giang' = 805,
-                       'Bà Rịa - Vũng Tàu' = 717,
-                       'Bắc Giang' = 221,
-                       'Bắc Kạn' = 207,
-                       'Bạc Liêu' = 821,
-                       'Bắc Ninh' = 106,
-                       'Bến Tre' = 811,
-                       'Bình Định' = 507,
-                       'Bình Dương' = 711,
-                       'Bình Phước' = 707,
-                       'Bình Thuận' = 715,
-                       'Cà Mau' = 823,
-                       'Cần Thơ' = 815,
-                       'Cao Bằng' = 203,
-                       'Đà Nẵng' = 501,
-                       'Đắk Lắk' = 605,
-                       'Đắk Nông' = 606,
-                       'Lai Châu' = 301,
-                       'Đồng Nai' = 713,
-                       'Đồng Tháp' = 803,
-                       'Gia Lai' = 603,
-                       'Hà Giang' = 201,
-                       'Hà Nam' = 111,
-                       'Hà Nội' = 101,
-                       'Hà Tĩnh' = 405,
-                       'Hải Dương' = 107,
-                       'Hải Phòng' = 103,
-                       'Hậu Giang' = 816,
-                       'Hồ Chí Minh' = 701,
-                       'Hoà Bình' = 305,
-                       'Hưng Yên' = 109,
-                       'Khánh Hòa' = 511,
-                       'Kiên Giang' = 813,
-                       'Kon Tum' = 601,
-                       'Lâm Đồng' = 607,
-                       'Lạng Sơn' = 209,
-                       'Lào Cai' = 205,
-                       'Long An' = 801,
-                       'Nam Định' = 113,
-                       'Nghệ An' = 403,
-                       'Ninh Bình' = 117,
-                       'Ninh Thuận' = 705,
-                       'Phú Thọ' = 217,
-                       'Phú Yên' = 509,
-                       'Quảng Bình' = 407,
-                       'Quảng Nam' = 503,
-                       'Quảng Ngãi' = 505,
-                       'Quảng Ninh' = 225,
-                       'Quảng Trị' = 409,
-                       'Sóc Trăng' = 819,
-                       'Tây Ninh' = 709,
-                       'Thái Bình' = 115,
-                       'Thái Nguyên' = 215,
-                       'Thanh Hóa' = 401,
-                       'Thừa Thiên Huế' = 411,
-                       'Tiền Giang' = 807,
-                       'Trà Vinh' = 817,
-                       'Tuyên Quang' = 211,
-                       'Vĩnh Long' = 809,
-                       'Vĩnh Phúc' = 104,
-                       'Yên Bái' = 213,
-                       .default = NA_real_)) %>% 
-  group_by(tinh, name_1) %>% 
-  summarise(tot_bmr_prov = sum(tot_bmr),
-            tot_bmr_lb_prov = sum(tot_bmr_lb),
-            killed_tot_prov = sum(killed_tot),
-            dist_nearest_base_prov = min(dist_nearest_base),
-            dist_nearest_hochi_prov = min(dist_nearest_hochi)) %>% 
-  select(tinh, everything()) %>% 
-  left_join(prov_controls, by = "tinh") %>% 
-  mutate(tot_bmr_prov_ppn = tot_bmr_prov/ppn60,
-         tot_bmr_lb_prov_ppn = tot_bmr_lb_prov/ppn60,
-         killed_tot_prov_ppn = killed_tot_prov/ppn60)
-
-save(province_bmr_sum, file = "province_bmr_sum.Rda")
-
-# Target type by north/south 
-targets_sum <- province_bmr %>% 
-  sf::st_drop_geometry() %>% 
-  summarise(agri_s = sum(numweaponsdelivered[tgtcountry == "SOUTH VIETNAM" & agriculture == 1], na.rm = T),
-            agri_n = sum(numweaponsdelivered[tgtcountry == "NORTH VIETNAM" & agriculture == 1], na.rm = T),
-            infra_s = sum(numweaponsdelivered[tgtcountry == "SOUTH VIETNAM" & infrastructure == 1], na.rm = T),
-            infra_n = sum(numweaponsdelivered[tgtcountry == "NORTH VIETNAM" & infrastructure == 1], na.rm = T),
-            civilian_s = sum(numweaponsdelivered[tgtcountry == "SOUTH VIETNAM" & civilian == 1], na.rm = T),
-            civilian_n = sum(numweaponsdelivered[tgtcountry == "NORTH VIETNAM" & civilian == 1], na.rm = T),
-            industry_s = sum(numweaponsdelivered[tgtcountry == "SOUTH VIETNAM" & industry == 1], na.rm = T),
-            industry_n = sum(numweaponsdelivered[tgtcountry == "NORTH VIETNAM" & industry == 1], na.rm = T))
-
 
 # Bombing intensity by district 
 vnmap2 <- vnmap2 %>% 
@@ -279,16 +130,15 @@ vnmap2 <- vnmap2 %>%
   NAME_1 = ifelse(distname2018 == "Thành phố Gia Nghĩa" & NAME_1 == "Đắk Lắk", "Đắk Nông", NAME_1))
 
 district_bmr <- st_join(gdf, vnmap2)
-district_bmr <- st_join(district_bmr, vnmap1)
 
 district_bmr_sf <- district_bmr %>% 
-  group_by(NAME_1, VARNAME_1, VARNAME_2, distname2018) %>% 
+  group_by(NAME_1, VARNAME_2, distname2018) %>% 
   summarise(
     tot_bmr = sum(NUMWEAPONSDELIVERED, na.rm = T),
     tot_bmr_lb = sum(WEIGHTDELIVERED, na.rm = T)) %>% 
   sf::st_drop_geometry() %>% 
   left_join(vnmap2, by = c("NAME_1", "VARNAME_2", "distname2018")) %>% 
-  left_join(dist_casualties, by = c("VARNAME_1" = "varname_1", "distname2018")) %>% 
+  left_join(dist_casualties, by = "distname2018") %>% 
   st_as_sf()
 
 district_bmr_sum <- district_bmr_sf %>% 
