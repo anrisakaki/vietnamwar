@@ -61,3 +61,10 @@ lfs_18 <- lfs_list[[4]] %>%
          emp_type = C35) %>% 
   filter(age > 14 & age < 66) %>% 
   mutate(year = 2018)
+
+lfs_fn <- function(i){
+  
+  i %>% 
+    mutate(work = ifelse(wage_work == 1 | nonwage_work == 1, 1, 0),
+           nonagri_self = ifelse(nonwage_work == 1 & ))
+}
