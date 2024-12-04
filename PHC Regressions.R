@@ -13,21 +13,21 @@ setFixest_coefplot(dict = dict, grid = FALSE, zero.par = list(lty = 2), main = "
 ###########################################
 # Cross sectional 
 
-work_agexbmr_cs_09_s <- tidy(feols(work ~ i(as.factor(age), log(tot_bmr)) + yrschool + nchild + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(married) | age,
+work_agexbmr_cs_09_s <- tidy(feols(work ~ i(as.factor(age), tot_bmr_std) + yrschool + nchild + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(married) | age,
                                 subset(phc09, south == 1 & migration == 0 & female == 1 & age < 65 & age > 15),
                                 weights = ~perwt,
-                                vcov = ~geo2_vn2009 + age))%>% filter(grepl("log\\(tot_bmr\\)", term))
-work_agexbmr_cs_09_n <- tidy(feols(work ~ i(as.factor(age), log(tot_bmr)) + yrschool + nchild + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(married) | age,
+                                vcov = ~geo2_vn2009 + age))%>% filter(grepl("tot_bmr_std", term))
+work_agexbmr_cs_09_n <- tidy(feols(work ~ i(as.factor(age), tot_bmr_std) + yrschool + nchild + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(married) | age,
                                 subset(phc09, south == 0 & migration == 0 & female == 1 & age < 65 & age > 15),
                                 weights = ~perwt,
-                                vcov = ~geo2_vn2009 + age))%>% filter(grepl("log\\(tot_bmr\\)", term))
+                                vcov = ~geo2_vn2009 + age))%>% filter(grepl("tot_bmr_std", term))
 
 work_agexbmr_cs_09_s$age <- rep(seq(17, 64), each = nrow(work_agexbmr_cs_09_s) / length(seq(17, 64)))
 work_agexbmr_cs_09_n$age <- rep(seq(17, 64), each = nrow(work_agexbmr_cs_09_n) / length(seq(17, 64)))
 
 work_agexbmr_cs_09_n$group <- "North"
 work_agexbmr_cs_09_s$group <- "South"
-work_agexbmr_cs_09_ns <- bind_rows(work_agexbmr_cs_09_n, work_agexbmr_cs_09_s)
+work_agexbmr_cs_09_ns <- bind_rows(work_agexbmr_cs_09_n, work_agexbmr_cs_09_s) %>% mutate(age_75 = 1975 - (2009 - age))
 
 # Province FE 
 
@@ -45,7 +45,7 @@ work_agexbmr_09_n$age <- rep(seq(17, 64), each = nrow(work_agexbmr_09_n) / lengt
 
 work_agexbmr_09_n$group <- "North"
 work_agexbmr_09_s$group <- "South"
-work_agexbmr_09_ns <- bind_rows(work_agexbmr_09_n, work_agexbmr_09_s)
+work_agexbmr_09_ns <- bind_rows(work_agexbmr_09_n, work_agexbmr_09_s) %>% mutate(age_75 = 1975 - (2009 - age))
 
 # By casualties 
 
