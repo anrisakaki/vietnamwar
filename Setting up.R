@@ -10,6 +10,8 @@ library(sfheaders)
 library(mgrs)
 library(broom)
 library(patchwork)
+library(srvyr)
+library(survey)
 
 rm(list=ls())
 
@@ -72,39 +74,9 @@ m1a_18 <- read_dta(file = "Full VHLSS/2018/2 - Data/1 - Households/MUC1A.dta")
 m2c_18 <- read_dta(file = "Full VHLSS/2018/2 - Data/1 - Households/MUC2V.dta")
 m4a_18 <- read_dta(file = "Full VHLSS/2018/2 - Data/1 - Households/MUC4A.dta")
 
-busid <- read_dta(file = "Full VHLSS/Business ids.dta")
-
-# DHC 
-dhc_97 <- read_dta(file = "DHC/VNIR31FL.dta")
-
 # Population and Housing Census 
 
-phc <- read_dta(file = "ipumsi_00008.dta")
-
-phc_dist <- read.csv("PHC District Codes.csv")
-
-# Enterprise Survey 
-
-ec <- list.files("Enterprise Census", pattern = "^dn.*\\.dta$", full.names = TRUE)
-
-ec_list <- lapply(ec, read_dta)
-
-ec_gender <- list.files("Enterprise Census/Gender data", pattern = "^dn.*\\.dta$", full.names = TRUE)
-ecgender_list <- lapply(ec_gender, read_dta)
-
-# Population 
-
-prewar_ppn <- read.csv("prewar_ppn.csv")
-
-prewar_area <- prewar_ppn
-
-postwar_ppn <- read.csv("Male and Female Population 1976.csv")
-
-sexratios <- read.csv("E02.09.csv")
-
-ppn60 <- read.csv("ppn60.csv")
-
-ppn0019 <- read.csv("PopulationVietnam_2000-2019.csv")
+phc <- read_dta(file = "ipumsi_00010.dta")
 
 # Bombing data 
 
@@ -127,11 +99,6 @@ cl_provcodes <- read.csv("AAD/cl_69.csv")
 
 zones <- read.csv("AAD/Zone Codes.csv")
 
-# LFS
-
-lfs_folder <- list.files("LFS", pattern = "^LFS.*\\.dta$", full.names = TRUE)
-lfs_list <- lapply(lfs_folder, read_dta)
-
 # Map 
 geoid_folder <- "C:/Users/Anri Sakakibara/OneDrive/PhD Political Economy/Vietnam War/geoid"
 geoid_files <- list.files(path = geoid_folder, pattern = "geo(.*)csv$")
@@ -148,9 +115,7 @@ bases <- st_read("3-replication package/3-replication package/rawdata/shapefiles
 popcenter <-
   st_read("3-replication package/3-replication package/rawdata/shapefiles/ne_10m_populated_places.shp")
 
-vnmap2_09 <- read_sf("Chloropleth Maps/VNShapefile/geo2_vn2009/geo2_vn2009.shp")
-
-provarea <- read.csv("province_area.csv")
+geo2_vn <- read_sf("geo2_vn2009_2019/geo2_vn2009_2019.shp")
   
 # Consistent District Boundaries 
 
