@@ -9,30 +9,36 @@ for (i in vhlss) {
 ##########################
 
 png("work_vhlss_dist_s.png")
+
+etable(feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + age + age^2 + educ | minority + urban + marital + tinh + year,
+            subset(vhlss, south == 1 & year < 2008),
+            weights = ~wt,
+            vcov = ~tinh+huyen))
+
 iplot(list(
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + age + age^2 + educ | minority + urban + marital + tinh,
         subset(vhlss02, south == 1),
-        weights = ~wt75,
+        weights = ~wt,
         vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + age + age^2 + educ | minority + urban + marital + tinh,
         subset(vhlss04, south == 1),
-        weights = ~wt45,
+        weights = ~wt,
         vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + age + age^2 + educ | minority + urban + marital + tinh,
         subset(vhlss06, south == 1),
-        weights = ~wt45,
+        weights = ~wt,
         vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + age + age^2 + educ | minority + urban + marital + tinh,
         subset(vhlss08, south == 1),
-        weights = ~wt9,
+        weights = ~wt,
         vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + age + age^2 + educ | minority + urban + marital + tinh,
         subset(vhlss10, south == 1),
-        weights = ~wt9,
+        weights = ~wt,
         vcov = ~tinh+huyen),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + age + age^2 + educ | minority + urban + marital + tinh,
         subset(vhlss12, south == 1),
-        weights = ~wt9,
+        weights = ~wt,
         vcov = ~tinh+huyen)
 ))
 legend("topleft", col = 1:6, pch = 16, bty = "n", cex = 0.9, 
