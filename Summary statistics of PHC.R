@@ -1,9 +1,3 @@
-bombs <- c("bombs_province89.Rda", "bombs_province99.Rda", "bombs_province09.Rda", "district_bmr_phc.Rda")
-
-for (i in bombs) {
-  load(i)
-}
-
 phc <- c("phc.Rda", "phc89.Rda", "phc99.Rda", "phc09.Rda", "phc19.Rda", "")
 
 for (i in phc) {
@@ -57,23 +51,6 @@ dist_phc_sum <- function(i){
     mutate(south = ifelse(geo2_vn > 704044457, 1, 0))
 }
 
-age_cohort_size <- function(i){
-  
-  i %>% 
-    filter(!is.na(age)) %>% 
-    summarise(n = sum(perwt),
-              tot_bmr_prov = mean(tot_bmr_prov))
-}
-
-age_cohort_size_dist <- function(i){
-  
-  i %>% 
-    filter(!is.na(age)) %>% 
-    group_by(age, geo2_vn) %>% 
-    summarise(n = sum(perwt),
-              tot_bmr_prov = mean(tot_bmr_prov))
-}
-
 # Calculating sex ratio by age, and by north and south 
 
 sum89 <- phc89 %>% 
@@ -106,32 +83,19 @@ save(sum89, file = "sum89.Rda")
 save(sum99, file = "sum99.Rda")
 save(sum09, file = "sum09.Rda")
 
-# Age cohort, by province 
-
-agecohort89 <- phc89 %>% 
-  group_by(age, geo1_vn1989) %>% 
-  age_cohort_size()
-
-agecohort99 <- phc99 %>% 
-  group_by(age, geo1_vn1999) %>% 
-  age_cohort_size()
-
-agecohort09 <- phc09 %>% 
-  group_by(age, geo1_vn2009) %>% 
-  age_cohort_size()
-
-agecohort19 <- phc19 %>% 
-  group_by(age, geo1_vn2019) %>% 
-  age_cohort_size()
-
-agecohort09_dist <- phc09 %>% 
-  age_cohort_size_dist()
-
 ## Regressing bombs on birth cohort size 
 
 etable(list(
-  feols()
-))
+  feols(n ~ tot_bmr, agecohort09_dist),
+  feols(n ~ (tot_bmr), agecohort19_dist)
+), tex = T)
+
+etable(list(
+  feols(n ~ log(tot_bmr_prov), agecohort89),
+  feols(n ~ log(tot_bmr_prov), agecohort99),
+  feols(n ~ log(tot_bmr_prov), agecohort09),
+  feols(n ~ log(tot_bmr_prov), agecohort19)
+), tex = T)
 
 # Calculating male the female ratio in each industry 
 
