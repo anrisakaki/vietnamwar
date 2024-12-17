@@ -1,13 +1,14 @@
-provbombs <- c("bombs_province89.Rda", "bombs_province99.Rda", "bombs_province09.Rda", "provbombs_sum.Rda")
+bombs <- c("bombs_province89.Rda", "bombs_province99.Rda", "bombs_province09.Rda", "district_bmr_phc.Rda")
 
-for (i in provbombs) {
+for (i in bombs) {
   load(i)
 }
 
 # Cleaning Population and Housing Census 
 
 phc <- phc %>%
-  mutate(married = ifelse(marst == 2, 1, 0),
+  mutate(yrschool = ifelse(yrschool > 19, NA, yrschool),
+         married = ifelse(marst == 2, 1, 0),
          widowed = ifelse(marst == 4, 1, 0),
          single = ifelse(marst == 1, 1, 0),
          minority = ifelse(ethnicvn > 1, 1, 0),
@@ -29,7 +30,11 @@ phc <- phc %>%
          urban = ifelse(urban == 1, 1, 0),
          south = ifelse(geo1_vn1989 > 26 & year == 1989 | geo1_vn1989 == 2 & year == 1989 , 1, 0),
          south = ifelse(geo1_vn1999 > 405 & year == 1999, 1, 0),
-         south = ifelse(geo1_vn2009 > 44, 1, 0))
+         south = ifelse(geo1_vn2009 > 44, 1, 0),
+         south = ifelse(geo1_vn2019 > 44, 1, 0),
+         geo2_vn2009 = as.double(geo2_vn2009),
+         geo2_vn2019 = as.double(geo2_vn2019),
+         geo2_vn = as.double(geo2_vn))
 
 # Separating by year 
 
@@ -54,15 +59,37 @@ phc99 <- phc %>%
 
 phc09 <- phc %>% 
   filter(year == 2009) %>% 
-  left_join(district_bmr_sum_phc, by = "geo2_vn2009") %>% 
+  left_join(bombs_province09, by = "geo1_vn2009") %>% 
+  left_join(district_bmr_phc, by = c("geo2_vn" = "geolevel2")) %>% 
   mutate(south = ifelse(geo1_vn2009 > 44, 1, 0))%>% 
   group_by(serial) %>% 
   mutate(widow_hh = ifelse(any(widowed == 1 & female == 1 & age > 58 & age < 89), 1, 0),
          widow_hh = ifelse(is.na(widow_hh), 0, widow_hh))
 
-phc_all <- bind_rows(phc89, phc99, phc09)
+phc19 <- phc %>% 
+  filter(year == 2019) %>% 
+  left_join(bombs_province09, by = c("geo1_vn2019" = "geo1_vn2009")) %>% 
+  left_join(district_bmr_phc, by = c("geo2_vn" = "geolevel2")) %>% 
+  mutate(south = ifelse(geo1_vn2019 > 44, 1, 0))%>% 
+  group_by(serial) %>% 
+  mutate(widow_hh = ifelse(any(widowed == 1 & female == 1 & age > 68), 1, 0),
+         widow_hh = ifelse(is.na(widow_hh), 0, widow_hh))
+
+phc_all <- bind_rows(phc89, phc99, phc09, phc19)
 
 save(phc89, file = "phc89.Rda")
 save(phc99, file = "phc99.Rda")
 save(phc09, file = "phc09.Rda")
+save(phc19, file = "phc19.Rda")
 
+# Widows in 1989
+
+widowed_89 <- phc89 %>%
+  filter(female == 1 & age >15) %>%
+  group_by(age, south) %>%
+  summarise(
+    total_females = sum(perwt, na.rm = TRUE),
+    total_widows = sum(perwt[widowed == 1], na.rm = TRUE)
+  ) %>%
+  mutate(share = (total_widows / total_females) * 100) 
+  
