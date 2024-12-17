@@ -98,7 +98,7 @@ dev.off()
 
 png("work_phc_s.png")
 iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
+  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(yrschool) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
         subset(phc89, south == 1),
         weights = ~perwt,
         vcov = ~geo1_vn1989),
