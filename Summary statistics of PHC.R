@@ -1,10 +1,10 @@
-bombs_prov <- c("bombs_province89.Rda", "bombs_province99.Rda", "bombs_province09.Rda")
+bombs <- c("bombs_province89.Rda", "bombs_province99.Rda", "bombs_province09.Rda", "district_bmr_phc.Rda")
 
-for (i in bombs_prov) {
+for (i in bombs) {
   load(i)
 }
 
-phc <- c("phc.Rda", "phc89.Rda", "phc99.Rda", "phc09.Rda")
+phc <- c("phc.Rda", "phc89.Rda", "phc99.Rda", "phc09.Rda", "phc19.Rda", "")
 
 for (i in phc) {
   load(i)
@@ -13,20 +13,65 @@ for (i in phc) {
 phc_sum <- function(i){
   
   i %>% 
-    summarise(tot_f = sum(perwt[female == 1], na.rm = T),
+    summarise(n = sum(perwt),
+              tot_f = sum(perwt[female == 1], na.rm = T),
               tot_m = sum(perwt[female == 0], na.rm = T),
               tot_mlf = sum(perwt[female == 0 & age > 15 & age < 65], na.rm = T),
               tot_flf = sum(perwt[female == 1 & age > 15 & age < 65], na.rm = T),
               f_work = sum(perwt[female == 1 & work == 1], na.rm = T),
               m_work = sum(perwt[female == 0 & work == 1], na.rm = T),
               widowed_f = sum(perwt[female == 1 & widowed == 1], na.rm = T),
-              tot_bmr_prov = mean(tot_bmr_prov),
-              tot_bmr_prov_ppn = mean(tot_bmr_prov_ppn),
-              killed_tot_prov_ppn = mean(killed_tot_prov_ppn)) %>% 
+              tot_f_migrants = sum(perwt[female == 1 & migration == 1], na.rm = T),
+              tot_m_migrants = sum(perwt[female == 0 & migration == 1], na.rm = T),
+              tot_bmr_prov = mean(tot_bmr_prov)) %>% 
     mutate(flfp = f_work/tot_flf,
            sexratio = tot_m/tot_f,
-           widow_share = widowed_f/tot_f)
+           widow_share = widowed_f/tot_f,
+           f_migrant_share = tot_f_migrants/tot_f,
+           migrant_share = (tot_f_migrants+tot_m_migrants)/n)
   
+}
+
+dist_phc_sum <- function(i){
+  
+  i %>% 
+    group_by(geo2_vn) %>% 
+    summarise(n = sum(perwt),
+              tot_f = sum(perwt[female == 1], na.rm = T),
+              tot_m = sum(perwt[female == 0], na.rm = T),
+              tot_mlf = sum(perwt[female == 0 & age > 14 & age < 65], na.rm = T),
+              tot_flf = sum(perwt[female == 1 & age > 14 & age < 65], na.rm = T),
+              f_work = sum(perwt[female == 1 & work == 1], na.rm = T),
+              m_work = sum(perwt[female == 0 & work == 1], na.rm = T),
+              widowed_f = sum(perwt[female == 1 & widowed == 1], na.rm = T),
+              tot_f_migrants = sum(perwt[female == 1 & migration == 1], na.rm = T),
+              tot_m_migrants = sum(perwt[female == 0 & migration == 1], na.rm = T),
+              tot_bmr = mean(tot_bmr),
+              tot_bmr_prov = mean(tot_bmr_prov),
+              popdensgeo2 = mean(popdensgeo2)) %>% 
+    mutate(flfp = f_work/tot_flf,
+           sexratio = tot_m/tot_f,
+           widow_share = widowed_f/tot_f,
+           f_migrant_share = tot_f_migrants/tot_f,
+           migrant_share = (tot_f_migrants+tot_m_migrants)/n) %>% 
+    mutate(south = ifelse(geo2_vn > 704044457, 1, 0))
+}
+
+age_cohort_size <- function(i){
+  
+  i %>% 
+    filter(!is.na(age)) %>% 
+    summarise(n = sum(perwt),
+              tot_bmr_prov = mean(tot_bmr_prov))
+}
+
+age_cohort_size_dist <- function(i){
+  
+  i %>% 
+    filter(!is.na(age)) %>% 
+    group_by(age, geo2_vn) %>% 
+    summarise(n = sum(perwt),
+              tot_bmr_prov = mean(tot_bmr_prov))
 }
 
 # Calculating sex ratio by age, and by north and south 
@@ -46,27 +91,47 @@ sum09 <- phc09 %>%
   phc_sum() %>% 
   mutate(south = ifelse(geo1_vn2009 > 44, 1, 0))
 
-sum_dist09 <- phc09 %>% 
-  group_by(geo2_vn2009) %>% 
-  summarise(tot_f = sum(perwt[female == 1], na.rm = T),
-            tot_m = sum(perwt[female == 0], na.rm = T),
-            tot_mlf = sum(perwt[female == 0 & age > 15 & age < 65], na.rm = T),
-            tot_flf = sum(perwt[female == 1 & age > 15 & age < 65], na.rm = T),
-            f_work = sum(perwt[female == 1 & work == 1], na.rm = T),
-            m_work = sum(perwt[female == 0 & work == 1], na.rm = T),
-            widowed_f = sum(perwt[female == 1 & widowed == 1], na.rm = T),
-            tot_bmr = mean(tot_bmr),
-            tot_bmr_prov = mean(tot_bmr_prov),
-            tot_bmr_prov_ppn = mean(tot_bmr_prov_ppn),
-            killed_tot_prov_ppn = mean(killed_tot_prov_ppn)) %>% 
-  mutate(flfp = f_work/tot_flf,
-         sexratio = tot_m/tot_f,
-         widow_share = widowed_f/tot_f) %>% 
-  mutate(south = ifelse(geo2_vn2009 > 44000, 1, 0))
+sum19 <- phc19 %>% 
+  group_by(geo1_vn2019) %>% 
+  phc_sum() %>% 
+  mutate(south = ifelse(geo1_vn2019 > 44, 1, 0))
 
-save(sum89, file = "sexratio_prov_89.Rda")
-save(sum99, file = "sexratio_prov_99.Rda")
-save(sum09, file = "sexratio_prov_09.Rda")
+sum_dist09 <- phc09 %>% 
+  dist_phc_sum()
+
+sum_dist19 <- phc19 %>% 
+  dist_phc_sum()
+
+save(sum89, file = "sum89.Rda")
+save(sum99, file = "sum99.Rda")
+save(sum09, file = "sum09.Rda")
+
+# Age cohort, by province 
+
+agecohort89 <- phc89 %>% 
+  group_by(age, geo1_vn1989) %>% 
+  age_cohort_size()
+
+agecohort99 <- phc99 %>% 
+  group_by(age, geo1_vn1999) %>% 
+  age_cohort_size()
+
+agecohort09 <- phc09 %>% 
+  group_by(age, geo1_vn2009) %>% 
+  age_cohort_size()
+
+agecohort19 <- phc19 %>% 
+  group_by(age, geo1_vn2019) %>% 
+  age_cohort_size()
+
+agecohort09_dist <- phc09 %>% 
+  age_cohort_size_dist()
+
+## Regressing bombs on birth cohort size 
+
+etable(list(
+  feols()
+))
 
 # Calculating male the female ratio in each industry 
 
@@ -122,7 +187,13 @@ indgen09_f <- phc09 %>%
   indgen_f_fn()
 indgen09 <- merge(indgen09_m, indgen09_f, by = c("south", "indgen")) %>% mutate(year = 2009)
 
-indgen <- bind_rows(indgen89, indgen99, indgen09) %>% 
+indgen19_m <- phc19 %>% 
+  indgen_m_fn()
+indgen19_f <- phc19 %>% 
+  indgen_f_fn()
+indgen19 <- merge(indgen19_m, indgen19_f, by = c("south", "indgen")) %>% mutate(year = 2019)
+
+indgen <- bind_rows(indgen89, indgen99, indgen09, indgen19) %>% 
   left_join(femalen, by = c("year", "south")) %>% 
   mutate(workerratio = N_m/N_f,
          Industry = case_when(indgen == 10 ~ 'Agriculture',
@@ -168,39 +239,67 @@ agecohort_sum <- phc %>%
          group09 = case_when(year == 2009 & age_cohort %in% c("10-14", "15-19", "20-24", "25-29", "30-34") ~ "Born after war",
                              TRUE ~ "Born before war"))
 
-## FLFP by age cohort 
-agecohort_flfp_sum <- phc %>% 
-  filter(female == 1 & work == 1) %>% 
-  group_by(year, age_cohort) %>%
-  summarise(work = sum(work * perwt)) %>% 
-  filter(!is.na(age_cohort))
+# Summary statistics of migrants 
 
-agecohort_sum <- left_join(agecohort_sum, agecohort_flfp_sum, by = c("year", "age_cohort")) %>% 
-  mutate(flfp = (work/n_female)*100) %>% 
-  mutate(
-    sex_ratio = round(sex_ratio, 2),
-    flfp = round(flfp, 2)
-  )  
+migrant_sum_survey <- function(i) {
+    # Filter the survey design object for females aged 15–64
+    j <- subset(i, female == 1 & age > 14 & age < 65)
+    
+    j_age <- subset(j, !is.na(age))
+    j_yrschool <- subset(j, !is.na(yrschool))
+    j_work <- subset(j, !is.na(work))
+    
+    results <- list(
+      # Age
+      mean_age_migrant = svymean(~age, subset(j_age, migration == 1))[[1]],
+      mean_age_nonmigrant = svymean(~age, subset(j_age, migration == 0))[[1]],
+      sd_age_migrant = sqrt(svyvar(~age, subset(j_age, migration == 1))[[1]]),
+      sd_age_nonmigrant = sqrt(svyvar(~age, subset(j_age, migration == 0))[[1]]),
+      diff_mean_age = svymean(~age, subset(j_age, migration == 1))[[1]] -
+        svymean(~age, subset(j_age, migration == 0))[[1]],
+      
+      # Years of Schooling
+      mean_yrschool_migrant = svymean(~yrschool, subset(j_yrschool, migration == 1))[[1]],
+      mean_yrschool_nonmigrant = svymean(~yrschool, subset(j_yrschool, migration == 0))[[1]],
+      sd_yrschool_migrant = sqrt(svyvar(~yrschool, subset(j_yrschool, migration == 1))[[1]]),
+      sd_yrschool_nonmigrant = sqrt(svyvar(~yrschool, subset(j_yrschool, migration == 0))[[1]]),
+      diff_mean_yrschool = svymean(~yrschool, subset(j_yrschool, migration == 1))[[1]] -
+        svymean(~yrschool, subset(j_yrschool, migration == 0))[[1]],
+      
+      # Work
+      mean_work_migrant = svymean(~work, subset(j_work, migration == 1))[[1]],
+      mean_work_nonmigrant = svymean(~work, subset(j_work, migration == 0))[[1]],
+      sd_work_migrant = sqrt(svyvar(~work, subset(j_work, migration == 1))[[1]]),
+      sd_work_nonmigrant = sqrt(svyvar(~work, subset(j_work, migration == 0))[[1]]),
+      diff_mean_work = svymean(~work, subset(j_work, migration == 1))[[1]] -
+        svymean(~work, subset(j_work, migration == 0))[[1]]
+    )
+    
+    return(as.data.frame(results))
+  }
 
-# Sex ratio by age cohort, by province 
-agecohort_sum_prov <- phc %>% 
-  group_by(year, age_cohort, geo1_vn1989, geo1_vn1999, geo1_vn2009, female) %>%
-  summarise(tot = sum(perwt)) %>% 
-  filter(!is.na(age_cohort)) %>% 
-  group_by(year, age_cohort) %>% 
-  pivot_wider(names_from = female, values_from = tot) %>% 
-  filter(!is.na(age_cohort)) %>% 
-  rename(n_male = 6,
-         n_female = 7) %>% 
+svy89 <- svydesign(ids = ~1, weights = ~perwt, data = phc89)
+svy99 <- svydesign(ids = ~1, weights = ~perwt, data = phc99)
+svy09 <- svydesign(ids = ~1, weights = ~perwt, data = phc09)
+svy19 <- svydesign(ids = ~1, weights = ~perwt, data = phc19)
 
-  mutate(sex_ratio = (n_male / n_female) * 100)
-agecohort_flfp_sum_prov <- phc %>% 
-  filter(female == 1 & work == 1) %>% 
-  group_by(year, age_cohort, geo1_vn1989, geo1_vn1999, geo1_vn2009) %>%
-  summarise(work = sum(work * perwt)) %>% 
-  filter(!is.na(age_cohort))
+summary_1989 <- migrant_sum_survey(svy89)
+summary_1999 <- migrant_sum_survey(svy99)
+summary_2009 <- migrant_sum_survey(svy09)
+summary_2019 <- migrant_sum_survey(svy19)
 
-agecohort_sum_prov <- left_join(agecohort_sum_prov, agecohort_flfp_sum_prov, by = c("year", "age_cohort", "geo1_vn1989", "geo1_vn1999", "geo1_vn2009")) %>% 
-  mutate(flfp = work/n_female)
+feols(age ~ migration, subset(phc89, female == 1 & age > 14 & age < 65), weights = ~perwt)
+feols(yrschool ~ migration, subset(phc89, female == 1 & age > 14 & age < 65), weights = ~perwt)
+feols(work ~ migration, subset(phc89, female == 1 & age > 14 & age < 65), weights = ~perwt)
 
-agecohort_sum_prov <- left_join(agecohort_sum_prov, provbombs_sum, by = c("year", "geo1_vn1989", "geo1_vn1999", "geo1_vn2009"))
+feols(age ~ migration, subset(phc99, female == 1 & age > 14 & age < 65), weights = ~perwt)
+feols(yrschool ~ migration, subset(phc99, female == 1 & age > 14 & age < 65), weights = ~perwt)
+feols(work ~ migration, subset(phc99, female == 1 & age > 14 & age < 65), weights = ~perwt)
+
+feols(age ~ migration, subset(phc09, female == 1 & age > 14 & age < 65), weights = ~perwt)
+feols(yrschool ~ migration, subset(phc09, female == 1 & age > 14 & age < 65), weights = ~perwt)
+feols(work ~ migration, subset(phc09, female == 1 & age > 14 & age < 65), weights = ~perwt)
+
+feols(age ~ migration, subset(phc19, female == 1 & age > 14 & age < 65), weights = ~perwt)
+feols(yrschool ~ migration, subset(phc19, female == 1 & age > 14 & age < 65), weights = ~perwt)
+feols(work ~ migration, subset(phc19, female == 1 & age > 14 & age < 65), weights = ~perwt)
