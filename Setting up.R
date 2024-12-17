@@ -16,50 +16,6 @@ library(survey)
 rm(list=ls())
 
 # VHLSS 
-inc_02 <- read_dta(file = "Full VHLSS/VHLSS 2002 N= 45,000/hhinc02.dta")
-exp_02 <- read_dta(file = "Full VHLSS/VHLSS 2002 N= 45,000/hhexpe02.dta")
-m1_02 <- read_dta(file = "Full VHLSS/VHLSS 2002 N= 45,000/muc1.dta") #DF containing age and sex
-m2_02 <- read_dta (file = "Full VHLSS/VHLSS 2002 N= 45,000/muc2.dta") #DF containing educational attainment 
-m3_02 <- read_dta (file = "Full VHLSS/VHLSS 2002 N= 45,000/muc3.dta") #DF containing work 
-m5a_02 <- read_dta (file = "Full VHLSS/VHLSS 2002 N= 45,000/muc5a.dta") #DF containing work
-m5c_02 <- read_dta(file = "Full VHLSS/VHLSS 2002 N= 45,000/muc5c1.dta")
-m9_02 <- read_dta(file = "Full VHLSS/VHLSS 2002 N= 45,000/muc9.dta")
-
-inc_04 <- read_dta(file = "Full VHLSS/2004/hhinc04.dta")
-ho1_04 <- read_dta(file = "Full VHLSS/2004/ho1.dta")
-ho2_04 <- read_dta(file = "Full VHLSS/2004/ho2.dta")
-m123a_04 <- read_dta(file = "Full VHLSS/2004/m1_2_3a.dta") #DF containing age, sex, and educational attainment 
-m4a_04 <- read_dta(file = "Full VHLSS/2004/m4a.dta") #DF containing work 
-m4c1_04 <- read_dta(file = "Full VHLSS/2004/m4c1.dta") #DF containing work 
-
-ttchung_06 <- read_dta(file = "Full VHLSS/2006/ttchung.dta")
-inc_06 <- read_dta(file = "Full VHLSS/2006/hhinc06.dta")
-m1a_06 <- read_dta(file = "Full VHLSS/2006/muc1a.dta") #DF containing age and sex 
-m2a_06 <- read_dta(file = "Full VHLSS/2006/muc2a.dta") #DF containing educational attainment 
-m4a_06 <- read_dta(file = "Full VHLSS/2006/muc4a.dta") #DF containing employment & housework 
-m4c_06 <- read_dta(file = "Full VHLSS/2006/muc4c.dta")
-
-m123a_08 <- read_dta(file = "Full VHLSS/2008/Hhold/muc123a.dta")
-m4a_08 <- read_dta(file = "Full VHLSS/2008/Hhold/muc4a.dta")
-m4c_08 <- read_dta(file = "Full VHLSS/2008/Hhold/muc4c1.dta")
-wt08 <- read_dta(file = "Full VHLSS/2008/Hhold/weight08new4.dta")
-ho_08 <- read_dta(file = "Full VHLSS/2008/Hhold/ho.dta")
-
-m1a_10 <- read_dta(file = "Full VHLSS/2010/muc1a.dta")
-m2a_10 <- read_dta(file = "Full VHLSS/2010/muc2a1.dta")
-m4a1_10 <- read_dta(file = "Full VHLSS/2010/muc4a1.dta")
-m4a2_10 <- read_dta(file = "Full VHLSS/2010/muc4a2.dta")
-m4a3_10 <- read_dta(file = "Full VHLSS/2010/muc4a3.dta")
-m4a4_10 <- read_dta(file = "Full VHLSS/2010/muc4a4.dta")
-m4c_10 <- read_dta(file = "Full VHLSS/2010/muc4c1.dta")
-wt10 <- read_dta(file = "Full VHLSS/2010/wt10.dta")
-ho11_10 <- read_dta(file = "Full VHLSS/2010/ho11.dta")
-
-m1a_12 <- read_dta(file = "Full VHLSS/2012/Muc1A.dta")
-m2a1_12 <- read_dta(file = "Full VHLSS/2012/Muc2a1.dta")
-wt12 <- read_dta(file = "Full VHLSS/2012/wt2012new.dta")
-ho11_12 <- read_dta(file = "Full VHLSS/2012/ho11.dta")
-
 ho1_14 <- read_dta(file = "Full VHLSS/2014/ho1.dta")
 m1a_14 <- read_dta(file = "Full VHLSS/2014/Muc1A.dta")
 m2a_14 <- read_dta(file = "Full VHLSS/2014/Muc2A.dta")
