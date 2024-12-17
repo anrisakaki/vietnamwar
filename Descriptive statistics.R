@@ -329,7 +329,7 @@ ggsave("sexratio_birthcohort.jpeg", width = 17, height = 7)
 
 # 1989
 
-ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov), y = sexratio*100)) +
+ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov), y = (tot_mlf/tot_flf)*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -343,10 +343,10 @@ ggplot(dplyr::filter(sum89, south == 0), aes(x = log(tot_bmr_prov), y = sexratio
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   labs(x = "log(BMR)",
-       y = "Sex Ratio")
+       y = "Sex Ratio of Working Age Population")
 ggsave("bmr_sexratio_89_n.jpeg", width = 7, height = 7)
 
-ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov), y = sexratio*100)) +
+ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov), y = (tot_mlf/tot_flf)*100)) +
   geom_point() +
   geom_smooth(method = "lm",
               se = F) +
@@ -360,7 +360,7 @@ ggplot(dplyr::filter(sum89, south == 1), aes(x = log(tot_bmr_prov), y = sexratio
         legend.title=element_blank(),
         text = element_text(size=10)) + 
   labs(x = "log(BMR)",
-       y = "Sex Ratio")
+       y = "Sex Ratio of Working Age Population")
 ggsave("bmr_sexratio_89_s.jpeg", width = 7, height = 7)
 
 ##########################
