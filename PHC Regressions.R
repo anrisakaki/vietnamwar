@@ -117,9 +117,3 @@ iplot(list(
 legend("bottomleft", col = 1:4, pch = 16, bty = "n", cex = 0.9, 
        legend = c("1989", "1999", "2009", "2019"))
 dev.off()
-
-######################
-# BMR vs. Age Cohort #
-######################
-
-
