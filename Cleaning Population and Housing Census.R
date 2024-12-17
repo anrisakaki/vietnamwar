@@ -40,7 +40,6 @@ phc <- phc %>%
 
 phc89 <- phc %>% 
   filter(year == 1989) %>% 
-  mutate(geo1_vn1989 = ifelse(geo1_vn1989 == 16, 13, geo1_vn1989)) %>% 
   left_join(bombs_province89, by = "geo1_vn1989") %>% 
   mutate(south = ifelse(geo1_vn1989 > 26 | geo1_vn1989 == 2, 1, 0))  %>% 
   group_by(serial) %>% 
@@ -49,8 +48,7 @@ phc89 <- phc %>%
 
 phc99 <- phc %>% 
   filter(year == 1999) %>% 
-  mutate(geo1_vn1999 = ifelse(geo1_vn1999 == 105, 101, geo1_vn1999),
-         geo1_vn1999 = ifelse(geo1_vn1999 == 303, 301, geo1_vn1999)) %>% 
+  mutate(geo1_vn1999 = ifelse(geo1_vn1999 == 105, 101, geo1_vn1999)) %>% 
   left_join(bombs_province99, by = "geo1_vn1999") %>% 
   mutate(south = ifelse(geo1_vn1999 > 405, 1, 0))  %>% 
   group_by(serial) %>% 
@@ -60,7 +58,7 @@ phc99 <- phc %>%
 phc09 <- phc %>% 
   filter(year == 2009) %>% 
   left_join(bombs_province09, by = "geo1_vn2009") %>% 
-  left_join(district_bmr_phc, by = c("geo2_vn" = "geolevel2")) %>% 
+  left_join(district_bmr_phc, by = "geo2_vn") %>% 
   mutate(south = ifelse(geo1_vn2009 > 44, 1, 0))%>% 
   group_by(serial) %>% 
   mutate(widow_hh = ifelse(any(widowed == 1 & female == 1 & age > 58 & age < 89), 1, 0),
@@ -69,7 +67,7 @@ phc09 <- phc %>%
 phc19 <- phc %>% 
   filter(year == 2019) %>% 
   left_join(bombs_province09, by = c("geo1_vn2019" = "geo1_vn2009")) %>% 
-  left_join(district_bmr_phc, by = c("geo2_vn" = "geolevel2")) %>% 
+  left_join(district_bmr_phc, by = "geo2_vn") %>% 
   mutate(south = ifelse(geo1_vn2019 > 44, 1, 0))%>% 
   group_by(serial) %>% 
   mutate(widow_hh = ifelse(any(widowed == 1 & female == 1 & age > 68), 1, 0),
@@ -81,6 +79,7 @@ save(phc89, file = "phc89.Rda")
 save(phc99, file = "phc99.Rda")
 save(phc09, file = "phc09.Rda")
 save(phc19, file = "phc19.Rda")
+save(phc_all, file = "phc_all.Rda")
 
 # Widows in 1989
 
