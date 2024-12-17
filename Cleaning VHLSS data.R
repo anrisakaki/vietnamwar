@@ -89,7 +89,8 @@ vhlss02 <- list(m1_02, m2_02, m3_02, m5a_02) %>%
   left_join(def02, by = c("tinh02", "huyen02", "xa02", "diaban02", "hoso02","qui")) %>% 
   left_join(wt02, by = c("tinh02", "huyen02", "xa02")) %>% 
   rename(tinh = tinh02,
-         huyen = huyen02) %>% 
+         huyen = huyen02,
+         wt = wt75) %>% 
   left_join(district_bmr_sum02_vhlss, by = c("tinh", "huyen")) %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
@@ -159,6 +160,7 @@ vhlss04 <- list(m123a_04, m4a_04) %>%
   left_join(def04, by = c("tinh", "huyen", "xa", "hoso")) %>% 
   left_join(wt04, by = c("tinh", "huyen", "xa")) %>% 
   left_join(district_bmr_sum04_vhlss, by = c("tinh", "huyen")) %>% 
+  rename(wt = wt45) %>% 
   mutate(inc = inc/mcpi/rcpi,
          urban = ifelse(urban == 1, 1, 0),
          tinh = ifelse(tinh == 105, 101, tinh),
@@ -231,6 +233,7 @@ vhlss06 <- list(m1a_06, m2a_06, m4a_06) %>%
   left_join(def06, by = hhid06) %>% 
   left_join(wt06, by = c("tinh", "huyen", "xa")) %>% 
   left_join(district_bmr_sum06_vhlss, by = c("tinh", "huyen")) %>% 
+  rename(wt = wt45) %>% 
   mutate(inc = inc/mcpi/rcpi,
          urban = ifelse(urban == 1, 1, 0),
          tinh = ifelse(tinh == 105, 101, tinh),
@@ -298,6 +301,7 @@ vhlss08 <- list(m123a_08, m4a_08) %>%
          educ, work, wagework, selfemp, selfagri, self, agri, manu, food, industry, occupation, manager, inc, hours, days, widow_hh, south, urban) %>% 
   left_join(wt08, by = c("tinh", "huyen", "xa")) %>% 
   left_join(district_bmr_sum08_vhlss, by = c("tinh", "huyen")) %>% 
+  rename(wt = wt9) %>% 
   mutate(tinh = ifelse(tinh == 105, 101, tinh),
          tinh = ifelse(tinh == 303 | tinh == 302, 301, tinh),
          year = 2008)
@@ -360,6 +364,7 @@ vhlss10 <- list(m1a_10, m2a_10, m4a1_10, m4a2_10, m4a3_10, m4a4_10) %>%
   left_join(wt10, by = c("tinh", "huyen", "xa")) %>% 
   left_join(district_bmr_sum10, by = c("tinh", "huyen")) %>% 
   distinct() %>% 
+  rename(wt = wt9) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          urban = ifelse(urban == 1, 1, 0),
@@ -422,6 +427,7 @@ vhlss12 <- list(m1a_12, m2a1_12) %>%
   left_join(wt12, by = c("tinh", "huyen", "xa")) %>% 
   left_join(district_bmr_sum12, by = c("tinh", "huyen")) %>% 
   distinct() %>% 
+  rename(wt = wt9) %>% 
   mutate(tinh = ifelse(tinh == 28, 1, tinh),
          tinh = ifelse(tinh == 14 | tinh == 11, 12, tinh),
          year = 2012)
