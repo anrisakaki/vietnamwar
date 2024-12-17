@@ -84,6 +84,7 @@ bombs_province89 <- province_bmr_sum %>%
                        'Sóc Trăng' = 43,
                        'Bạc Liêu' = 45,
                        'Cà Mau' = 45,
+                       'Sơn La' = 16,
                        .default = NA_real_)) %>% 
   bmr_sum_fn() %>% 
   rename(geo1_vn1989 = tinh)
@@ -152,6 +153,8 @@ bombs_province99 <- province_bmr_sum %>%
                        'Sóc Trăng' = 819,
                        'Bạc Liêu' = 821,
                        'Cà Mau' = 823,
+                       'Sơn La' = 303,
+                       'Điện Biên' = 301,
                        .default = NA_real_)) %>% 
   bmr_sum_fn() %>% 
   rename(geo1_vn1999 = tinh)
@@ -219,6 +222,8 @@ bombs_province09 <- province_bmr_sum %>%
                        'Sóc Trăng' = 94,
                        'Bạc Liêu' = 95,
                        'Cà Mau' = 96,
+                       'Sơn La' = 14,
+                       'Điện Biên' = 11,
                        .default = NA_real_)) %>% 
   bmr_sum_fn() %>% 
   rename(geo1_vn2009 = tinh)
@@ -226,3 +231,8 @@ bombs_province09 <- province_bmr_sum %>%
 save(bombs_province89, file = "bombs_province89.Rda")
 save(bombs_province99, file = "bombs_province99.Rda")
 save(bombs_province09, file = "bombs_province09.Rda")
+
+#########
+# VHLSS #
+#########
+
