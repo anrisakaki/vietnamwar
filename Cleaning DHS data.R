@@ -1,8 +1,3 @@
-dhs97 <- dhc_97 %>% 
-  rename(age = v012,
-         region = v024,
-         educ = v133,
-         hhsize = v136,
-         nchildren = v201,
-         ) %>% 
-  mutate(female = ifelse(v151 == 2, 1, 0))
+dhs97 <- dhs97 %>% 
+  mutate(sprovin = ifelse(sprovin == 22, 1, sprovin)) %>% 
+  left_join(bombs_province97, by = "sprovin")
