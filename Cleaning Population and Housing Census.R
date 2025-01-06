@@ -91,4 +91,26 @@ widowed_89 <- phc89 %>%
     total_widows = sum(perwt[widowed == 1], na.rm = TRUE)
   ) %>%
   mutate(share = (total_widows / total_females) * 100) 
+
+# Widowhood summary statistics 
+
+etable(list(
+  # age 
+  feols(age ~ as.factor(widowed), subset(phc89, female == 1 & age > (1989 - (1975-15)) & age < 65 & south == 1), weights = ~perwt),
+  
+  # work 
+  feols(work ~ as.factor(widowed), subset(phc89, female == 1 & age > (1989 - (1975-15))  & age < 65 & south == 1), weights = ~perwt),
+  
+  # educ 
+  feols(yrschool ~ as.factor(widowed), subset(phc89, female == 1 & age > (1989 - (1975-15))  & age < 65 & south == 1), weights = ~perwt),
+  
+  # no. of children 
+  feols(nchild ~ as.factor(widowed), subset(phc89, female == 1 & age > (1989 - (1975-15))  & age < 65 & south == 1), weights = ~perwt),
+  
+  # urban 
+  feols(urban ~ as.factor(widowed), subset(phc89, female == 1 & age > (1989 - (1975-15))  & age < 65 & south == 1), weights = ~perwt),
+  
+  # famsize 
+  feols(famsize ~ as.factor(widowed), subset(phc89, female == 1 & age > (1989 - (1975-15))  & age < 65 & south == 1), weights = ~perwt)
+))
   
