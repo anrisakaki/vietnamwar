@@ -36,6 +36,7 @@ phc <- read_dta(file = "ipumsi_00010.dta")
 # DHS
 
 dhs97 <- read_dta("DHS/DHS_97.DTA")
+dhs02 <- read_dta("DHS/DHS_02.DTA")
 
 # Bombing data 
 
