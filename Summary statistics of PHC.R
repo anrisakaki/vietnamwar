@@ -1,4 +1,4 @@
-phc <- c("phc.Rda", "phc89.Rda", "phc99.Rda", "phc09.Rda", "phc19.Rda", "")
+phc <- c("phc.Rda", "phc89.Rda", "phc99.Rda", "phc09.Rda", "phc19.Rda", "phc_all.Rda")
 
 for (i in phc) {
   load(i)
@@ -83,20 +83,17 @@ save(sum89, file = "sum89.Rda")
 save(sum99, file = "sum99.Rda")
 save(sum09, file = "sum09.Rda")
 
-## Regressing bombs on birth cohort size 
-
-etable(list(
-  feols(n ~ tot_bmr, agecohort09_dist),
-  feols(n ~ (tot_bmr), agecohort19_dist)
-), tex = T)
-
-etable(list(
-  feols(n ~ log(tot_bmr_prov), agecohort89),
-  feols(n ~ log(tot_bmr_prov), agecohort99),
-  feols(n ~ log(tot_bmr_prov), agecohort09),
-  feols(n ~ log(tot_bmr_prov), agecohort19)
-), tex = T)
-
+sum_phc <- phc_all %>% 
+  group_by(year, south) %>% 
+  summarise(n = sum(perwt),
+            tot_f = sum(perwt[female == 1], na.rm = T),
+            tot_m = sum(perwt[female == 0], na.rm = T),
+            tot_mlf = sum(perwt[female == 0 & age > 15 & age < 65], na.rm = T),
+            tot_flf = sum(perwt[female == 1 & age > 15 & age < 65], na.rm = T),
+            f_work = sum(perwt[female == 1 & work == 1], na.rm = T),
+            m_work = sum(perwt[female == 0 & work == 1], na.rm = T)) %>% 
+  mutate(flfp = f_work/tot_flf,
+         mlfp = m_work/tot_mlf)
 # Calculating male the female ratio in each industry 
 
 female_n_fn <- function(i){
