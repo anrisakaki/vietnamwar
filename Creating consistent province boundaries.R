@@ -232,7 +232,76 @@ save(bombs_province89, file = "bombs_province89.Rda")
 save(bombs_province99, file = "bombs_province99.Rda")
 save(bombs_province09, file = "bombs_province09.Rda")
 
-#########
-# VHLSS #
-#########
+#######
+# DHS #
+#######
 
+bombs_province97 <- province_bmr_sum %>%
+  mutate(tinh = recode(name_1,
+                       # 'Đắk Nông' = 67,
+                       # 'Hậu Giang' = 93,
+                       'Hà Nội' = 1,
+                       'Hải Phòng' = 3,
+                       'Hải Dương' = 23,
+                       'Hưng Yên' = 63,
+                       'Nam Định' = 25,
+                       'Hà Nam' = 64,
+                       # 'Ninh Bình' = 37,
+                       'Thái Bình' = 26,
+                       # 'Hà Giang' = 2,
+                       # 'Cao Bằng' = 4,
+                       'Lào Cai' = 13,
+                       # 'Bắc Kạn' = 6,
+                       'Lạng Sơn' = 15,
+                       'Tuyên Quang' = 14,
+                       # 'Yên Bái' = 15,
+                       'Thái Nguyên' = 16,
+                       'Phú Thọ' = 19,
+                       'Vĩnh Phúc' = 61,
+                       'Bắc Giang' = 21,
+                       'Bắc Ninh' = 62,
+                       # 'Quảng Ninh' = 22,
+                       'Lai Châu' = 12,
+                       # 'Hoà Bình' = 17,
+                       'Thanh Hóa' = 27,
+                       'Nghệ An'= 29,
+                       # 'Hà Tĩnh' = 42,
+                       # 'Quảng Bình' = 44,
+                       'Quảng Trị' = 32,
+                       'Thừa Thiên Huế' = 33,
+                       'Đà Nẵng' = 34,
+                       'Quảng Nam' = 65,
+                       # 'Quảng Ngãi' = 51,
+                       'Bình Định' = 37,
+                       # 'Phú Yên' = 54,
+                       # 'Khánh Hòa' = 56,
+                       # 'Kon Tum' = 62,
+                       # 'Gia Lai' = 64,
+                       'Đắk Lắk' = 40,
+                       'Hồ Chí Minh' = 2,
+                       'Lâm Đồng' = 42,
+                       'Ninh Thuận' = 44,
+                       # 'Bình Phước' = 70,
+                       'Tây Ninh' = 45,
+                       # 'Bình Dương' = 74,
+                       'Đồng Nai' = 47,
+                       # 'Bình Thuận' = 60,
+                       # 'Bà Rịa - Vũng Tàu' = 77,
+                       # 'Long An' = 80,
+                       'Đồng Tháp' = 49,
+                       'An Giang' = 50,
+                       'Tiền Giang' = 52,
+                       'Vĩnh Long' = 56,
+                       # 'Bến Tre' = 83,
+                       'Kiên Giang' = 53,
+                       'Cần Thơ' = 54,
+                       'Trà Vinh' = 57,
+                       'Sóc Trăng' = 58,
+                       'Bạc Liêu' = 67,
+                       'Cà Mau' = 59,
+                       'Sơn La' = 18,
+                       # 'Điện Biên' = 11,
+                       .default = NA_real_)) %>% 
+  bmr_sum_fn() %>% 
+  filter(!is.na(tinh)) %>% 
+  rename(sprovin = tinh)
