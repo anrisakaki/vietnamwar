@@ -16,23 +16,26 @@ library(survey)
 rm(list=ls())
 
 # VHLSS 
-ho1_14 <- read_dta(file = "Full VHLSS/2014/ho1.dta")
+
+ho1_14 <- read_dta(file = "Full VHLSS/2014/Ho1.dta")
 m1a_14 <- read_dta(file = "Full VHLSS/2014/Muc1A.dta")
 m2a_14 <- read_dta(file = "Full VHLSS/2014/Muc2A.dta")
-m4a_14 <- read_dta(file = "Full VHLSS/2014/Muc4a.dta")
+m4a_14 <- read_dta(file = "Full VHLSS/2014/Muc4A.dta")
+wt14 <- read_dta(file = "Full VHLSS/2014/wt2014.dta")
 
+ho1_16 <- read_dta(file = "Full VHLSS/2016/Household/Ho1.dta")
 m1a_16 <- read_dta(file = "Full VHLSS/2016/Household/Muc1A.dta")
 m2ab_16 <- read_dta(file = "Full VHLSS/2016/Household/Muc2AB.dta")
 m4a_16 <- read_dta(file = "Full VHLSS/2016/Household/Muc4A.dta")
 wt16 <- read_dta(file = "Full VHLSS/2016/Household/wt16.dta")
 
-m1a_18 <- read_dta(file = "Full VHLSS/2018/2 - Data/1 - Households/MUC1A.dta")
-m2c_18 <- read_dta(file = "Full VHLSS/2018/2 - Data/1 - Households/MUC2V.dta")
-m4a_18 <- read_dta(file = "Full VHLSS/2018/2 - Data/1 - Households/MUC4A.dta")
-
 # Population and Housing Census 
 
 phc <- read_dta(file = "ipumsi_00010.dta")
+
+# DHS
+
+dhs97 <- read_dta("DHS/DHS_97.DTA")
 
 # Bombing data 
 
@@ -76,3 +79,7 @@ geo2_vn <- read_sf("geo2_vn2009_2019/geo2_vn2009_2019.shp")
 # Consistent District Boundaries 
 
 mccaig_boundaries <- read_dta("Consistent 2019 to 1999 wards with 1999 districts.dta")
+
+# Population Density 
+
+ppn_density <- read.csv("ppn_density.csv")
