@@ -1,4 +1,4 @@
-phc <- c("phc89.Rda", "phc99.Rda", "phc09.Rda", "phc19.Rda")
+phc <- c("phc.Rda", "phc89.Rda", "phc99.Rda", "phc09.Rda", "phc19.Rda", "phc_all.Rda")
 
 for (i in phc) {
   load(i)
@@ -74,10 +74,13 @@ work_agexbmr_19_ns <- bind_rows(work_agexbmr_19_n, work_agexbmr_19_s) %>% mutate
 # Probability of working - province level #
 ###########################################
 
-png("work_phc_n.png")
-iplot(list(
+etable(list(
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
         subset(phc89, south == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
+        subset(phc89, south == 1),
         weights = ~perwt,
         vcov = ~geo1_vn1989),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
@@ -85,35 +88,102 @@ iplot(list(
         weights = ~perwt,
         vcov = ~geo1_vn1999),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
-        subset(phc09, south == 0),
-        weights = ~perwt,
-        vcov = ~geo1_vn2009),
-  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
-        subset(phc19, south == 0),
-        weights = ~perwt,
-        vcov = ~geo1_vn2019)))
-legend("bottomleft", col = 1:4, pch = 16, bty = "n", cex = 0.9, 
-       legend = c("1989", "1999", "2009", "2019"))
-dev.off()
-
-png("work_phc_s.png")
-iplot(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(yrschool) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
-        subset(phc89, south == 1),
-        weights = ~perwt,
-        vcov = ~geo1_vn1989),
-  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
         subset(phc99, south == 1),
         weights = ~perwt,
         vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
+        subset(phc09, south == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
         subset(phc09, south == 1),
         weights = ~perwt,
         vcov = ~geo1_vn2009),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
+        subset(phc19, south == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2019),
+  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_prov_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo1) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration),
         subset(phc19, south == 1),
         weights = ~perwt,
-        vcov = ~geo1_vn2019)))
-legend("bottomleft", col = 1:4, pch = 16, bty = "n", cex = 0.9, 
-       legend = c("1989", "1999", "2009", "2019"))
-dev.off()
+        vcov = ~geo1_vn2019)), tex = T)
+
+##############################
+# Widowhood - district level #
+##############################
+
+etable(list(
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(migration) + nchild | geo1_vn2009,
+        subset(phc09, south == 1 & female == 1 & age > (2009-(1975-15))),
+        weights = ~perwt,
+        vcov = ~geo2_vn2009),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(migration) + nchild | geo1_vn2019,
+        subset(phc19, south == 1 & female == 1 & age > (2019-(1975-15))),
+        weights = ~perwt,
+        vcov = ~geo2_vn2019)), tex = T)
+
+etable(list(
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(migration) | geo1_vn2009,
+        subset(phc09, south == 1 & female == 1 & age > (2009-(1975-15)) & nchild == 0),
+        weights = ~perwt,
+        vcov = ~geo2_vn2009),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(migration) + nchild | geo1_vn2009,
+        subset(phc09, south == 1 & female == 1 & age > (2009-(1975-15)) & nchild > 0),
+        weights = ~perwt,
+        vcov = ~geo2_vn2009)), tex = T)
+
+##############################
+# Widowhood - province level #
+##############################
+
+etable(list(
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + nchild + famsize | geo1_vn1989,
+        subset(phc89, south == 1 & female == 1 & age > (1989-(1975-15)) & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + nchild + famsize | geo1_vn1999,
+        subset(phc99, south == 1 & female == 1 & age > (1999-(1975-15))),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + nchild + famsize | geo1_vn2009,
+        subset(phc09, south == 1 & female == 1 & age > (2009-(1975-15)) & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + nchild + famsize | geo1_vn2019,
+        subset(phc19, south == 1 & female == 1 & age > (2019-(1975-15)) & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2019)), tex = T)
+
+etable(list(
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + famsize | geo1_vn1989,
+        subset(phc89, south == 1 & female == 1 & age > (1989-(1975-15)) & nchild == 0 & migration == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + as.factor(migration) + famsize | geo1_vn1989,
+        subset(phc89, south == 1 & female == 1 & age > (1989-(1975-15)) & nchild > 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1989),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + as.factor(migration) + famsize | geo1_vn1999,
+        subset(phc99, south == 1 & female == 1 & age > (1999-(1975-15)) & nchild == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + as.factor(migration) + famsize | geo1_vn1999,
+        subset(phc99, south == 1 & female == 1 & age > (1999-(1975-15)) & nchild > 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn1999),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + as.factor(migration) + famsize| geo1_vn2009,
+        subset(phc09, south == 1 & female == 1 & age > (2009-(1975-15)) & nchild == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + as.factor(migration) + famsize | geo1_vn2009,
+        subset(phc09, south == 1 & female == 1 & age > (2009-(1975-15)) & nchild > 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2009),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + as.factor(migration) + famsize | geo1_vn2019,
+        subset(phc19, south == 1 & female == 1 & age > (2019-(1975-15)) & nchild == 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2019),
+  feols(work ~ as.factor(widowed) + as.factor(edattain) + age + age^2 + as.factor(urban) + as.factor(minority) + as.factor(migration) + famsize | geo1_vn2019,
+        subset(phc19, south == 1 & female == 1 & age > (2019-(1975-15)) & nchild > 0),
+        weights = ~perwt,
+        vcov = ~geo1_vn2019)), tex = T)
