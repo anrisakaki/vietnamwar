@@ -31,7 +31,7 @@ wt16 <- read_dta(file = "Full VHLSS/2016/Household/wt16.dta")
 
 # Population and Housing Census 
 
-phc <- read_dta(file = "ipumsi_00010.dta")
+phc <- read_dta(file = "ipumsi_00011.dta")
 
 # DHS
 
