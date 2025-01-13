@@ -791,6 +791,8 @@ ggsave("fcomp99_n.jpeg", width = 12, height = 12)
 
 # 2009
 
+## Female
+
 ggplot(dplyr::filter(indgen_s, year == 2009 & f_comp>4), aes(x = (f_comp), y = reorder(Industry, f_comp))) + 
   geom_bar(stat = "identity", fill = "skyblue") +
   geom_text(aes(x = f_comp / 2, label = f_comp), size = 5, color = "black") +
@@ -852,6 +854,37 @@ ggplot(dplyr::filter(indgen_n, year == 2019 & f_comp>2), aes(x = (f_comp), y = r
         text = element_text(size=20)) + 
   scale_x_continuous(breaks = NULL) 
 ggsave("fcomp19_n.jpeg", width = 12, height = 12)
+
+## Male 
+ggplot(dplyr::filter(indgen_s, year == 2019 & m_comp > 5), aes(x = (m_comp), y = reorder(Industry, m_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(x = m_comp / 2, label = m_comp), size = 5, color = "black") +
+  labs(x = "Share of Men Women in 2019 (%)",
+       y = "") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=20)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("mcomp19_s.jpeg", width = 12, height = 12)
+
+ggplot(dplyr::filter(indgen_n, year == 2019 & m_comp > 3), aes(x = (m_comp), y = reorder(Industry, m_comp))) + 
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(x = m_comp / 2, label = m_comp), size = 5, color = "black") +
+  labs(x = "Share of Working Women in 2009 (%)",
+       y = "") +
+  theme(axis.line = element_line(color='black'),
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_blank(),
+        text = element_text(size=20)) + 
+  scale_x_continuous(breaks = NULL) 
+ggsave("mcomp19_n.jpeg", width = 12, height = 12)
 
 # Birth cohort and sex ratio 
 
