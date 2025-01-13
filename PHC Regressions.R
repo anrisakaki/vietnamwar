@@ -330,7 +330,7 @@ legend("topleft", col = 1:2, pch = 16, bty = "n", cex = 0.9,
 dev.off()
 
 iplot(list(
-  feols(indgen == 60 | indgen == 70 | indgen == 110 | indgen < 113 & indgen < 130  ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2009,
+  feols(indgen == 60 | indgen == 70 | indgen == 110 | indgen > 113 & indgen < 130  ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2009,
         subset(phc09, south == 1 & work == 1),
         weights = ~perwt,
         vcov = ~geo2_vn2009),
