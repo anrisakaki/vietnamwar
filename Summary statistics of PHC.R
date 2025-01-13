@@ -94,6 +94,7 @@ sum_phc <- phc_all %>%
             m_work = sum(perwt[female == 0 & work == 1], na.rm = T)) %>% 
   mutate(flfp = f_work/tot_flf,
          mlfp = m_work/tot_mlf)
+
 # Calculating male the female ratio in each industry 
 
 female_n_fn <- function(i){
