@@ -201,6 +201,23 @@ agecohort_sum <- phc %>%
          group09 = case_when(year == 2009 & age_cohort %in% c("10-14", "15-19", "20-24", "25-29", "30-34") ~ "Born after war",
                              TRUE ~ "Born before war"))
 
+# Summary statistics of migration patterns 
+
+phc_all %>% 
+  group_by(year) %>% 
+  summarise(n = sum(perwt),
+            # Share of people in same major, same minor admin unit 
+            non_mig = sum(perwt[migrate5 == 11], na.rm = T),
+            
+            # Share of people in same major, different minor admin unit
+            mig_district = sum(perwt[migrate5 == 12], na.rm = T),
+            
+            # Share of people in different major admin unit 
+            mig_province = sum(perwt[migrate5 == 20], na.rm = T)) %>% 
+  mutate(share1 = mig_district/n,
+         share2 = mig_province/n,
+         share3 = non_mig/n)
+
 # Summary statistics of migrants 
 
 migrant_sum_survey <- function(i) {
