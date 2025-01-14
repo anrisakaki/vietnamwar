@@ -11,7 +11,6 @@ bmr_sum_fn <- function(i){
     summarise(tot_bmr_prov = sum(tot_bmr_prov),
               tot_bmr_lb_prov = sum(tot_bmr_lb_prov),
               killed_tot_prov = sum(killed_tot_prov),
-              dist_nearest_base_prov = min(dist_nearest_base_prov),
               dist_nearest_hochi_prov = min(dist_nearest_hochi_prov)) %>% 
     select(tinh, everything()) %>% 
     mutate(mean_tot_bmr_prov = mean(tot_bmr_prov, na.rm = T),
@@ -231,72 +230,3 @@ bombs_province09 <- province_bmr_sum %>%
 save(bombs_province89, file = "bombs_province89.Rda")
 save(bombs_province99, file = "bombs_province99.Rda")
 save(bombs_province09, file = "bombs_province09.Rda")
-
-#######
-# DHS #
-#######
-
-bombs_province97 <- bombs_province99 %>%
-  mutate(
-    sprovin = recode(
-      geo1_vn1999,
-      `101` = 1,
-      `103` = 3,
-      `107` = 23,
-      `109` = 63,
-      `113` = 25,
-      `111` = 64,
-      `115` = 26,
-      `205` = 13,
-      `209` = 15,
-      `211` = 14,
-      `215` = 16,
-      `217` = 19,
-      `219` = 61,
-      `221` = 21,
-      `223` = 62,
-      `301` = 12,
-      `401` = 27,
-      `403` = 29,
-      `409` = 32,
-      `411` = 33,
-      `501` = 34,
-      `507` = 65,
-      `505` = 37,
-      `605` = 40,
-      `701` = 2,
-      `703` = 42,
-      `705` = 44,
-      `709` = 45,
-      `713` = 47,
-      `803` = 49,
-      `805` = 50,
-      `807` = 52,
-      `809` = 56,
-      `813` = 53,
-      `815` = 54,
-      `817` = 57,
-      `819` = 58,
-      `821` = 67,
-      `823` = 59,
-      `303` = 18,
-      .default = NA_real_
-    )
-  ) %>%
-  filter(!is.na(sprovin))  
-
-bombs_province02 <- bombs_province99 %>%
-  mutate(
-    geo1_vn1999 = recode(
-      geo1_vn1999,
-      `703` = 607,
-      `219` = 104,
-      `223` = 106,
-      `503` = 999,
-      `507` = 503,
-      `505` = 507,
-      .default = geo1_vn1999
-    )
-  ) %>%
-  filter(!is.na(geo1_vn1999))  
-
