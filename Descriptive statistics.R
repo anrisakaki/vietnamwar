@@ -13,6 +13,8 @@ ggplot(district_bmr_sum_phc_sf) +
   scale_fill_gradient(name = "log(Bombs, \nMissiles and Rockets)", low = "green", high = "red", na.value = "grey") + 
   geom_hline(yintercept = 17, color = "blue", linetype = "dashed") +
   annotate("text", x = Inf, y = 17.3, label = "17th Parallel", hjust = 1.1, color = "blue", size = 4) + 
+  geom_sf(data = hcmtrail, aes(color = "Ho Chi Minh Trail"), size = 1.2) +  
+  scale_color_manual(name = "Trail", values = c("Ho Chi Minh Trail" = "purple")) +  
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks = element_blank(),
