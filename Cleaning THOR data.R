@@ -83,20 +83,13 @@ province_bmr_sum_sf <- province_bmr %>%
   ungroup() %>% 
   left_join(prov_casualties, by = "varname_1")
 
-bases <- st_transform(bases, crs = 4326)
-hcmtrail <- st_transform(hcmtrail, crs = 4326)
+province_centroids <- st_centroid(province_bmr_sum_sf)
+province_centroids <- st_transform(province_centroids, crs = st_crs(hcmtrail))
+nearest_trail <- st_nearest_feature(province_centroids, hcmtrail)
 
-nearest_base <- st_nearest_feature(province_bmr_sum_sf, bases)
-province_bmr_sum_sf$dist_nearest_base <-
-  as.numeric(st_distance(province_bmr_sum_sf, bases[nearest_base, ], by_element = TRUE)) / 1000
-
-nearest_trail <- st_nearest_feature(province_bmr_sum_sf, hcmtrail)
-province_bmr_sum_sf$dist_nearest_hochi <-
-  as.numeric(st_distance(province_bmr_sum_sf, hcmtrail[nearest_trail, ], by_element = TRUE)) / 1000
-
-distance_info <- province_bmr_sum_sf %>% 
-  select(varname_1, dist_nearest_base, dist_nearest_hochi)
-distance_info <- sf::st_drop_geometry(distance_info)
+province_bmr_sum_sf$dist_nearest_hochi <- as.numeric(
+  st_distance(province_centroids, hcmtrail[nearest_trail, ], by_element = TRUE)
+) / 1000
 
 province_bmr_sum <- province_bmr_sum_sf %>% 
   ungroup() %>% 
@@ -171,7 +164,6 @@ province_bmr_sum <- province_bmr_sum_sf %>%
   summarise(tot_bmr_prov = sum(tot_bmr),
             tot_bmr_lb_prov = sum(tot_bmr_lb),
             killed_tot_prov = sum(killed_tot),
-            dist_nearest_base_prov = min(dist_nearest_base),
             dist_nearest_hochi_prov = min(dist_nearest_hochi)) %>% 
   select(tinh, everything())
 
@@ -203,8 +195,19 @@ district_bmr_sum_phc_sf <- district_bmr_phc %>%
   left_join(geo2_vn, by = c("geolevel2" = "GEOLEVEL2")) %>% 
   sf::st_as_sf()
 
+district_centroids <- st_centroid(district_bmr_sum_phc_sf)
+district_centroids <- st_transform(district_centroids, crs = st_crs(hcmtrail))
+nearest_trail <- st_nearest_feature(district_centroids, hcmtrail)
+
+district_bmr_phc$dist_nearest_hochi_dist <- as.numeric(
+  st_distance(district_centroids, hcmtrail[nearest_trail, ], by_element = TRUE)
+) / 1000
+
 district_bmr_phc <- district_bmr_phc %>% 
   rename(geo2_vn = geolevel2)
+
+save(district_bmr_phc, file = "district_bmr_phc.Rda")
+
 ######################
 # SUMMARY OF TARGETS #
 ######################
@@ -220,5 +223,3 @@ targets_sum <- district_bmr_phc_sf %>%
             civilian_n = sum(numweaponsdelivered[tgtcountry == "NORTH VIETNAM" & civilian == 1], na.rm = T),
             industry_s = sum(numweaponsdelivered[tgtcountry == "SOUTH VIETNAM" & industry == 1], na.rm = T),
             industry_n = sum(numweaponsdelivered[tgtcountry == "NORTH VIETNAM" & industry == 1], na.rm = T))
-
-save(district_bmr_phc, file = "district_bmr_phc.Rda")
