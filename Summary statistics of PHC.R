@@ -65,21 +65,20 @@ dist_phc_sum <- function(i) {
       tot_bmr_std = mean(tot_bmr_std, na.rm = TRUE),
       dist_hochi = mean(dist_nearest_hochi_dist, na.rm = TRUE),
       popdensgeo2 = mean(popdensgeo2, na.rm = TRUE),
-      avg_ruggedness = mean(avg_ruggedness),
-      avg_elevation = mean(avg_elevation),
+      avg_ruggedness = mean(avg_ruggedness_dist),
+      avg_elevation = mean(avg_elevation_dist),
       geo1_vn2009 = mean(geo1_vn2009, na.rm = TRUE),
       geo1_vn2019 = mean(geo1_vn2019, na.rm = TRUE)
     ) %>%
     mutate(
-      flfp = f_work / tot_f,
-      sexratio = tot_m / tot_f,
-      widow_share = widowed_f / tot_f,
-      f_migrant_share = tot_f_migrants / tot_f,
-      migrant_share = (tot_f_migrants + tot_m_migrants) / n,
+      flfp = f_work / f,
+      sexratio = m / f,
+      widow_share = widowed_f / f,
+      migrant_share = (f_migrants + m_migrants) / n,
       minority_share = minority / n,
       disabled_share = disabled / n,
-      agri_f_share = agri_f_n / f_work,
-      manu_f_share = manu_f_n / f_work,
+      agri_f_share = agri_f / f_work,
+      manu_f_share = manu_f / f_work,
       secondary_share = secondary / n,
       uni_share = uni / n
     ) %>%
