@@ -67,6 +67,14 @@ gdf <- st_make_valid(gdf)
 ####################################
 # PROVINCE-LEVEL BOMBING INTENSITY #
 ####################################
+variables <- list(altitude = altitude, ruggedness = ruggedness)
+names <- c("alt", "ruggedness")
+
+for (i in seq_along(variables)) {
+  var <- projectRaster(variables[[i]], crs = st_crs(vnmap1)$proj4string)
+  cropped_var <- crop(var, vnmap1)
+  vnmap1[[names[i]]] <- exact_extract(cropped_var, vnmap1, 'mean')
+}
 
 province_bmr <- st_join(gdf, vnmap1) %>% rename_all(tolower)
 
@@ -76,12 +84,10 @@ province_bmr_sum_sf <- province_bmr %>%
   group_by(varname_1, name_1) %>% 
   summarise(tot_bmr = sum(numweaponsdelivered),
             tot_bmr_lb = sum(weightdelivered),
-            tot_agri = sum(numweaponsdelivered[agriculture == 1]),
-            tot_agri_lb = sum(weightdelivered[agriculture == 1]),
-            tot_industry = sum(numweaponsdelivered[industry == 1]),
-            tot_industry_lb = sum(weightdelivered[industry == 1])) %>% 
-  ungroup() %>% 
-  left_join(prov_casualties, by = "varname_1")
+            avg_ruggedness = mean(ruggedness),
+            avg_elevation = mean(alt)) %>% 
+  left_join(prov_casualties, by = "varname_1") %>% 
+  ungroup()
 
 province_centroids <- st_centroid(province_bmr_sum_sf)
 province_centroids <- st_transform(province_centroids, crs = st_crs(hcmtrail))
@@ -164,7 +170,9 @@ province_bmr_sum <- province_bmr_sum_sf %>%
   summarise(tot_bmr_prov = sum(tot_bmr),
             tot_bmr_lb_prov = sum(tot_bmr_lb),
             killed_tot_prov = sum(killed_tot),
-            dist_nearest_hochi_prov = min(dist_nearest_hochi)) %>% 
+            dist_nearest_hochi_prov = min(dist_nearest_hochi),
+            avg_ruggedness = mean(avg_ruggedness),
+            avg_elevation = mean(avg_elevation)) %>% 
   select(tinh, everything())
 
 save(province_bmr_sum, file = "province_bmr_sum.Rda")
@@ -172,8 +180,14 @@ save(province_bmr_sum, file = "province_bmr_sum.Rda")
 #################################
 # Bombing intensity by district # 
 #################################
-
 geo2_vn <- st_make_valid(geo2_vn)
+
+for (i in seq_along(variables)) {
+  var <- projectRaster(variables[[i]], crs = st_crs(geo2_vn)$proj4string)
+  cropped_var <- crop(var, vnmap1)
+  geo2_vn[[names[i]]] <- exact_extract(cropped_var, geo2_vn, 'mean')
+}
+
 district_bmr_phc_sf <- st_join(geo2_vn, gdf)
 
 district_bmr_phc <- district_bmr_phc_sf %>% 
@@ -181,8 +195,9 @@ district_bmr_phc <- district_bmr_phc_sf %>%
   group_by(GEOLEVEL2) %>% 
   summarise(
     tot_bmr = sum(NUMWEAPONSDELIVERED, na.rm = T),
-    tot_bmr_lb = sum(WEIGHTDELIVERED, na.rm = T)) %>% 
-  sf::st_drop_geometry() %>% 
+    tot_bmr_lb = sum(WEIGHTDELIVERED, na.rm = T),
+    avg_ruggedness_dist = mean(ruggedness),
+    avg_elevation_dist = mean(alt)) %>% 
   mutate(mean_tot_bmr = mean(tot_bmr, na.rm = T),
          sd_tot_bmr = sd(tot_bmr, na.rm = T),
          tot_bmr_std = (tot_bmr - mean_tot_bmr)/sd_tot_bmr,
