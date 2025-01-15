@@ -36,13 +36,62 @@ etable(list(
 
 ## Province level
 
-### 2009 
 etable(list(
+  # 2009
+  feols(flfp ~ tot_bmr_std,
+        subset(sum_dist09, south == 0),
+        vcov = ~geo2_vn2009),
+  feols(flfp ~ tot_bmr_std | geo1_vn2009,
+        subset(sum_dist09, south == 0),
+        vcov = ~geo2_vn2009),
   feols(flfp ~ tot_bmr_std + migrant_share + minority_share + secondary_share + uni_share | geo1_vn2009,
         subset(sum_dist09, south == 0),
         vcov = ~geo2_vn2009),
+  feols(flfp ~ tot_bmr_std + migrant_share + minority_share + secondary_share + uni_share + avg_ruggedness + avg_elevation | geo1_vn2009,
+        subset(sum_dist09, south == 0),
+        vcov = ~geo2_vn2009),
+  
+  # 2019
+  feols(flfp ~ tot_bmr_std,
+        subset(sum_dist19, south == 0),
+        vcov = ~geo2_vn2019),
+  feols(flfp ~ tot_bmr_std | geo1_vn2019,
+        subset(sum_dist19, south == 0),
+        vcov = ~geo2_vn2019),
   feols(flfp ~ tot_bmr_std + migrant_share + minority_share + secondary_share + uni_share | geo1_vn2019,
         subset(sum_dist19, south == 0),
+        vcov = ~geo2_vn2019),
+  feols(flfp ~ tot_bmr_std + migrant_share + minority_share + secondary_share + uni_share + avg_ruggedness + avg_elevation | geo1_vn2019,
+        subset(sum_dist19, south == 0),
+        vcov = ~geo2_vn2019)), tex = T)
+
+etable(list(
+  # 2009
+  feols(flfp ~ tot_bmr_std,
+        subset(sum_dist09, south == 1),
+        vcov = ~geo2_vn2009),
+  feols(flfp ~ tot_bmr_std | geo1_vn2009,
+        subset(sum_dist09, south == 1),
+        vcov = ~geo2_vn2009),
+  feols(flfp ~ tot_bmr_std + migrant_share + minority_share + secondary_share + uni_share | geo1_vn2009,
+        subset(sum_dist09, south == 1),
+        vcov = ~geo2_vn2009),
+  feols(flfp ~ tot_bmr_std + migrant_share + minority_share + secondary_share + uni_share + avg_ruggedness + avg_elevation | geo1_vn2009,
+        subset(sum_dist09, south == 1),
+        vcov = ~geo2_vn2009),
+  
+  # 2019
+  feols(flfp ~ tot_bmr_std,
+        subset(sum_dist19, south == 1),
+        vcov = ~geo2_vn2019),
+  feols(flfp ~ tot_bmr_std | geo1_vn2019,
+        subset(sum_dist19, south == 1),
+        vcov = ~geo2_vn2019),
+  feols(flfp ~ tot_bmr_std + migrant_share + minority_share + secondary_share + uni_share | geo1_vn2019,
+        subset(sum_dist19, south == 1),
+        vcov = ~geo2_vn2019),
+  feols(flfp ~ tot_bmr_std + migrant_share + minority_share + secondary_share + uni_share + avg_ruggedness + avg_elevation | geo1_vn2019,
+        subset(sum_dist19, south == 1),
         vcov = ~geo2_vn2019)), tex = T)
 
 # DiD Model
@@ -86,21 +135,61 @@ work_agexbmr_19_ns <- bind_rows(work_agexbmr_19_n, work_agexbmr_19_s)
 # Instrumental variables
 
 etable(list(
-  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + I(age^2) + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2009 | tot_bmr_std ~ dist_nearest_hochi_dist,
-        subset(phc09, south == 0 & age < 65 & age > 15),
-        weights = ~perwt,
+  # 2009
+  feols(flfp ~ 1 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist09, south == 0),
         vcov = ~geo2_vn2009),
-  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + I(age^2) + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2009 | tot_bmr_std ~ dist_nearest_hochi_dist,
-        subset(phc09, south == 1 & age < 65 & age > 15),
-        weights = ~perwt,
+  feols(flfp ~ 1 | geo1_vn2009 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist09, south == 0),
         vcov = ~geo2_vn2009),
-  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2019 | tot_bmr_std ~ dist_nearest_hochi_dist,
-        subset(phc19, south == 0 & age < 65 & age > 15),
-        weights = ~perwt,
+  feols(flfp ~ migrant_share + minority_share + secondary_share + uni_share | geo1_vn2009 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist09, south == 0),
+        vcov = ~geo2_vn2009),
+  feols(flfp ~ migrant_share + minority_share + secondary_share + uni_share + avg_ruggedness + avg_elevation | geo1_vn2009 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist09, south == 0),
+        vcov = ~geo2_vn2009),
+  
+  # 2019
+  feols(flfp ~ 1 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist19, south == 0),
         vcov = ~geo2_vn2019),
-  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + I(age^2) + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2019 | tot_bmr_std ~ dist_nearest_hochi_dist,
-        subset(phc19, south == 1 & age < 65 & age > 15),
-        weights = ~perwt,
+  feols(flfp ~ 1 | geo1_vn2019 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist19, south == 0),
+        vcov = ~geo2_vn2019),
+  feols(flfp ~ migrant_share + minority_share + secondary_share + uni_share | geo1_vn2019 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist19, south == 0),
+        vcov = ~geo2_vn2019),
+  feols(flfp ~ migrant_share + minority_share + secondary_share + uni_share + avg_ruggedness + avg_elevation | geo1_vn2019 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist19, south == 0),
+        vcov = ~geo2_vn2019)), tex = T)
+
+etable(list(
+  # 2009
+  feols(flfp ~ 1 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist09, south == 1),
+        vcov = ~geo2_vn2009),
+  feols(flfp ~ 1 | geo1_vn2009 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist09, south == 1),
+        vcov = ~geo2_vn2009),
+  feols(flfp ~ migrant_share + minority_share + secondary_share + uni_share | geo1_vn2009 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist09, south == 1),
+        vcov = ~geo2_vn2009),
+  feols(flfp ~ migrant_share + minority_share + secondary_share + uni_share + avg_ruggedness + avg_elevation | geo1_vn2009 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist09, south == 1),
+        vcov = ~geo2_vn2009),
+  
+  # 2019
+  feols(flfp ~ 1 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist19, south == 1),
+        vcov = ~geo2_vn2019),
+  feols(flfp ~ 1 | geo1_vn2019 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist19, south == 1),
+        vcov = ~geo2_vn2019),
+  feols(flfp ~ migrant_share + minority_share + secondary_share + uni_share | geo1_vn2019 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist19, south == 1),
+        vcov = ~geo2_vn2019),
+  feols(flfp ~ migrant_share + minority_share + secondary_share + uni_share + avg_ruggedness + avg_elevation | geo1_vn2019 | tot_bmr_std ~ dist_hochi,
+        subset(sum_dist19, south == 1),
         vcov = ~geo2_vn2019)), tex = T)
 
 ###########################################
