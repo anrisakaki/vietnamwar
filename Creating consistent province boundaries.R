@@ -1,4 +1,3 @@
-load("province_bmr_sum.Rda")
 load("district_bmr_sum.Rda")
 
 ###########################################
