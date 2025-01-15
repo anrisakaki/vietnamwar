@@ -1,5 +1,3 @@
-load("district_bmr_sum.Rda")
-
 ###########################################
 # CREATING CONSISTENT PROVINCE BOUNDARIES #
 ###########################################
@@ -10,7 +8,9 @@ bmr_sum_fn <- function(i){
     summarise(tot_bmr_prov = sum(tot_bmr_prov),
               tot_bmr_lb_prov = sum(tot_bmr_lb_prov),
               killed_tot_prov = sum(killed_tot_prov),
-              dist_nearest_hochi_prov = min(dist_nearest_hochi_prov)) %>% 
+              dist_nearest_hochi_prov = min(dist_nearest_hochi_prov),
+              avg_ruggedness_prov = mean(avg_ruggedness),
+              avg_elevation_prov = mean(avg_elevation)) %>% 
     select(tinh, everything()) %>% 
     mutate(mean_tot_bmr_prov = mean(tot_bmr_prov, na.rm = T),
            sd_tot_bmr_prov = sd(tot_bmr_prov, na.rm = T),
