@@ -6,48 +6,82 @@ for (i in phc) {
 
 phc_sum <- function(i){
   
-  i %>% 
-    summarise(n = sum(perwt),
-              tot_f = sum(perwt[female == 1], na.rm = T),
-              tot_m = sum(perwt[female == 0], na.rm = T),
-              tot_mlf = sum(perwt[female == 0 & age > 15 & age < 65], na.rm = T),
-              tot_flf = sum(perwt[female == 1 & age > 15 & age < 65], na.rm = T),
-              f_work = sum(perwt[female == 1 & work == 1], na.rm = T),
-              m_work = sum(perwt[female == 0 & work == 1], na.rm = T),
-              widowed_f = sum(perwt[female == 1 & widowed == 1], na.rm = T),
-              tot_f_migrants = sum(perwt[female == 1 & migration == 1], na.rm = T),
-              tot_m_migrants = sum(perwt[female == 0 & migration == 1], na.rm = T),
-              tot_bmr_prov = mean(tot_bmr_prov)) %>% 
-    mutate(flfp = f_work/tot_flf,
-           sexratio = tot_m/tot_f,
-           widow_share = widowed_f/tot_f,
-           f_migrant_share = tot_f_migrants/tot_f,
-           migrant_share = (tot_f_migrants+tot_m_migrants)/n)
-  
+  i %>%
+    filter(age > 14 & age < 65) %>%
+    summarise(
+      n = sum(perwt, na.rm = TRUE),
+      tot_f = sum(perwt[female == 1], na.rm = TRUE),
+      tot_m = sum(perwt[female == 0], na.rm = TRUE),
+      f_work = sum(perwt[female == 1 & work == 1], na.rm = TRUE),
+      m_work = sum(perwt[female == 0 & work == 1], na.rm = TRUE),
+      widowed_f = sum(perwt[female == 1 & widowed == 1], na.rm = TRUE),
+      tot_f_migrants = sum(perwt[female == 1 & migration == 1], na.rm = TRUE),
+      tot_m_migrants = sum(perwt[female == 0 & migration == 1], na.rm = TRUE),
+      minority_n = sum(perwt[minority == 1], na.rm = TRUE),
+      disabled_n = sum(perwt[disabled == 1], na.rm = TRUE),
+      agri_f_n = sum(perwt[agri == 1 & female == 1], na.rm = TRUE),
+      manu_f_n = sum(perwt[manu == 1 & female == 1], na.rm = TRUE),
+      n_primary = sum(perwt[edattain == 2], na.rm = TRUE),
+      n_secondary = sum(perwt[edattain == 3], na.rm = TRUE),
+      n_uni = sum(perwt[edattain == 4], na.rm = TRUE),
+      tot_bmr_std = mean(tot_bmr_prov_std, na.rm = TRUE),
+      dist_hochi = mean(dist_nearest_hochi_prov, na.rm = TRUE)
+    ) %>%
+    mutate(
+      flfp = f_work / tot_f,
+      sexratio = tot_m / tot_f,
+      widow_share = widowed_f / tot_f,
+      f_migrant_share = tot_f_migrants / tot_f,
+      migrant_share = (tot_f_migrants + tot_m_migrants) / n,
+      minority_share = minority_n / n,
+      disabled_share = disabled_n / n,
+      agri_f_share = agri_f_n / f_work,
+      manu_f_share = manu_f_n / f_work,
+      primary_share = n_primary / tot_f,
+      secdonary_share = n_secondary / tot_f,
+      uni_share = n_uni / tot_f
+    )
 }
 
-dist_phc_sum <- function(i){
-  
-  i %>% 
-    group_by(geo2_vn) %>% 
-    summarise(n = sum(perwt),
-              tot_f = sum(perwt[female == 1], na.rm = T),
-              tot_m = sum(perwt[female == 0], na.rm = T),
-              tot_mlf = sum(perwt[female == 0 & age > 14 & age < 65], na.rm = T),
-              tot_flf = sum(perwt[female == 1 & age > 14 & age < 65], na.rm = T),
-              f_work = sum(perwt[female == 1 & work == 1], na.rm = T),
-              m_work = sum(perwt[female == 0 & work == 1], na.rm = T),
-              widowed_f = sum(perwt[female == 1 & widowed == 1], na.rm = T),
-              tot_f_migrants = sum(perwt[female == 1 & migration == 1], na.rm = T),
-              tot_m_migrants = sum(perwt[female == 0 & migration == 1], na.rm = T),
-              tot_bmr = mean(tot_bmr),
-              tot_bmr_prov = mean(tot_bmr_prov),
-              popdensgeo2 = mean(popdensgeo2)) %>% 
-    mutate(flfp = f_work/tot_flf,
-           sexratio = tot_m/tot_f,
-           widow_share = widowed_f/tot_f,
-           f_migrant_share = tot_f_migrants/tot_f,
-           migrant_share = (tot_f_migrants+tot_m_migrants)/n) %>% 
+dist_phc_sum <- function(i) {
+  i %>%
+    filter(age > 14 & age < 65) %>%
+    summarise(
+      n = sum(perwt, na.rm = TRUE),
+      tot_f = sum(perwt[female == 1], na.rm = TRUE),
+      tot_m = sum(perwt[female == 0], na.rm = TRUE),
+      f_work = sum(perwt[female == 1 & work == 1], na.rm = TRUE),
+      m_work = sum(perwt[female == 0 & work == 1], na.rm = TRUE),
+      widowed_f = sum(perwt[female == 1 & widowed == 1], na.rm = TRUE),
+      tot_f_migrants = sum(perwt[female == 1 & migration == 1], na.rm = TRUE),
+      tot_m_migrants = sum(perwt[female == 0 & migration == 1], na.rm = TRUE),
+      minority_n = sum(perwt[minority == 1], na.rm = TRUE),
+      disabled_n = sum(perwt[disabled == 1], na.rm = TRUE),
+      agri_f_n = sum(perwt[agri == 1 & female == 1], na.rm = TRUE),
+      manu_f_n = sum(perwt[manu == 1 & female == 1], na.rm = TRUE),
+      n_primary = sum(perwt[edattain == 2], na.rm = TRUE),
+      n_secondary = sum(perwt[edattain == 3], na.rm = TRUE),
+      n_uni = sum(perwt[edattain == 4], na.rm = TRUE),
+      tot_bmr_std = mean(tot_bmr_std, na.rm = TRUE),
+      dist_hochi = mean(dist_nearest_hochi_dist, na.rm = TRUE),
+      popdensgeo2 = mean(popdensgeo2, na.rm = TRUE),
+      geo1_vn2009 = mean(geo1_vn2009, na.rm = TRUE),
+      geo1_vn2019 = mean(geo1_vn2019, na.rm = TRUE)
+    ) %>%
+    mutate(
+      flfp = f_work / tot_f,
+      sexratio = tot_m / tot_f,
+      widow_share = widowed_f / tot_f,
+      f_migrant_share = tot_f_migrants / tot_f,
+      migrant_share = (tot_f_migrants + tot_m_migrants) / n,
+      minority_share = minority_n / n,
+      disabled_share = disabled_n / n,
+      agri_f_share = agri_f_n / f_work,
+      manu_f_share = manu_f_n / f_work,
+      primary_share = n_primary / tot_f,
+      secondary_share = n_secondary / tot_f,
+      uni_share = n_uni / tot_f
+    ) %>%
     mutate(south = ifelse(geo2_vn > 704044457, 1, 0))
 }
 
@@ -74,14 +108,18 @@ sum19 <- phc19 %>%
   mutate(south = ifelse(geo1_vn2019 > 44, 1, 0))
 
 sum_dist09 <- phc09 %>% 
+  group_by(geo2_vn, geo2_vn2009) %>% 
   dist_phc_sum()
 
 sum_dist19 <- phc19 %>% 
+  group_by(geo2_vn, geo2_vn2019) %>% 
   dist_phc_sum()
 
 save(sum89, file = "sum89.Rda")
 save(sum99, file = "sum99.Rda")
 save(sum09, file = "sum09.Rda")
+save(sum_dist09, file = "sum_dist09.Rda")
+save(sum_dist19, file = "sum_dist19.Rda")
 
 sum_phc <- phc_all %>% 
   group_by(year, south) %>% 
