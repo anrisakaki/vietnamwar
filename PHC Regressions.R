@@ -14,23 +14,40 @@ setFixest_coefplot(dict = dict, grid = FALSE, zero.par = list(lty = 2), main = "
 
 # FE Model
 
+## Individual level
+
 etable(list(
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2009,
         subset(phc09, south == 0 & age < 65 & age > 15),
         weights = ~perwt,
-        vcov = ~geo2_vn2009 + age),
+        vcov = ~geo2_vn2009),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2009,
         subset(phc09, south == 1 & age < 65 & age > 15),
         weights = ~perwt,
-        vcov = ~geo2_vn2009 + age),
+        vcov = ~geo2_vn2009),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2019,
         subset(phc19, south == 0 & age < 65 & age > 15),
         weights = ~perwt,
-        vcov = ~geo2_vn2019 + age),
+        vcov = ~geo2_vn2019),
   feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2019,
         subset(phc19, south == 1 & age < 65 & age > 15),
         weights = ~perwt,
-        vcov = ~geo2_vn2019 + age)), tex = T)
+        vcov = ~geo2_vn2019)), tex = T)
+
+## Province level
+etable(list(
+  feols(flfp ~ tot_bmr_std + log(popdensgeo2) + migrant_share + minority_share + secondary_share + uni_share| geo1_vn2009,
+        subset(sum_dist09, south == 0),
+        vcov = ~geo2_vn2009),
+  feols(flfp ~ tot_bmr_std + log(popdensgeo2) + migrant_share + minority_share + secondary_share + uni_share| geo1_vn2009,
+        subset(sum_dist09, south == 1),
+        vcov = ~geo2_vn2009),
+  feols(flfp ~ tot_bmr_std + log(popdensgeo2) + migrant_share + minority_share + secondary_share + uni_share| geo1_vn2019,
+        subset(sum_dist19, south == 0),
+        vcov = ~geo2_vn2019),
+  feols(flfp ~ tot_bmr_std + log(popdensgeo2) + migrant_share + minority_share + secondary_share + uni_share| geo1_vn2019,
+        subset(sum_dist19, south == 1),
+        vcov = ~geo2_vn2019)), tex = T)
 
 # DiD Model
 
@@ -69,6 +86,26 @@ work_agexbmr_19_n$age_75 <- rep(seq(-27, 21), each = nrow(work_agexbmr_09_n) / l
 work_agexbmr_19_n$group <- "North"
 work_agexbmr_19_s$group <- "South"
 work_agexbmr_19_ns <- bind_rows(work_agexbmr_19_n, work_agexbmr_19_s) 
+
+# Instrumental variables
+
+etable(list(
+  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + I(age^2) + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2009 | tot_bmr_std ~ dist_nearest_hochi_dist,
+        subset(phc09, south == 0 & age < 65 & age > 15),
+        weights = ~perwt,
+        vcov = ~geo2_vn2009),
+  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + I(age^2) + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2009 | tot_bmr_std ~ dist_nearest_hochi_dist,
+        subset(phc09, south == 1 & age < 65 & age > 15),
+        weights = ~perwt,
+        vcov = ~geo2_vn2009),
+  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + age^2 + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2019 | tot_bmr_std ~ dist_nearest_hochi_dist,
+        subset(phc19, south == 0 & age < 65 & age > 15),
+        weights = ~perwt,
+        vcov = ~geo2_vn2019),
+  feols(work ~ as.factor(female) + i(as.factor(female), tot_bmr_std) + as.factor(edattain) + nchild + age + I(age^2) + log(popdensgeo2) + as.factor(urban) + as.factor(minority) + as.factor(marst) + as.factor(migration) | geo1_vn2019 | tot_bmr_std ~ dist_nearest_hochi_dist,
+        subset(phc19, south == 1 & age < 65 & age > 15),
+        weights = ~perwt,
+        vcov = ~geo2_vn2019)), tex = T)
 
 ###########################################
 # Probability of working - province level #
