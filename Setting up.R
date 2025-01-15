@@ -12,6 +12,8 @@ library(broom)
 library(patchwork)
 library(srvyr)
 library(survey)
+library(raster)
+library(exactextractr)
 
 rm(list=ls())
 
@@ -61,7 +63,9 @@ vnmap2 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_2.shp")
 vnmap3 <- read_sf("Chloropleth Maps/VNShapefile/gadm36_VNM_3.shp")
 hcmtrail <- st_read("3-replication package/3-replication package/rawdata/shapefiles/HoChiMinhGeoreference.shp")
 bases <- st_read("3-replication package/3-replication package/rawdata/shapefiles/AirBases-point.shp")
-popcenter <-
-  st_read("3-replication package/3-replication package/rawdata/shapefiles/ne_10m_populated_places.shp")
 
 geo2_vn <- read_sf("geo2_vn2009_2019/geo2_vn2009_2019.shp")
+
+altitude <- raster("VNM_alt_tif/VNM_alt.tif")
+ruggedness <- raster("nunnpuga/tri.tif")
+precipitation <- raster("prec_30s_bil/avg.tif")
