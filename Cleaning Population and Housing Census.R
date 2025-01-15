@@ -85,10 +85,10 @@ phc19 <- phc %>%
   filter(year == 2019) %>% 
   left_join(bombs_province09, by = c("geo1_vn2019" = "geo1_vn2009")) %>% 
   left_join(district_bmr_phc, by = "geo2_vn") %>% 
+  phc_fn() %>% 
   mutate(south = ifelse(geo1_vn2019 > 44, 1, 0),
          spagegap = spouse_age - age,
-         speducgap = spouse_yrschool - yrschool) %>% 
-  phc_fn()
+         speducgap = spouse_yrschool - yrschool)
 
 phc_all <- bind_rows(phc89, phc99, phc09, phc19)
 
@@ -99,9 +99,6 @@ save(phc19, file = "phc19.Rda")
 save(phc_all, file = "phc_all.Rda")
 
 # Widows in 1989
-
-phc89 %>% summarise(total_widows = sum(perwt[widowed == 1 & female == 1], na.rm = TRUE))
-
 widowed_89 <- phc89 %>%
   filter(female == 1 & age >15) %>%
   group_by(age, south) %>%
