@@ -35,18 +35,14 @@ etable(list(
         vcov = ~geo2_vn2019)), tex = T)
 
 ## Province level
+
+### 2009 
 etable(list(
-  feols(flfp ~ tot_bmr_std + log(popdensgeo2) + migrant_share + minority_share + secondary_share + uni_share| geo1_vn2009,
+  feols(flfp ~ tot_bmr_std + migrant_share + minority_share + secondary_share + uni_share | geo1_vn2009,
         subset(sum_dist09, south == 0),
         vcov = ~geo2_vn2009),
-  feols(flfp ~ tot_bmr_std + log(popdensgeo2) + migrant_share + minority_share + secondary_share + uni_share| geo1_vn2009,
-        subset(sum_dist09, south == 1),
-        vcov = ~geo2_vn2009),
-  feols(flfp ~ tot_bmr_std + log(popdensgeo2) + migrant_share + minority_share + secondary_share + uni_share| geo1_vn2019,
+  feols(flfp ~ tot_bmr_std + migrant_share + minority_share + secondary_share + uni_share | geo1_vn2019,
         subset(sum_dist19, south == 0),
-        vcov = ~geo2_vn2019),
-  feols(flfp ~ tot_bmr_std + log(popdensgeo2) + migrant_share + minority_share + secondary_share + uni_share| geo1_vn2019,
-        subset(sum_dist19, south == 1),
         vcov = ~geo2_vn2019)), tex = T)
 
 # DiD Model
