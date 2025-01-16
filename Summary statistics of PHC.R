@@ -39,7 +39,8 @@ phc_sum <- function(i){
       agri_f_share = agri_f / f_work,
       manu_f_share = manu_f / f_work,
       secondary_share = secondary / n,
-      uni_share = uni / n
+      uni_share = uni / n,
+      urban_share = urban / n
     )
 }
 
@@ -62,6 +63,7 @@ dist_phc_sum <- function(i) {
       primary = sum(perwt[edattain == 2], na.rm = TRUE),
       secondary = sum(perwt[edattain == 3], na.rm = TRUE),
       uni = sum(perwt[edattain == 4], na.rm = TRUE),
+      urban = sum(perwt[urban == 1], na.rm = TRUE),
       tot_bmr_std = mean(tot_bmr_std, na.rm = TRUE),
       dist_hochi = mean(dist_nearest_hochi_dist, na.rm = TRUE),
       popdensgeo2 = mean(popdensgeo2, na.rm = TRUE),
@@ -80,7 +82,8 @@ dist_phc_sum <- function(i) {
       agri_f_share = agri_f / f_work,
       manu_f_share = manu_f / f_work,
       secondary_share = secondary / n,
-      uni_share = uni / n
+      uni_share = uni / n,
+      urban_share = urban /n
     ) %>%
     mutate(south = ifelse(geo2_vn > 704044457, 1, 0))
 }
