@@ -1,3 +1,7 @@
+vhlss <- c("vhlss14.Rda", "vhlss16.Rda")
+for (i in vhlss) {
+  load(i)
+}
 
 ##########################
 # PROBABILITY OF WORKING #
